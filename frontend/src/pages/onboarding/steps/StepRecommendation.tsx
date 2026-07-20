@@ -61,7 +61,7 @@ function computeRecommendation(data: WizardData): Recommendation {
     reasons: [
       "As a solo founder you could also run a sole proprietorship, but a limited company keeps your personal assets separate from business debts.",
       "It's easier to add co-founders or investors later without re-registering.",
-      "Most clients on LaunchGH choose this structure — it grows with you.",
+      "Most clients on Deevale GH choose this structure — it grows with you.",
     ],
   }
 }

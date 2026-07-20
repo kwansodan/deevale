@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-const REFRESH_TOKEN_KEY = "launchgh.refresh_token"
+const REFRESH_TOKEN_KEY = "deevalegh.refresh_token"
 
 export type CurrentUser = {
   id: string

@@ -2,7 +2,7 @@ import logging
 import secrets
 from abc import ABC, abstractmethod
 
-logger = logging.getLogger("launchgh.otp")
+logger = logging.getLogger("deevalegh.otp")
 
 
 class OtpSender(ABC):
@@ -20,10 +20,10 @@ class ConsoleOtpSender(OtpSender):
     """
 
     def send_sms(self, phone: str, code: str) -> None:
-        logger.info("[DEV OTP] SMS to %s: your LaunchGH code is %s", phone, code)
+        logger.info("[DEV OTP] SMS to %s: your Deevale GH code is %s", phone, code)
 
     def send_email(self, email: str, code: str) -> None:
-        logger.info("[DEV OTP] Email to %s: your LaunchGH code is %s", email, code)
+        logger.info("[DEV OTP] Email to %s: your Deevale GH code is %s", email, code)
 
 
 def get_otp_sender() -> OtpSender:

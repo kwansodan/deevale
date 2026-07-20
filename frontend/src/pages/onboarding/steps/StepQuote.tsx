@@ -67,7 +67,7 @@ export function StepQuote({
                 <span className="tabular-nums">{formatGhs(quote.subtotal_government_minor)}</span>
               </div>
               <div className="text-muted-foreground flex items-center justify-between text-xs">
-                <span>LaunchGH service fee</span>
+                <span>Deevale GH service fee</span>
                 <span className="tabular-nums">{formatGhs(quote.subtotal_service_minor)}</span>
               </div>
               <div className="mt-1 flex items-center justify-between text-base font-semibold">

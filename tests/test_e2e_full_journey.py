@@ -88,7 +88,7 @@ def test_full_client_journey_signup_to_completed_case(app, client, caplog):
         reviewer_headers = auth_headers(reviewer)
 
         # --- 1. Signup + OTP + login ---
-        with caplog.at_level("INFO", logger="launchgh.otp"):
+        with caplog.at_level("INFO", logger="deevalegh.otp"):
             signup_resp = client.post(
                 "/auth/signup",
                 json={

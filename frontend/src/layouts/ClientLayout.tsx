@@ -54,7 +54,7 @@ export default function ClientLayout() {
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-5">
             <Link to="/app" className="text-primary text-lg font-bold">
-              LaunchGH
+              Deevale GH
             </Link>
             <nav className="flex items-center gap-4 text-sm" aria-label="Primary">
               <Link to="/app" className="text-muted-foreground hover:text-foreground">

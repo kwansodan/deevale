@@ -38,7 +38,7 @@ def test_signup_with_referral_grants_reward_on_first_payment(app, client, caplog
         code = client.get("/referrals/me", headers=auth_headers(referrer)).get_json()["code"]
 
         # New user signs up with the referral code.
-        with caplog.at_level("INFO", logger="launchgh.otp"):
+        with caplog.at_level("INFO", logger="deevalegh.otp"):
             signup = client.post(
                 "/auth/signup",
                 json={

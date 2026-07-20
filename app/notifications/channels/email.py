@@ -5,7 +5,7 @@ from flask import current_app
 
 from app.notifications.channels.base import ChannelAdapter
 
-logger = logging.getLogger("launchgh.email")
+logger = logging.getLogger("deevalegh.email")
 
 
 class EmailSender(ABC):

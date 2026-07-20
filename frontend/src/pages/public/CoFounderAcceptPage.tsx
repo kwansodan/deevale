@@ -44,7 +44,7 @@ export default function CoFounderAcceptPage() {
   return (
     <div className="bg-background flex min-h-svh items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <p className="text-primary mb-4 text-center text-lg font-bold">LaunchGH</p>
+        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
         {isLoading ? (
           <Skeleton className="h-64 w-full" />
         ) : isError || !data ? (
@@ -73,7 +73,7 @@ export default function CoFounderAcceptPage() {
               ) : !user ? (
                 <div className="grid gap-3 text-sm">
                   <p className="text-muted-foreground">
-                    First, create your own LaunchGH account (or log in) — your ID verification stays
+                    First, create your own Deevale GH account (or log in) — your ID verification stays
                     private to you.
                   </p>
                   <div className="flex gap-2">

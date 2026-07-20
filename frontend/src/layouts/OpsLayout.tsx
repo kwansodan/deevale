@@ -56,7 +56,7 @@ export default function OpsLayout() {
     <div className="bg-background flex min-h-svh">
       <aside className="border-border bg-card flex w-56 shrink-0 flex-col border-r">
         <div className="border-border border-b px-4 py-4">
-          <span className="text-primary text-lg font-bold">LaunchGH</span>
+          <span className="text-primary text-lg font-bold">Deevale GH</span>
           <p className="text-muted-foreground text-xs">Ops Console</p>
         </div>
         <nav className="flex-1 space-y-1 p-2">

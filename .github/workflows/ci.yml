@@ -12,13 +12,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: launchgh
-          POSTGRES_PASSWORD: launchgh
-          POSTGRES_DB: launchgh_test
+          POSTGRES_USER: deevalegh
+          POSTGRES_PASSWORD: deevalegh
+          POSTGRES_DB: deevalegh_test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U launchgh"
+          --health-cmd "pg_isready -U deevalegh"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -33,7 +33,7 @@ jobs:
           --health-retries 10
     env:
       FLASK_ENV: testing
-      TEST_DATABASE_URL: postgresql+psycopg2://launchgh:launchgh@localhost:5432/launchgh_test
+      TEST_DATABASE_URL: postgresql+psycopg2://deevalegh:deevalegh@localhost:5432/deevalegh_test
       REDIS_URL: redis://localhost:6379/0
       RATELIMIT_STORAGE_URI: redis://localhost:6379/0
     steps:

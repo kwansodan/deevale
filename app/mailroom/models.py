@@ -10,7 +10,7 @@ from app.extensions import db
 
 
 class RegisteredAddressEnrollment(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
-    """A client's opt-in to use LaunchGH's office as their registered office.
+    """A client's opt-in to use Deevale GH's office as their registered office.
     Consent + the disclaimer text they agreed to are captured immutably."""
 
     __tablename__ = "registered_address_enrollments"

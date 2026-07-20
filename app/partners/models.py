@@ -10,7 +10,7 @@ from app.extensions import db
 
 
 class Partner(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
-    """A law/accounting firm reselling LaunchGH through the partner API."""
+    """A law/accounting firm reselling Deevale GH through the partner API."""
 
     __tablename__ = "partners"
 

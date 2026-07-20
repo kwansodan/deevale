@@ -264,7 +264,7 @@ export default function PartnersPage() {
         <div>
           <h1 className="text-xl font-semibold">Partners</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Law & accounting firms reselling LaunchGH through the partner API.
+            Law & accounting firms reselling Deevale GH through the partner API.
           </p>
         </div>
         <Button onClick={() => setCreating(true)}>

@@ -25,7 +25,7 @@ def test_password_reset_requested_and_completed_write_audit_logs(client, caplog)
 
     make_user(email="auditreset@example.com", password="oldpassword1")
 
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post("/auth/password-reset/request", json={"email": "auditreset@example.com"})
     assert AuditLog.query.filter_by(action="password_reset_requested").count() == 1
 

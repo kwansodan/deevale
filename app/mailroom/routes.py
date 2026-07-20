@@ -89,7 +89,7 @@ def enroll_route(payload):
 
     if not has_active_subscription(case.client_id):
         raise ForbiddenError(
-            "The registered address service is part of the LaunchGH compliance plan. "
+            "The registered address service is part of the Deevale GH compliance plan. "
             "Subscribe to use our office as your registered address."
         )
 

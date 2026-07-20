@@ -119,7 +119,7 @@ export default function SignPage() {
   return (
     <div className="bg-background flex min-h-svh items-start justify-center px-4 py-8">
       <div className="w-full max-w-xl">
-        <p className="text-primary mb-4 text-center text-lg font-bold">LaunchGH</p>
+        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : isError || !data ? (

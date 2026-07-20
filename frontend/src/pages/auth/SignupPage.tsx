@@ -63,7 +63,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm border-border">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">
-            <span className="text-primary text-2xl font-bold">LaunchGH</span>
+            <span className="text-primary text-2xl font-bold">Deevale GH</span>
           </div>
           <CardTitle className="text-xl">Start your business journey</CardTitle>
           <CardDescription>Register in minutes, we'll guide you the rest of the way.</CardDescription>

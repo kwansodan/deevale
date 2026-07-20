@@ -125,11 +125,11 @@ def send_weekly_digests() -> int:
             body += "\n\nUpcoming deadlines:\n" + "\n".join(f"⏰ {line}" for line in deadline_lines)
 
         html = render_template(
-            "notifications/email/base.html.j2", title="Your LaunchGH weekly update", body=body
+            "notifications/email/base.html.j2", title="Your Deevale GH weekly update", body=body
         )
         text = render_template(
-            "notifications/email/base.txt.j2", title="Your LaunchGH weekly update", body=body
+            "notifications/email/base.txt.j2", title="Your Deevale GH weekly update", body=body
         )
-        get_email_sender().send(user.email, "Your LaunchGH weekly update", html, text)
+        get_email_sender().send(user.email, "Your Deevale GH weekly update", html, text)
         sent += 1
     return sent

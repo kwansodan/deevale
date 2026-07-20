@@ -40,7 +40,7 @@ class BusinessProfile(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
 
 class ClientInvoice(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
     """An invoice the client's business issues to *their* customer. Distinct
-    from payments.Invoice (which is LaunchGH billing the client)."""
+    from payments.Invoice (which is Deevale GH billing the client)."""
 
     __tablename__ = "client_invoices"
 

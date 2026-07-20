@@ -1,6 +1,6 @@
 """Load test for the workflow engine and ops queue.
 
-Target: 200 concurrent clients against a running LaunchGH API.
+Target: 200 concurrent clients against a running Deevale GH API.
 
 Usage:
     pip install locust
@@ -15,7 +15,7 @@ Two user classes are simulated:
                    SLA/stage filters (the hot path through the queue query).
 
 Point OFFICER_EMAIL/OFFICER_PASSWORD at a seeded officer (see seeds/seed_demo.py:
-officer@launchgh.demo / Demo1234!).
+officer@deevalegh.demo / Demo1234!).
 """
 
 import os
@@ -24,7 +24,7 @@ import uuid
 
 from locust import HttpUser, between, task
 
-OFFICER_EMAIL = os.environ.get("LOADTEST_OFFICER_EMAIL", "officer@launchgh.demo")
+OFFICER_EMAIL = os.environ.get("LOADTEST_OFFICER_EMAIL", "officer@deevalegh.demo")
 OFFICER_PASSWORD = os.environ.get("LOADTEST_OFFICER_PASSWORD", "Demo1234!")
 
 

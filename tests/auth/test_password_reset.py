@@ -16,7 +16,7 @@ def _extract_code(caplog) -> str:
 def test_password_reset_full_flow(client, caplog):
     make_user(email="reset@example.com", password="oldpassword1")
 
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         req_resp = client.post("/auth/password-reset/request", json={"email": "reset@example.com"})
     assert req_resp.status_code == 200
     code = _extract_code(caplog)
@@ -41,7 +41,7 @@ def test_password_reset_request_does_not_leak_account_existence(client):
 
 def test_password_reset_wrong_code_rejected(client, caplog):
     make_user(email="resetwrong@example.com", password="oldpassword1")
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post("/auth/password-reset/request", json={"email": "resetwrong@example.com"})
 
     resp = client.post(

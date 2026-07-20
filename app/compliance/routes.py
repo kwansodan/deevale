@@ -95,7 +95,7 @@ def file_it_for_me_route(obligation_id):
 
     if not has_active_subscription(obligation.client_id):
         raise ForbiddenError(
-            "'File it for me' is part of the LaunchGH compliance plan. Subscribe to have our team "
+            "'File it for me' is part of the Deevale GH compliance plan. Subscribe to have our team "
             "handle this filing for you."
         )
 

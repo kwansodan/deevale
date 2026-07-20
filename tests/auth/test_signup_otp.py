@@ -12,7 +12,7 @@ def _extract_code(caplog) -> str:
 
 
 def test_signup_sends_console_otp_and_creates_unverified_user(client, caplog):
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         resp = client.post(
             "/auth/signup",
             json={
@@ -48,7 +48,7 @@ def test_signup_rejects_invalid_ghana_phone(client):
 
 
 def test_verify_otp_activates_account_and_allows_login(client, caplog):
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post(
             "/auth/signup",
             json={
@@ -70,7 +70,7 @@ def test_verify_otp_activates_account_and_allows_login(client, caplog):
 
 
 def test_login_before_verification_is_rejected(client, caplog):
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post(
             "/auth/signup",
             json={
@@ -85,7 +85,7 @@ def test_login_before_verification_is_rejected(client, caplog):
 
 
 def test_verify_otp_wrong_code_rejected(client, caplog):
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post(
             "/auth/signup",
             json={
@@ -103,7 +103,7 @@ def test_verify_otp_expired_code_rejected(client, caplog, monkeypatch):
     import app.auth.service as service_mod
 
     monkeypatch.setattr(service_mod, "OTP_TTL_MINUTES", -1)
-    with caplog.at_level("INFO", logger="launchgh.otp"):
+    with caplog.at_level("INFO", logger="deevalegh.otp"):
         client.post(
             "/auth/signup",
             json={

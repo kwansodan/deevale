@@ -86,10 +86,10 @@ def run() -> None:
     seed_fee_schedule.run()
     seed_workflow_definitions.run()
 
-    officer = _user("officer@launchgh.demo", "+233240000001", "Kwame Boateng", [RoleName.CASE_OFFICER])
-    _user("reviewer@launchgh.demo", "+233240000002", "Abena Sarpong", [RoleName.REVIEWER])
-    _user("finance@launchgh.demo", "+233240000003", "Yaw Darko", [RoleName.FINANCE])
-    admin = _user("admin@launchgh.demo", "+233240000004", "Esi Amankwah", [RoleName.ADMIN])
+    officer = _user("officer@deevalegh.demo", "+233240000001", "Kwame Boateng", [RoleName.CASE_OFFICER])
+    _user("reviewer@deevalegh.demo", "+233240000002", "Abena Sarpong", [RoleName.REVIEWER])
+    _user("finance@deevalegh.demo", "+233240000003", "Yaw Darko", [RoleName.FINANCE])
+    admin = _user("admin@deevalegh.demo", "+233240000004", "Esi Amankwah", [RoleName.ADMIN])
 
     ama = _user("ama@client.demo", "+233240000010", "Ama Owusu", [RoleName.CLIENT])
     kofi = _user("kofi@client.demo", "+233240000011", "Kofi Mensah", [RoleName.CLIENT])
@@ -148,7 +148,7 @@ def run() -> None:
     db.session.commit()
 
     print("Demo seeded:")
-    print(f"  staff:   officer@launchgh.demo / reviewer@ / finance@ / admin@  (password: {DEMO_PASSWORD})")
+    print(f"  staff:   officer@deevalegh.demo / reviewer@ / finance@ / admin@  (password: {DEMO_PASSWORD})")
     print(f"  clients: ama@client.demo, kofi@client.demo, efua@client.demo   (password: {DEMO_PASSWORD})")
     print(f"  cases:   {BusinessCase.query.count()} across different stages")
 

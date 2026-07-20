@@ -65,7 +65,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm border-border">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">
-            <span className="text-primary text-2xl font-bold">LaunchGH</span>
+            <span className="text-primary text-2xl font-bold">Deevale GH</span>
           </div>
           <CardTitle className="text-xl">{t("auth.welcomeBack")}</CardTitle>
           <CardDescription>{t("auth.loginSubtitle")}</CardDescription>

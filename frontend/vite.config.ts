@@ -11,10 +11,10 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['launchgh-icon.svg', 'favicon.svg'],
+      includeAssets: ['deevalegh-icon.svg', 'favicon.svg'],
       manifest: {
-        name: 'LaunchGH',
-        short_name: 'LaunchGH',
+        name: 'Deevale GH',
+        short_name: 'Deevale',
         description: 'Register and run your business in Ghana — end to end.',
         theme_color: '#14532D',
         background_color: '#F7F4EE',
@@ -22,7 +22,7 @@ export default defineConfig({
         start_url: '/app',
         scope: '/',
         icons: [
-          { src: 'launchgh-icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' },
+          { src: 'deevalegh-icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' },
         ],
       },
       workbox: {

@@ -199,7 +199,7 @@ def test_webhook_delivery_signs_payload_and_marks_delivered(app, partner_factory
 
         def fake_post(url, data=None, headers=None, timeout=None):
             captured["url"] = url
-            captured["signature"] = headers["X-LaunchGH-Signature"]
+            captured["signature"] = headers["X-Deevale-Signature"]
             captured["body"] = data
             return FakeResponse()
 

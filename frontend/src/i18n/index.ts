@@ -26,7 +26,7 @@ i18n
     interpolation: { escapeValue: false },
     detection: {
       order: ["localStorage", "navigator"],
-      lookupLocalStorage: "launchgh.lang",
+      lookupLocalStorage: "deevalegh.lang",
       caches: ["localStorage"],
     },
   })

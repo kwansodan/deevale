@@ -31,7 +31,7 @@ export default function PayInvoicePage() {
   return (
     <div className="bg-background flex min-h-svh items-start justify-center px-4 py-10">
       <div className="w-full max-w-lg">
-        <p className="text-primary mb-4 text-center text-lg font-bold">LaunchGH</p>
+        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
         {isLoading ? (
           <Skeleton className="h-80 w-full" />
         ) : isError || !data ? (

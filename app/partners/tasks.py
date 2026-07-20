@@ -40,9 +40,9 @@ def deliver_webhook(self, delivery_id: str) -> None:
             data=body,
             headers={
                 "Content-Type": "application/json",
-                "X-LaunchGH-Event": delivery.event_type,
-                "X-LaunchGH-Signature": signature,
-                "X-LaunchGH-Delivery": str(delivery.id),
+                "X-Deevale-Event": delivery.event_type,
+                "X-Deevale-Signature": signature,
+                "X-Deevale-Delivery": str(delivery.id),
             },
             timeout=15,
         )

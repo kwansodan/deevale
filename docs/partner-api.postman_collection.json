@@ -1,11 +1,11 @@
 {
   "info": {
-    "name": "LaunchGH Partner API v1",
-    "description": "Partner API for law/accounting firms. Authenticate every request with a scoped API key issued by a LaunchGH admin: send it as `Authorization: Bearer sk_partner_...`. Set the `base_url` and `api_key` collection variables before running.",
+    "name": "Deevale GH Partner API v1",
+    "description": "Partner API for law/accounting firms. Authenticate every request with a scoped API key issued by a Deevale GH admin: send it as `Authorization: Bearer sk_partner_...`. Set the `base_url` and `api_key` collection variables before running.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "base_url", "value": "https://app.launchgh.com" },
+    { "key": "base_url", "value": "https://app.deevalegh.com" },
     { "key": "api_key", "value": "sk_partner_pk_xxxx.yyyy" },
     { "key": "case_id", "value": "" },
     { "key": "webhook_id", "value": "" }
@@ -65,9 +65,9 @@
         "url": { "raw": "{{base_url}}/api/partner/v1/webhooks", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "webhooks"] },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"url\": \"https://your-firm.example.com/launchgh/hooks\",\n  \"event_types\": [\"case.created\", \"stage.completed\", \"document.approved\", \"payment.received\"]\n}"
+          "raw": "{\n  \"url\": \"https://your-firm.example.com/deevalegh/hooks\",\n  \"event_types\": [\"case.created\", \"stage.completed\", \"document.approved\", \"payment.received\"]\n}"
         },
-        "description": "Requires scope `webhooks:manage`. The response includes a `secret` (shown once) used to verify the `X-LaunchGH-Signature` HMAC-SHA256 header on every delivery."
+        "description": "Requires scope `webhooks:manage`. The response includes a `secret` (shown once) used to verify the `X-Deevale-Signature` HMAC-SHA256 header on every delivery."
       }
     },
     {

@@ -16,7 +16,7 @@
     "password": "Password",
     "login": "Log in",
     "loggingIn": "Logging in...",
-    "newHere": "New to LaunchGH?",
+    "newHere": "New to Deevale GH?",
     "createAccount": "Create an account",
     "signupTitle": "Start your business journey",
     "signupSubtitle": "Register in minutes, we'll guide you the rest of the way.",
@@ -55,7 +55,7 @@
   },
   "referrals": {
     "title": "Refer & earn",
-    "subtitle": "Share your code. When a friend registers their business and pays, you both get credit toward your LaunchGH fees.",
+    "subtitle": "Share your code. When a friend registers their business and pays, you both get credit toward your Deevale GH fees.",
     "yourCode": "Your referral code",
     "copyLink": "Copy invite link",
     "balance": "Available credit",

@@ -5,7 +5,7 @@ from flask import current_app
 
 from app.notifications.channels.base import ChannelAdapter
 
-logger = logging.getLogger("launchgh.whatsapp")
+logger = logging.getLogger("deevalegh.whatsapp")
 
 # Maps each notification category to its pre-approved WhatsApp Business
 # template plus the ordered context variables the template expects. WhatsApp

@@ -8,7 +8,7 @@ from app.core.model_mixins import utcnow
 from app.notifications.channels.base import ChannelAdapter
 from app.notifications.enums import DeliveryStatus
 
-logger = logging.getLogger("launchgh.sms")
+logger = logging.getLogger("deevalegh.sms")
 
 
 class SmsSender(ABC):

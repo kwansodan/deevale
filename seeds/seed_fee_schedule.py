@@ -72,7 +72,7 @@ FEE_SCHEDULE = [
     ),
     dict(
         code="SERVICE_FEE_COMPANY_LTD",
-        label="LaunchGH Service Fee -- Company Limited by Shares",
+        label="Deevale GH Service Fee -- Company Limited by Shares",
         applies_to_entity_type=EntityType.COMPANY_LIMITED_BY_SHARES.value,
         applies_to_stage_code=None,
         amount_minor=150_000,
@@ -80,7 +80,7 @@ FEE_SCHEDULE = [
     ),
     dict(
         code="SERVICE_FEE_PARTNERSHIP",
-        label="LaunchGH Service Fee -- Partnership",
+        label="Deevale GH Service Fee -- Partnership",
         applies_to_entity_type=EntityType.PARTNERSHIP.value,
         applies_to_stage_code=None,
         amount_minor=100_000,
@@ -88,7 +88,7 @@ FEE_SCHEDULE = [
     ),
     dict(
         code="SERVICE_FEE_CLG",
-        label="LaunchGH Service Fee -- Company Limited by Guarantee",
+        label="Deevale GH Service Fee -- Company Limited by Guarantee",
         applies_to_entity_type=EntityType.COMPANY_LIMITED_BY_GUARANTEE.value,
         applies_to_stage_code=None,
         amount_minor=180_000,
@@ -96,7 +96,7 @@ FEE_SCHEDULE = [
     ),
     dict(
         code="SERVICE_FEE_EXTERNAL",
-        label="LaunchGH Service Fee -- External Company",
+        label="Deevale GH Service Fee -- External Company",
         applies_to_entity_type=EntityType.EXTERNAL_COMPANY.value,
         applies_to_stage_code=None,
         amount_minor=250_000,

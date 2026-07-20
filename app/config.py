@@ -6,7 +6,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "postgresql+psycopg2://launchgh:launchgh@localhost:5432/launchgh"
+        "DATABASE_URL", "postgresql+psycopg2://deevalegh:deevalegh@localhost:5432/deevalegh"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -24,9 +24,9 @@ class Config:
     }
 
     S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL", "http://localhost:9000")
-    S3_ACCESS_KEY = os.environ.get("S3_ACCESS_KEY", "launchgh")
-    S3_SECRET_KEY = os.environ.get("S3_SECRET_KEY", "launchgh-secret")
-    S3_BUCKET = os.environ.get("S3_BUCKET", "launchgh-documents")
+    S3_ACCESS_KEY = os.environ.get("S3_ACCESS_KEY", "deevalegh")
+    S3_SECRET_KEY = os.environ.get("S3_SECRET_KEY", "deevalegh-secret")
+    S3_BUCKET = os.environ.get("S3_BUCKET", "deevalegh-documents")
     S3_REGION = os.environ.get("S3_REGION", "us-east-1")
     S3_USE_SSL = os.environ.get("S3_USE_SSL", "false").lower() == "true"
     S3_PUBLIC_ENDPOINT_URL = os.environ.get("S3_PUBLIC_ENDPOINT_URL", S3_ENDPOINT_URL)
@@ -34,11 +34,11 @@ class Config:
     MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024
     ALLOWED_UPLOAD_CONTENT_TYPES = {"application/pdf", "image/jpeg", "image/png"}
 
-    # LaunchGH registered-office address, assigned to clients on the
+    # Deevale GH registered-office address, assigned to clients on the
     # registered-address add-on. Editable per deployment.
     REGISTERED_OFFICE_ADDRESS = os.environ.get(
         "REGISTERED_OFFICE_ADDRESS",
-        "LaunchGH Ltd, 3rd Floor, Atlantic Tower, Airport City, Accra, Ghana",
+        "Deevale GH Ltd, 3rd Floor, Atlantic Tower, Airport City, Accra, Ghana",
     )
     # How long scanned mail is retained before the shred job removes the scan.
     MAIL_RETENTION_DAYS = int(os.environ.get("MAIL_RETENTION_DAYS", "90"))
@@ -46,10 +46,12 @@ class Config:
     OTP_SENDER = os.environ.get("OTP_SENDER", "console")
     EMAIL_SENDER = os.environ.get("EMAIL_SENDER", "console")
     SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "")
-    EMAIL_FROM_ADDRESS = os.environ.get("EMAIL_FROM_ADDRESS", "notifications@launchgh.com")
+    EMAIL_FROM_ADDRESS = os.environ.get("EMAIL_FROM_ADDRESS", "notifications@deevalegh.com")
 
     SMS_SENDER = os.environ.get("SMS_SENDER", "console")  # console | twilio | hubtel
-    SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID", "LaunchGH")
+    # Alphanumeric sender IDs are capped at 11 chars and reject spaces, so this
+    # stays a single token rather than matching the display name exactly.
+    SMS_SENDER_ID = os.environ.get("SMS_SENDER_ID", "DeevaleGH")
     SMS_DEFAULT_COST_MINOR = int(os.environ.get("SMS_DEFAULT_COST_MINOR", "5"))
     TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
     TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
@@ -69,7 +71,7 @@ class Config:
     SUBSCRIPTION_ANNUAL_PRICE_MINOR = int(os.environ.get("SUBSCRIPTION_ANNUAL_PRICE_MINOR", "99900"))
 
     # Referral rewards (pesewas): granted to the referrer when their referee's
-    # first LaunchGH invoice is paid, plus a welcome credit for the referee.
+    # first Deevale GH invoice is paid, plus a welcome credit for the referee.
     REFERRAL_REWARD_MINOR = int(os.environ.get("REFERRAL_REWARD_MINOR", "5000"))
     REFERRAL_WELCOME_MINOR = int(os.environ.get("REFERRAL_WELCOME_MINOR", "2500"))
 
@@ -83,7 +85,7 @@ class Config:
 
     CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "http://localhost:5173").split(",")
 
-    API_TITLE = "LaunchGH API"
+    API_TITLE = "Deevale GH API"
     API_VERSION = "v1"
     OPENAPI_VERSION = "3.0.3"
     OPENAPI_URL_PREFIX = "/"
@@ -102,7 +104,7 @@ class DevConfig(Config):
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "TEST_DATABASE_URL", "postgresql+psycopg2://launchgh:launchgh@localhost:5432/launchgh_test"
+        "TEST_DATABASE_URL", "postgresql+psycopg2://deevalegh:deevalegh@localhost:5432/deevalegh_test"
     )
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=2)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(seconds=10)

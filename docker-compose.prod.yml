@@ -1,4 +1,4 @@
-name: launchgh-prod
+name: deevalegh-prod
 
 services:
   postgres:
@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?set in .env}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
-      POSTGRES_DB: launchgh
+      POSTGRES_DB: deevalegh
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/launchgh
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/1
@@ -58,7 +58,7 @@ services:
     command: celery -A app.celery_app worker --loglevel=info
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/launchgh
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/1
@@ -73,7 +73,7 @@ services:
     command: celery -A celery_beat_schedule beat --loglevel=info
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/launchgh
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/1

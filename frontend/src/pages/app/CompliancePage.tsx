@@ -164,7 +164,7 @@ function SubscribeUpsell({
           Let us handle your filings
         </CardTitle>
         <CardDescription>
-          The LaunchGH compliance plan unlocks "File it for me" on every deadline — our team files,
+          The Deevale GH compliance plan unlocks "File it for me" on every deadline — our team files,
           you get the receipts.
         </CardDescription>
       </CardHeader>
@@ -319,7 +319,7 @@ export default function CompliancePage() {
                     <p key={obligation.id} className="text-muted-foreground flex items-center gap-2 py-1 text-sm">
                       <CheckCircle2 className="text-success size-3.5" />
                       {obligation.title} — {format(new Date(obligation.due_date), "d MMM yyyy")}
-                      {obligation.status === "filed_by_us" && " (filed by LaunchGH)"}
+                      {obligation.status === "filed_by_us" && " (filed by Deevale GH)"}
                     </p>
                   ))}
                 </div>

@@ -1,4 +1,4 @@
-# Deploying LaunchGH to a single VPS
+# Deploying Deevale GH to a single VPS
 
 Target: one Ubuntu VPS (DigitalOcean / Hetzner, 2 GB RAM minimum) running
 Docker Compose, with Caddy terminating TLS in front of the stack.
@@ -9,12 +9,12 @@ Docker Compose, with Caddy terminating TLS in front of the stack.
 apt update && apt install -y docker.io docker-compose-v2 caddy
 ```
 
-Point your DNS `A` record (e.g. `app.launchgh.com`) at the server.
+Point your DNS `A` record (e.g. `app.deevalegh.com`) at the server.
 
 ## 2. Clone and configure
 
 ```bash
-git clone <your-repo> /opt/launchgh && cd /opt/launchgh
+git clone <your-repo> /opt/deevalegh && cd /opt/deevalegh
 cp .env.example .env
 ```
 
@@ -26,7 +26,7 @@ from code:
 - `S3_ACCESS_KEY`, `S3_SECRET_KEY` — MinIO root credentials
 - `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` — **live** keys from the Paystack dashboard
 - `SENDGRID_API_KEY`, `EMAIL_SENDER=sendgrid`, `EMAIL_FROM_ADDRESS`
-- `CORS_ORIGINS=https://app.launchgh.com`
+- `CORS_ORIGINS=https://app.deevalegh.com`
 
 ## 3. Build and start
 
@@ -51,7 +51,7 @@ the admin UI (`/ops/settings`) — the seeded figures are placeholders.
 `/etc/caddy/Caddyfile`:
 
 ```
-app.launchgh.com {
+app.deevalegh.com {
     reverse_proxy 127.0.0.1:8080
 }
 ```
@@ -69,14 +69,14 @@ internally, so only port 8080 (bound to localhost) needs exposing to Caddy.
 In the Paystack dashboard set the webhook URL to:
 
 ```
-https://app.launchgh.com/api/payments/webhook/paystack
+https://app.deevalegh.com/api/payments/webhook/paystack
 ```
 
 ## 6. Operations
 
 - **Logs**: `docker compose -f docker-compose.prod.yml logs -f api worker`
 - **Update**: `git pull && docker compose -f docker-compose.prod.yml up -d --build`
-- **DB backup**: `docker compose -f docker-compose.prod.yml exec postgres pg_dump -U $POSTGRES_USER launchgh > backup.sql`
+- **DB backup**: `docker compose -f docker-compose.prod.yml exec postgres pg_dump -U $POSTGRES_USER deevalegh > backup.sql`
 - **MinIO bucket policy**: the documents bucket is private by default; all
   client access goes through short-lived presigned URLs issued by the API.
   Never attach a public-read policy to it.
