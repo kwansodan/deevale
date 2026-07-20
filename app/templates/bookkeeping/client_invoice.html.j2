@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: sans-serif; color: #1C2B27; font-size: 13px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .biz { font-size: 18px; font-weight: bold; color: #14532D; }
+  h1 { font-size: 22px; margin: 0; color: #14532D; }
+  table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+  td.num, th.num { text-align: right; }
+  .totals { margin-top: 8px; width: 40%; margin-left: 60%; }
+  .totals td { border: none; padding: 4px 8px; }
+  .total-row td { font-weight: bold; border-top: 2px solid #14532D; }
+  .muted { color: #6b6f65; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="biz">{{ profile.display_name if profile else "Business" }}</div>
+      {% if profile and profile.address %}<div class="muted">{{ profile.address }}</div>{% endif %}
+      {% if profile and profile.is_vat_registered and profile.vat_number %}
+        <div class="muted">VAT No: {{ profile.vat_number }}</div>
+      {% endif %}
+    </div>
+    <div style="text-align: right;">
+      <h1>INVOICE</h1>
+      <div>{{ invoice.invoice_number }}</div>
+      <div class="muted">Issued: {{ invoice.issue_date }}</div>
+      {% if invoice.due_date %}<div class="muted">Due: {{ invoice.due_date }}</div>{% endif %}
+    </div>
+  </div>
+
+  <p style="margin-top: 24px;"><strong>Bill to:</strong> {{ invoice.customer_name }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="num">Qty</th>
+        <th class="num">Unit ({{ invoice.currency }})</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in invoice.line_items %}
+      <tr>
+        <td>{{ line.description }}</td>
+        <td class="num">{{ "%.2f"|format(line.quantity_milli / 1000) }}</td>
+        <td class="num">{{ "%.2f"|format(line.unit_price_minor / 100) }}</td>
+        <td class="num">{{ "%.2f"|format(line.amount_minor / 100) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="totals">
+    <tr><td>Subtotal</td><td class="num">{{ invoice.currency }} {{ "%.2f"|format(invoice.subtotal_minor / 100) }}</td></tr>
+    {% if invoice.vat_minor > 0 %}
+    <tr><td>VAT ({{ "%.1f"|format(invoice.vat_rate_bps / 100) }}%)</td><td class="num">{{ invoice.currency }} {{ "%.2f"|format(invoice.vat_minor / 100) }}</td></tr>
+    {% endif %}
+    <tr class="total-row"><td>Total</td><td class="num">{{ invoice.currency }} {{ "%.2f"|format(invoice.total_minor / 100) }}</td></tr>
+  </table>
+
+  {% if invoice.notes %}<p class="muted" style="margin-top: 24px;">{{ invoice.notes }}</p>{% endif %}
+</body>
+</html>

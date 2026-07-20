@@ -1,0 +1,73 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "compliance": "Compliance",
+    "money": "Money",
+    "mail": "Mail",
+    "referrals": "Referrals",
+    "notifications": "Notifications",
+    "logout": "Log out",
+    "startBusiness": "Start a new business"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "loginSubtitle": "Log in to track your business registration.",
+    "email": "Email",
+    "password": "Password",
+    "login": "Log in",
+    "loggingIn": "Logging in...",
+    "newHere": "New to LaunchGH?",
+    "createAccount": "Create an account",
+    "signupTitle": "Start your business journey",
+    "signupSubtitle": "Register in minutes, we'll guide you the rest of the way.",
+    "fullName": "Full name",
+    "phone": "Ghana phone number",
+    "referralCode": "Referral code (optional)",
+    "creatingAccount": "Creating account...",
+    "haveAccount": "Already have an account?",
+    "incorrectCredentials": "Incorrect email or password."
+  },
+  "dashboard": {
+    "actionNeeded": "Action needed",
+    "noCasesTitle": "Ready to launch your business?",
+    "noCasesBody": "Answer a few questions, get an instant quote, and we'll handle every government office for you.",
+    "progress": "Progress",
+    "documents": "Documents",
+    "messages": "Messages",
+    "nothingNeeded": "Nothing needed from you right now — we'll let you know the moment that changes. 🎉"
+  },
+  "status": {
+    "notStarted": "Not started",
+    "awaitingClient": "Awaiting client",
+    "inReview": "In review",
+    "withGovernment": "With government",
+    "done": "Done",
+    "blocked": "Blocked"
+  },
+  "money": {
+    "title": "Money",
+    "subtitle": "Invoice your customers and track expenses.",
+    "notAccountingNote": "This is a lightweight record-keeping tool, not full accounting software. It won't file your taxes — export the CSV for your accountant when you need a proper set of books.",
+    "invoices": "Invoices",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "newInvoice": "New invoice"
+  },
+  "referrals": {
+    "title": "Refer & earn",
+    "subtitle": "Share your code. When a friend registers their business and pays, you both get credit toward your LaunchGH fees.",
+    "yourCode": "Your referral code",
+    "copyLink": "Copy invite link",
+    "balance": "Available credit",
+    "ledger": "Credit history",
+    "empty": "No credits yet — share your code to start earning."
+  },
+  "common": {
+    "back": "Back",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading…",
+    "language": "Language"
+  }
+}

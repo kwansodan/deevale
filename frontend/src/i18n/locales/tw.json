@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "language": "Twi (Akan)",
+    "status": "MACHINE-DRAFT — every string below is a machine-generated draft and MUST be reviewed by a fluent Twi speaker before release. Keys without a reviewed value fall back to English at runtime.",
+    "reviewed": false
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "compliance": "Mmara so di",
+    "money": "Sika",
+    "mail": "Nkrataa",
+    "referrals": "Nsɛmpa",
+    "notifications": "Amanneɛbɔ",
+    "logout": "Pue",
+    "startBusiness": "Fi adwuma foforɔ ase"
+  },
+  "auth": {
+    "welcomeBack": "Akwaaba bio",
+    "loginSubtitle": "Hyɛn mu na hwɛ wo adwuma nkyerɛwee.",
+    "email": "Email",
+    "password": "Ahintasɛm",
+    "login": "Hyɛn mu",
+    "loggingIn": "Ɛrehyɛn mu...",
+    "newHere": "Woyɛ foforɔ wɔ LaunchGH?",
+    "createAccount": "Bɔ akawnt",
+    "signupTitle": "Fi wo adwuma akwantuo ase",
+    "signupSubtitle": "Kyerɛw wo din wɔ simma kakraa mu, yɛbɛkyerɛ wo ɛkwan.",
+    "fullName": "Din a ɛyɛ ma",
+    "phone": "Ghana telefon nɔma",
+    "referralCode": "Nsɛmpa koodu (sɛ wowɔ bi a)",
+    "creatingAccount": "Ɛrebɔ akawnt...",
+    "haveAccount": "Wowɔ akawnt dada?",
+    "incorrectCredentials": "Email anaa ahintasɛm nteɛ."
+  },
+  "dashboard": {
+    "actionNeeded": "Deɛ ɛsɛ sɛ woyɛ",
+    "noCasesTitle": "Woasiesie wo ho sɛ wobɛfi wo adwuma ase?",
+    "noCasesBody": "Bua nsɛm kakraa, nya boɔ ntɛm ara, na yɛbɛhwɛ aban dwumadibea biara ama wo.",
+    "progress": "Nkɔsoɔ",
+    "documents": "Nkrataa",
+    "messages": "Nkra",
+    "nothingNeeded": "Biribiara nhia wo seesei — yɛbɛma woate bere a biribi sesa. 🎉"
+  },
+  "status": {
+    "notStarted": "Emfii ase",
+    "awaitingClient": "Ɛretwɛn adetɔfoɔ",
+    "inReview": "Wɔrehwɛ mu",
+    "withGovernment": "Ɛwɔ aban hɔ",
+    "done": "Awie",
+    "blocked": "Wasi ɛkwan"
+  },
+  "money": {
+    "title": "Sika",
+    "subtitle": "Fa nkrataa kɔ wo adetɔfoɔ hɔ na di wo ka ho dwuma.",
+    "notAccountingNote": "Yei yɛ adwinnadeɛ a ɛnyɛ duru, ɛnyɛ akawntabuo software a ɛyɛ ma. Ɛremfa wo tow — fa CSV no kɔma wo akawntanibuni.",
+    "invoices": "Nkrataa",
+    "expenses": "Ka a wobɔ",
+    "reports": "Amanneɛbɔ",
+    "newInvoice": "Nkrataa foforɔ"
+  },
+  "referrals": {
+    "title": "Kyerɛ na nya",
+    "subtitle": "Kyɛ wo koodu. Sɛ w'adamfo kyerɛw n'adwuma na ɔtua ka a, mo baanu nyinaa nya sika.",
+    "yourCode": "Wo nsɛmpa koodu",
+    "copyLink": "Kopi nsɛmpa link",
+    "balance": "Sika a ɛwɔ hɔ",
+    "ledger": "Sika abakɔsɛm",
+    "empty": "Sika biara nni hɔ — kyɛ wo koodu na fi ase nya."
+  },
+  "common": {
+    "back": "San kɔ",
+    "continue": "Toa so",
+    "cancel": "Gyae",
+    "save": "Kora",
+    "loading": "Ɛreload…",
+    "language": "Kasa"
+  }
+}

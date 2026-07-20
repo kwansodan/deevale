@@ -1,0 +1,88 @@
+{
+  "info": {
+    "name": "LaunchGH Partner API v1",
+    "description": "Partner API for law/accounting firms. Authenticate every request with a scoped API key issued by a LaunchGH admin: send it as `Authorization: Bearer sk_partner_...`. Set the `base_url` and `api_key` collection variables before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://app.launchgh.com" },
+    { "key": "api_key", "value": "sk_partner_pk_xxxx.yyyy" },
+    { "key": "case_id", "value": "" },
+    { "key": "webhook_id", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{api_key}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Create case on behalf of a client",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/partner/v1/cases", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "cases"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"client\": {\n    \"full_name\": \"Ama Owusu\",\n    \"email\": \"ama@example.com\",\n    \"phone\": \"+233241234567\"\n  },\n  \"entity_type\": \"company_limited_by_shares\",\n  \"business_name\": \"Ama Ventures\"\n}"
+        },
+        "description": "Requires scope `cases:write`. Provisions the client account if it doesn't exist, creates the case, and tags it to your firm."
+      }
+    },
+    {
+      "name": "List cases",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/partner/v1/cases", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "cases"] },
+        "description": "Requires scope `cases:read`. Returns only your firm's cases."
+      }
+    },
+    {
+      "name": "Get case status + stage tree",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/partner/v1/cases/{{case_id}}", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "cases", "{{case_id}}"] },
+        "description": "Requires scope `cases:read`. Returns the full stage/task tree."
+      }
+    },
+    {
+      "name": "Request a document upload slot",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/partner/v1/cases/{{case_id}}/documents/upload-slot", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "cases", "{{case_id}}", "documents", "upload-slot"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"document_type_code\": \"passport\",\n  \"original_filename\": \"passport.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"size_bytes\": 204800\n}"
+        },
+        "description": "Requires scope `documents:write`. Returns a presigned URL; PUT the file bytes directly to it."
+      }
+    },
+    {
+      "name": "Subscribe to webhooks",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/api/partner/v1/webhooks", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "webhooks"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"url\": \"https://your-firm.example.com/launchgh/hooks\",\n  \"event_types\": [\"case.created\", \"stage.completed\", \"document.approved\", \"payment.received\"]\n}"
+        },
+        "description": "Requires scope `webhooks:manage`. The response includes a `secret` (shown once) used to verify the `X-LaunchGH-Signature` HMAC-SHA256 header on every delivery."
+      }
+    },
+    {
+      "name": "List webhooks",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/partner/v1/webhooks", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "webhooks"] }
+      }
+    },
+    {
+      "name": "Delete a webhook",
+      "request": {
+        "method": "DELETE",
+        "url": { "raw": "{{base_url}}/api/partner/v1/webhooks/{{webhook_id}}", "host": ["{{base_url}}"], "path": ["api", "partner", "v1", "webhooks", "{{webhook_id}}"] }
+      }
+    }
+  ]
+}

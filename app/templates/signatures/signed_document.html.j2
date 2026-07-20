@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: sans-serif; color: #1C2B27; font-size: 13px; }
+  .doc { margin-bottom: 40px; }
+  .sigblock { border-top: 2px solid #14532D; padding-top: 16px; margin-top: 32px; }
+  .sig { margin-bottom: 16px; padding: 8px 0; border-bottom: 1px solid #ddd; }
+  .sig img { max-height: 60px; }
+  .typed { font-family: cursive; font-size: 22px; }
+  .meta { color: #6b6f65; font-size: 11px; }
+  .flag { color: #B45309; font-size: 11px; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <div class="doc">{{ request.merged_html | safe }}</div>
+
+  <div class="sigblock">
+    <h3>Signatures</h3>
+    {% for party in parties %}
+    <div class="sig">
+      <strong>{{ party.name }}</strong> ({{ party.email }})<br>
+      {% if party.signature_type == "drawn" %}
+        <img src="{{ party.signature_data }}" alt="signature">
+      {% else %}
+        <span class="typed">{{ party.signature_data }}</span>
+      {% endif %}
+      <div class="meta">
+        Signed {{ party.signed_at }} · IP {{ party.signed_ip or "n/a" }}
+      </div>
+    </div>
+    {% endfor %}
+    <p class="flag">
+      Executed using a simple electronic signature captured by LaunchGH. Each signature above is
+      bound to the signer's identity, timestamp and IP address at the time of signing.
+    </p>
+  </div>
+</body>
+</html>
