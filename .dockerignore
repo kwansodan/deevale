@@ -1,0 +1,45 @@
+# The build context is sent to the daemon in full, so anything not COPYed by
+# the Dockerfile is pure cost -- and .env would be a secret leak into the image
+# layers. The Dockerfile only needs requirements.txt, app/, migrations/, seeds/
+# and the three wsgi/celery entrypoints.
+
+# Secrets -- never in an image
+.env
+.env.*
+!.env.example
+
+.git
+.github
+.claude
+
+# Frontend is built and served by Vercel, never from this image
+frontend/
+
+# Python noise
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Not needed at runtime
+tests/
+loadtest/
+docs/
+scripts/
+*.md
+docker-compose*.yml
+Makefile
+requirements-dev.txt
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

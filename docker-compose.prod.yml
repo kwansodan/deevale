@@ -1,5 +1,15 @@
 name: deevalegh-prod
 
+# Shared by every service built from this repo. Previously duplicated four
+# times, which is how the copies drift.
+x-app-env: &app-env
+  DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
+  REDIS_URL: redis://redis:6379/0
+  CELERY_BROKER_URL: redis://redis:6379/1
+  CELERY_RESULT_BACKEND: redis://redis:6379/1
+  S3_ENDPOINT_URL: http://minio:9000
+  FLASK_ENV: production
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -35,6 +45,20 @@ services:
     volumes:
       - minio_data:/data
 
+  # Runs once per deploy and exits; everything that touches the database waits
+  # for it to succeed. If a migration fails, the app never starts on a schema it
+  # cannot use -- which is the failure mode you want.
+  migrate:
+    build: .
+    restart: "no"
+    env_file: .env
+    environment:
+      <<: *app-env
+    command: flask --app wsgi db upgrade
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     build: .
     restart: unless-stopped
@@ -44,17 +68,14 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/1
-      S3_ENDPOINT_URL: http://minio:9000
-      FLASK_ENV: production
+      <<: *app-env
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   worker:
     build: .
@@ -62,14 +83,12 @@ services:
     command: celery -A app.celery_app worker --loglevel=info
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/1
-      S3_ENDPOINT_URL: http://minio:9000
-      FLASK_ENV: production
+      <<: *app-env
     depends_on:
-      - api
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   beat:
     build: .
@@ -77,13 +96,12 @@ services:
     command: celery -A celery_beat_schedule beat --loglevel=info
     env_file: .env
     environment:
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/1
-      FLASK_ENV: production
+      <<: *app-env
     depends_on:
-      - api
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
   # NOTE: there is deliberately no `web` service here. The SPA is deployed to
   # Vercel and talks to this stack cross-origin at api.deevalegh.com, so the

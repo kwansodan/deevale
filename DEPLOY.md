@@ -64,14 +64,35 @@ code:
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-First boot only — migrations and seed data:
+Six services come up: `postgres`, `redis`, `minio`, `api`, `worker`, `beat` —
+plus a one-shot `migrate` that runs `flask db upgrade` and exits. `api`,
+`worker` and `beat` all wait on it via `service_completed_successfully`, so a
+failed migration means nothing starts on a schema it cannot use. Migrations
+therefore need no manual step on any deploy or redeploy.
+
+> ⚠️ `migrate` fails immediately if `migrations/versions/` is empty of a real
+> initial revision, or if `ProdConfig.validate()` rejects a default secret. Both
+> are intentional: better a stack that refuses to start than an API returning
+> 500s because no tables exist.
+
+First boot only — seed the reference data:
 
 ```bash
-docker compose -f docker-compose.prod.yml exec api flask --app wsgi db upgrade
 docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_roles
 docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_fee_schedule
 docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow_definitions
 ```
+
+### Running it from Komodo
+
+Point the stack at `docker-compose.prod.yml`, **not** `docker-compose.yml`. The
+dev file contains only backing services plus Mailhog and no application at all;
+deploying it gives you four healthy containers and nothing serving the API.
+
+Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` — the
+image `COPY`s `app/`, `migrations/`, `seeds/` and the wsgi/celery entrypoints,
+all of which live at the root. One build serves `migrate`, `api`, `worker` and
+`beat`; they differ only by `command`.
 
 Then replace the seeded fee amounts with the real current government fees via
 the admin UI (`/ops/settings`) — the seeded figures are placeholders.
