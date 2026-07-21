@@ -68,7 +68,14 @@ class NotificationDispatcher:
         db.session.flush()
 
         for channel_name, adapter in _CHANNEL_ADAPTERS.items():
-            if not _wants_channel(user.id, category.value, DeliveryChannel(channel_name)):
+            channel = DeliveryChannel(channel_name)
+            if not _wants_channel(user.id, category.value, channel):
+                continue
+            # A per-category opt-in cannot conjure a WhatsApp account onto a
+            # number that has none, so the self-declared flag gates it too.
+            if channel == DeliveryChannel.WHATSAPP and not getattr(
+                user, "is_whatsapp_reachable", False
+            ):
                 continue
             delivery = NotificationDelivery(
                 notification_id=notification.id, channel=channel_name, status="pending"

@@ -51,6 +51,7 @@ def signup_route(payload):
         email=payload["email"],
         phone=payload["phone"],
         secondary_phone=payload.get("secondary_phone"),
+        is_whatsapp_reachable=payload.get("is_whatsapp_reachable", False),
         full_name=payload["full_name"],
         password=payload["password"],
         referral_code=payload.get("referral_code"),

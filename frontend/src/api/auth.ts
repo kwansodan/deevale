@@ -5,6 +5,7 @@ export type SignupPayload = {
   email: string
   phone: string
   secondary_phone?: string
+  is_whatsapp_reachable?: boolean
   full_name: string
   password: string
   referral_code?: string

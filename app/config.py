@@ -43,6 +43,7 @@ class Config:
     # How long scanned mail is retained before the shred job removes the scan.
     MAIL_RETENTION_DAYS = int(os.environ.get("MAIL_RETENTION_DAYS", "90"))
 
+    # console = log the code (dev); live = send via EMAIL_SENDER / SMS_SENDER.
     OTP_SENDER = os.environ.get("OTP_SENDER", "console")
     EMAIL_SENDER = os.environ.get("EMAIL_SENDER", "console")  # console | resend
     RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")

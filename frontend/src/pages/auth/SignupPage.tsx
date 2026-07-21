@@ -8,6 +8,7 @@ import { toast } from "sonner"
 
 import { signup } from "@/api/auth"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import {
   Form,
@@ -19,9 +20,12 @@ import {
 } from "@/components/ui/form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
-// Mirrors normalize_mobile() on the backend: a local 0XXXXXXXXX is assumed
-// Ghanaian, anything else must be E.164 so founders abroad can sign up.
-const mobileRe = /^(0\d{9}|\+[1-9]\d{6,14})$/
+// Mirrors normalize_mobile() on the backend exactly, including the Ghanaian
+// 02x/03x/05x prefixes -- a looser client rule just moves the rejection to a
+// 422 after submit. Anything non-Ghanaian must be E.164 so founders abroad
+// can sign up. Shape validation only: it cannot tell a real number from a
+// well-formed one.
+const mobileRe = /^(0(2\d|5\d|3\d)\d{7}|\+[1-9]\d{6,14})$/
 const stripSpacing = (v: string) => v.replace(/[\s-]/g, "")
 
 const signupSchema = z.object({
@@ -38,6 +42,7 @@ const signupSchema = z.object({
       (v) => v === "" || mobileRe.test(v),
       "Enter a valid mobile number, e.g. 024 000 0000 or +44 7700 900000"
     ),
+  is_whatsapp_reachable: z.boolean(),
   password: z.string().min(8, "Password must be at least 8 characters"),
 })
 
@@ -53,7 +58,14 @@ export default function SignupPage() {
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    defaultValues: { full_name: "", email: "", phone: "", secondary_phone: "", password: "" },
+    defaultValues: {
+      full_name: "",
+      email: "",
+      phone: "",
+      secondary_phone: "",
+      is_whatsapp_reachable: false,
+      password: "",
+    },
   })
 
   async function onSubmit(values: SignupFormValues) {
@@ -130,6 +142,25 @@ export default function SignupPage() {
                       <Input type="tel" placeholder="024 000 0000" {...field} />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="is_whatsapp_reachable"
+                render={({ field }) => (
+                  <FormItem className="-mt-1 flex flex-row items-center gap-2 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-muted-foreground font-normal">
+                      This number is on WhatsApp
+                    </FormLabel>
                   </FormItem>
                 )}
               />

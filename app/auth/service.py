@@ -56,6 +56,7 @@ def signup(
     password: str,
     referral_code: str | None = None,
     secondary_phone: str | None = None,
+    is_whatsapp_reachable: bool = False,
 ) -> User:
     if User.query.filter_by(email=email).first() is not None:
         raise ConflictError("An account with this email already exists")
@@ -67,6 +68,7 @@ def signup(
         email=email,
         phone=phone,
         secondary_phone=secondary_phone,
+        is_whatsapp_reachable=is_whatsapp_reachable,
         full_name=full_name,
         password_hash=hash_password(password),
         is_active=True,

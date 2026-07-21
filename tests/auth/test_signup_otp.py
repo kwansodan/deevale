@@ -181,3 +181,49 @@ def test_signup_rejects_invalid_secondary_phone(client):
         },
     )
     assert resp.status_code == 422
+
+
+def test_signup_records_whatsapp_reachability(client, app):
+    client.post(
+        "/auth/signup",
+        json={
+            "email": "onwhatsapp@example.com",
+            "phone": "0244001100",
+            "is_whatsapp_reachable": True,
+            "full_name": "Akua Boateng",
+            "password": "supersecret1",
+        },
+    )
+
+    from app.auth.models import User
+
+    with app.app_context():
+        assert User.query.filter_by(email="onwhatsapp@example.com").first().is_whatsapp_reachable
+
+
+def test_signup_defaults_whatsapp_reachability_to_false(client, app):
+    client.post(
+        "/auth/signup",
+        json={
+            "email": "nowhatsapp@example.com",
+            "phone": "0244001200",
+            "full_name": "Kofi Asare",
+            "password": "supersecret1",
+        },
+    )
+
+    from app.auth.models import User
+
+    with app.app_context():
+        assert User.query.filter_by(email="nowhatsapp@example.com").first().is_whatsapp_reachable is False
+
+
+def test_otp_sender_follows_config(app):
+    from app.auth.otp import ConsoleOtpSender, LiveOtpSender, get_otp_sender
+
+    with app.app_context():
+        app.config["OTP_SENDER"] = "console"
+        assert isinstance(get_otp_sender(), ConsoleOtpSender)
+        app.config["OTP_SENDER"] = "live"
+        assert isinstance(get_otp_sender(), LiveOtpSender)
+        app.config["OTP_SENDER"] = "console"

@@ -29,6 +29,10 @@ class User(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
     # Optional alternate contact. Not unique and not a login identifier -- two
     # people in the same household may legitimately give the same fallback line.
     secondary_phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # Self-declared at signup. WhatsApp delivery is gated on this as well as on
+    # the per-category preference: opting in is pointless if the number has no
+    # WhatsApp account behind it.
+    is_whatsapp_reachable: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
