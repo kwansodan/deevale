@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   Building2,
+  Check,
   CheckCircle2,
   FileSignature,
   Globe2,
@@ -87,9 +88,8 @@ export default function LandingPage() {
             Register your business in Ghana, without the guesswork.
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
-            We handle incorporation with the Office of the Registrar of Companies, tax and SSNIT
-            registration, and the filings that keep you compliant afterwards. You track every stage
-            online.
+            Incorporation, tax and SSNIT registration, and the filings that keep you compliant
+            afterwards.
           </p>
 
           <div className="mt-8">
@@ -110,24 +110,22 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <Card className="border-border mt-8 max-w-2xl">
-            <CardContent className="pt-6">
-              {isForeign ? (
-                <p className="text-sm leading-relaxed">
-                  You can own a Ghanaian company as a non-resident and complete the entire process
-                  without travelling. We prepare the GIPC registration, handle notarised
-                  home-country documents, and give you a registered Ghanaian office address for
-                  official correspondence.
-                </p>
-              ) : (
-                <p className="text-sm leading-relaxed">
-                  Fixed, itemised pricing with government fees shown at cost. Submit your details
-                  and ID once, then follow each stage — name reservation, incorporation, TIN, SSNIT
-                  — from your dashboard instead of chasing anyone for updates.
-                </p>
-              )}
-            </CardContent>
-          </Card>
+          {/* Chips rather than a paragraph: this restated the subhead, and a
+              skimmer met three blocks of prose before reaching the CTA. */}
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {(isForeign
+              ? ["No travel required", "GIPC handled", "Ghanaian office address"]
+              : ["Fixed, itemised pricing", "Government fees at cost", "Every stage tracked"]
+            ).map((chip) => (
+              <li
+                key={chip}
+                className="border-border text-foreground flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm"
+              >
+                <Check className="text-accent size-3.5" />
+                {chip}
+              </li>
+            ))}
+          </ul>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button
@@ -164,43 +162,46 @@ export default function LandingPage() {
         </div>
       )}
 
-      <Section eyebrow="Remote by default" title="You never have to be in the room">
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            {
-              icon: FileSignature,
-              title: "Sign electronically",
-              body: "Constitutions, consent forms and partnership deeds are signed online, in the right order, by every party — wherever they are.",
-            },
-            {
-              icon: ShieldCheck,
-              title: "Upload ID securely",
-              body: "Passports and national IDs go straight into an encrypted vault. Each co-founder verifies themselves on their own account.",
-            },
-            {
-              icon: MapPin,
-              title: "Use our address",
-              body: "Take a registered Ghanaian office address. We receive your official mail, scan it, and it appears in your dashboard.",
-            },
-          ].map(({ icon: Icon, title, body }) => (
-            <div key={title}>
-              <Icon className="text-primary size-5" />
-              <h3 className="mt-3 font-semibold">{title}</h3>
-              <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{body}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+      {/* Foreign path only. Remoteness is the overseas buyer's make-or-break
+          question and barely registers for someone already in Accra, so it
+          does not need its own section for both audiences. */}
+      {isForeign && (
+        <Section eyebrow="Remote by default" title="You never have to be in the room">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: FileSignature,
+                title: "Sign electronically",
+                body: "Every party signs online, in the right order, wherever they are.",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Upload ID securely",
+                body: "Passports go into an encrypted vault. Each co-founder verifies on their own account.",
+              },
+              {
+                icon: MapPin,
+                title: "Use our address",
+                body: "We receive your official mail, scan it, and it appears in your dashboard.",
+              },
+            ].map(({ icon: Icon, title, body }) => (
+              <div key={title}>
+                <Icon className="text-primary size-5" />
+                <h3 className="mt-3 font-semibold">{title}</h3>
+                <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
 
       <Section
         id="pricing"
         eyebrow="Pricing"
         title="What it costs, all in"
       >
-        <p className="text-muted-foreground -mt-4 mb-8 max-w-2xl text-sm">
-          Every quote separates the government fee from our service fee, so you always know what is
-          a statutory charge and what you are paying us.
-        </p>
+        {/* The fee-split point now sits under the grid: it is reassurance, and
+            it was standing between the reader and the actual prices. */}
         <div className="grid gap-4 md:grid-cols-2">
           {visibleEntities.map((entity) => (
             <Card key={entity.key} className="border-border">
@@ -231,6 +232,9 @@ export default function LandingPage() {
             </Card>
           ))}
         </div>
+        <p className="text-muted-foreground mt-4 text-sm">
+          Every quote itemises the government fee separately from ours.
+        </p>
       </Section>
 
       <Section eyebrow="How it works" title="Four steps, tracked end to end">
@@ -255,9 +259,8 @@ export default function LandingPage() {
       {isForeign && (
         <Section eyebrow="Foreign investors" title="What Ghana will require of you">
           <p className="text-muted-foreground -mt-4 mb-8 max-w-2xl text-sm">
-            Foreign-owned entities must meet a minimum equity threshold set by the GIPC Act, and the
-            figure depends on the shape of the business. We confirm which applies to you before you
-            commit to anything.
+            The GIPC Act sets a minimum equity threshold that depends on the shape of the business.
+            We confirm which applies before you commit to anything.
           </p>
           <div className="grid gap-4 md:grid-cols-3">
             {[
@@ -292,14 +295,9 @@ export default function LandingPage() {
         <div className="grid gap-8 md:grid-cols-2">
           <div>
             <p className="text-sm leading-relaxed">
-              Registering is the easy part. Ghanaian companies owe annual returns, tax filings,
-              SSNIT contributions and permit renewals — and the penalties for missing them accrue
-              quietly until they don&apos;t. That risk is heaviest if you are running the company
+              Registering is the easy part. Annual returns, tax filings, SSNIT and permit renewals
+              carry penalties that accrue quietly until they don&apos;t — and that risk is heaviest
               from another country.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed">
-              Our compliance plan tracks every deadline against your specific entity, warns you
-              ahead of time, and — if you want — files on your behalf.
             </p>
           </div>
           <Card className="border-border">
@@ -343,8 +341,8 @@ export default function LandingPage() {
       <Section eyebrow="For firms" title="Law and accounting firms">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
-            Register clients through our partner API, with your own branding, scoped API keys and
-            webhooks for every case event. You keep the relationship; we do the filing.
+            Register clients through our partner API, under your own branding. You keep the
+            relationship; we do the filing.
           </p>
           <Button
             render={

@@ -60,8 +60,7 @@ export const entities: EntityOffer[] = [
   {
     key: "ltd_shares",
     name: "Company Limited by Shares",
-    blurb:
-      "The standard private company for a trading or services business. Shareholders, directors, and a company secretary.",
+    blurb: "The standard private company for a trading or services business.",
     price: str(import.meta.env.VITE_PRICE_LTD_SHARES),
     timeline: str(import.meta.env.VITE_TIMELINE_LTD_SHARES),
     foreignTrack: false,
@@ -69,8 +68,7 @@ export const entities: EntityOffer[] = [
   {
     key: "sole_proprietorship",
     name: "Sole Proprietorship",
-    blurb:
-      "Register a business name in your own name. Fastest and cheapest, but no separation between you and the business.",
+    blurb: "Fastest and cheapest, but no separation between you and the business.",
     price: str(import.meta.env.VITE_PRICE_SOLE_PROP),
     timeline: str(import.meta.env.VITE_TIMELINE_SOLE_PROP),
     foreignTrack: false,
@@ -78,8 +76,7 @@ export const entities: EntityOffer[] = [
   {
     key: "partnership",
     name: "Partnership",
-    blurb:
-      "Two or more partners trading together under a registered partnership agreement.",
+    blurb: "Two or more partners under a registered partnership agreement.",
     price: str(import.meta.env.VITE_PRICE_PARTNERSHIP),
     timeline: str(import.meta.env.VITE_TIMELINE_PARTNERSHIP),
     foreignTrack: false,
@@ -87,8 +84,7 @@ export const entities: EntityOffer[] = [
   {
     key: "ltd_guarantee",
     name: "Company Limited by Guarantee",
-    blurb:
-      "For NGOs, foundations, churches and associations that do not distribute profit to members.",
+    blurb: "For NGOs, foundations and associations that do not distribute profit.",
     price: str(import.meta.env.VITE_PRICE_LTD_GUARANTEE),
     timeline: str(import.meta.env.VITE_TIMELINE_LTD_GUARANTEE),
     foreignTrack: false,
@@ -96,8 +92,7 @@ export const entities: EntityOffer[] = [
   {
     key: "external_company",
     name: "External Company (Branch)",
-    blurb:
-      "Register your existing overseas company as a branch in Ghana. Needs notarised home-country documents and a local manager.",
+    blurb: "Your existing overseas company, registered as a branch in Ghana.",
     price: str(import.meta.env.VITE_PRICE_EXTERNAL_COMPANY),
     timeline: str(import.meta.env.VITE_TIMELINE_EXTERNAL_COMPANY),
     foreignTrack: true,
@@ -105,8 +100,7 @@ export const entities: EntityOffer[] = [
   {
     key: "foreign_ltd_shares",
     name: "Foreign-Owned Company + GIPC",
-    blurb:
-      "A Ghanaian company with foreign shareholders, registered with the Ghana Investment Promotion Centre.",
+    blurb: "A Ghanaian company with foreign shareholders, registered with the GIPC.",
     price: str(import.meta.env.VITE_PRICE_FOREIGN_LTD),
     timeline: str(import.meta.env.VITE_TIMELINE_FOREIGN_LTD),
     foreignTrack: true,
