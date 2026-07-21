@@ -34,7 +34,7 @@
     "progress": "Progress",
     "documents": "Documents",
     "messages": "Messages",
-    "nothingNeeded": "Nothing needed from you right now — we'll let you know the moment that changes. 🎉"
+    "nothingNeeded": "Nothing needed from you right now. We'll let you know the moment that changes. 🎉"
   },
   "status": {
     "notStarted": "Not started",
@@ -47,7 +47,7 @@
   "money": {
     "title": "Money",
     "subtitle": "Invoice your customers and track expenses.",
-    "notAccountingNote": "This is a lightweight record-keeping tool, not full accounting software. It won't file your taxes — export the CSV for your accountant when you need a proper set of books.",
+    "notAccountingNote": "This is a lightweight record-keeping tool, not full accounting software. It won't file your taxes. Export the CSV for your accountant when you need a proper set of books.",
     "invoices": "Invoices",
     "expenses": "Expenses",
     "reports": "Reports",
@@ -60,7 +60,7 @@
     "copyLink": "Copy invite link",
     "balance": "Available credit",
     "ledger": "Credit history",
-    "empty": "No credits yet — share your code to start earning."
+    "empty": "No credits yet. Share your code to start earning."
   },
   "common": {
     "back": "Back",

@@ -296,7 +296,7 @@ export default function LandingPage() {
           <div>
             <p className="text-sm leading-relaxed">
               Registering is the easy part. Annual returns, tax filings, SSNIT and permit renewals
-              carry penalties that accrue quietly until they don&apos;t — and that risk is heaviest
+              carry penalties that accrue quietly until they don&apos;t. That risk is heaviest
               from another country.
             </p>
           </div>

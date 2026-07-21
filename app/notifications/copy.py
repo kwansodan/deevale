@@ -14,7 +14,7 @@ class _DefaultDict(dict):
 NOTIFICATION_COPY = {
     "stage_completed": {
         "title": "Stage complete: {stage_name}",
-        "body": "\U0001f389 Great news — '{stage_name}' is done for {business_name}. {next_step}",
+        "body": "\U0001f389 Great news: '{stage_name}' is done for {business_name}. {next_step}",
     },
     "action_required": {
         "title": "Action needed: {task_name}",
