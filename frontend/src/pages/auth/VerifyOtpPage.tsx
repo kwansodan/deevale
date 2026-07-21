@@ -37,7 +37,7 @@ export default function VerifyOtpPage() {
 
   async function onSubmit(values: OtpFormValues) {
     if (!identifier) {
-      toast.error("Missing phone number -- please sign up again.")
+      toast.error("Missing email address -- please sign up again.")
       return
     }
     setIsSubmitting(true)

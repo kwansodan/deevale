@@ -4,6 +4,7 @@ import type { CurrentUser } from "@/stores/auth"
 export type SignupPayload = {
   email: string
   phone: string
+  secondary_phone?: string
   full_name: string
   password: string
   referral_code?: string

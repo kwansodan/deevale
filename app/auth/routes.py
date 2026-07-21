@@ -50,12 +50,13 @@ def signup_route(payload):
     user = signup(
         email=payload["email"],
         phone=payload["phone"],
+        secondary_phone=payload.get("secondary_phone"),
         full_name=payload["full_name"],
         password=payload["password"],
         referral_code=payload.get("referral_code"),
     )
     db.session.commit()
-    return {"user_id": str(user.id), "message": "Signup successful. Check your phone for a verification code."}
+    return {"user_id": str(user.id), "message": "Signup successful. Check your email for a verification code."}
 
 
 @blp.route("/verify-otp", methods=["POST"])
@@ -85,7 +86,8 @@ def login_route(payload):
         db.session.commit()
         raise UnauthorizedError("Incorrect email or password")
 
-    if not user.is_phone_verified:
+    # Signup verification is by email now, so that is the flag that gates login.
+    if not user.is_email_verified:
         raise UnauthorizedError("Please verify your account before logging in")
 
     tokens = build_tokens(user)

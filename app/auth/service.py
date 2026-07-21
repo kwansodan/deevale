@@ -49,7 +49,14 @@ def get_or_create_role(name: RoleName) -> Role:
     return role
 
 
-def signup(email: str, phone: str, full_name: str, password: str, referral_code: str | None = None) -> User:
+def signup(
+    email: str,
+    phone: str,
+    full_name: str,
+    password: str,
+    referral_code: str | None = None,
+    secondary_phone: str | None = None,
+) -> User:
     if User.query.filter_by(email=email).first() is not None:
         raise ConflictError("An account with this email already exists")
     if User.query.filter_by(phone=phone).first() is not None:
@@ -59,6 +66,7 @@ def signup(email: str, phone: str, full_name: str, password: str, referral_code:
         id=uuid.uuid4(),
         email=email,
         phone=phone,
+        secondary_phone=secondary_phone,
         full_name=full_name,
         password_hash=hash_password(password),
         is_active=True,
@@ -74,7 +82,10 @@ def signup(email: str, phone: str, full_name: str, password: str, referral_code:
 
         link_referral(user, referral_code)
 
-    issue_otp(identifier=phone, purpose=OtpPurpose.SIGNUP, channel=OtpChannel.SMS, user_id=user.id)
+    # Verification goes to email, not SMS: the primary mobile may now be any
+    # country, and email delivery is both cheaper and not subject to the
+    # international SMS routing that a Ghana-only sender ID cannot cover.
+    issue_otp(identifier=email, purpose=OtpPurpose.SIGNUP, channel=OtpChannel.EMAIL, user_id=user.id)
     return user
 
 

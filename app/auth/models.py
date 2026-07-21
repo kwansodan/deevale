@@ -26,6 +26,9 @@ class User(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
 
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     phone: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
+    # Optional alternate contact. Not unique and not a login identifier -- two
+    # people in the same household may legitimately give the same fallback line.
+    secondary_phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
