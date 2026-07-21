@@ -126,6 +126,44 @@ export const compliance = {
   registeredAddressPrice: str(import.meta.env.VITE_PRICE_REGISTERED_ADDRESS),
 }
 
+export type StageState = "done" | "active" | "upcoming"
+export type TrackerStage = { name: string; sla: string; state: StageState }
+
+/**
+ * The stage sequences shown in the hero device. These mirror the real workflows
+ * in app/workflow/seed_workflow_company_ltd.py and workflow_library.py, names
+ * and SLAs included — it is an illustrative case, not a mock-up of something
+ * the product does not do.
+ */
+export const trackerStages: Record<"local" | "foreign", TrackerStage[]> = {
+  local: [
+    { name: "Name Reservation", sla: "72h", state: "done" },
+    { name: "Incorporation", sla: "120h", state: "done" },
+    { name: "Tax Registration", sla: "72h", state: "active" },
+    { name: "SSNIT Registration", sla: "72h", state: "upcoming" },
+    { name: "Business Operating Permit", sla: "120h", state: "upcoming" },
+  ],
+  foreign: [
+    { name: "Home-Country Documents", sla: "—", state: "done" },
+    { name: "Name Reservation", sla: "72h", state: "done" },
+    { name: "Incorporation", sla: "120h", state: "active" },
+    { name: "GIPC Registration", sla: "240h", state: "upcoming" },
+    { name: "Tax Registration", sla: "72h", state: "upcoming" },
+  ],
+}
+
+/**
+ * Figures below the hero. Every one is a fact derivable from the workflow
+ * library rather than a marketing claim, so none of them can be wrong.
+ * Claim-shaped numbers (registrations completed, years operating) stay in
+ * `company` above and hide when unset.
+ */
+export const figures = [
+  { value: "5", label: "stages, tracked end to end" },
+  { value: "4", label: "agencies handled for you" },
+  { value: "72h", label: "target on name reservation" },
+]
+
 export const legal = {
   termsUrl: str(import.meta.env.VITE_TERMS_URL),
   privacyUrl: str(import.meta.env.VITE_PRIVACY_URL),

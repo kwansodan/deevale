@@ -18,10 +18,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Wordmark } from "@/components/Wordmark"
+import { StageTracker } from "@/components/landing/StageTracker"
+import { CertificateMark } from "@/components/landing/CertificateMark"
+import { useInView } from "@/hooks/useInView"
+import { cn } from "@/lib/utils"
 import {
   company,
   compliance,
   entities,
+  figures,
   gipc,
   hasTrustSignals,
   legal,
@@ -39,25 +44,74 @@ function Figure({ value, fallback }: { value: string | null; fallback: string })
   return <span>{value}</span>
 }
 
+/** A bordered square container, so icons read as one system rather than confetti. */
+function IconTile({ icon: Icon }: { icon: typeof ShieldCheck }) {
+  return (
+    <span className="border-border bg-secondary text-accent flex size-9 items-center justify-center rounded-md border">
+      <Icon className="size-4" />
+    </span>
+  )
+}
+
+/**
+ * Sections previously shared identical metrics, which is what made the page read
+ * as chapters of a textbook. `surface` and `width` exist so the rhythm can be
+ * varied deliberately rather than by hand-rolling classes at each call site.
+ */
 function Section({
   id,
   eyebrow,
   title,
+  surface = "default",
+  width = "wide",
+  center = false,
   children,
 }: {
   id?: string
   eyebrow?: string
   title: string
+  surface?: "default" | "tinted" | "ink"
+  width?: "wide" | "narrow"
+  center?: boolean
   children: React.ReactNode
 }) {
+  const { ref, inView } = useInView<HTMLDivElement>()
   return (
-    <section id={id} className="border-border border-t px-4 py-16 md:py-24">
-      <div className="mx-auto max-w-5xl">
+    <section
+      id={id}
+      className={cn(
+        "px-4 py-16 md:py-24",
+        surface === "default" && "border-border border-t",
+        surface === "tinted" && "bg-secondary/40 border-border border-y",
+        surface === "ink" && "bg-primary text-primary-foreground"
+      )}
+    >
+      <div
+        ref={ref}
+        className={cn(
+          "mx-auto",
+          width === "wide" ? "max-w-5xl" : "max-w-3xl",
+          center && "text-center",
+          // Starts visible; only hidden while waiting when motion is allowed,
+          // so reduced-motion readers never get a blank section.
+          "motion-safe:transition-all motion-safe:duration-700",
+          !inView && "motion-safe:translate-y-3 motion-safe:opacity-0"
+        )}
+      >
         {eyebrow && (
-          <p className="text-primary mb-2 text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>
+          <p
+            className={cn(
+              "mb-2 text-sm font-semibold tracking-wide uppercase",
+              // accent-400 rather than --accent: brass at #8A6D3B is only
+              // 3.61:1 on the ink ground, which fails AA at this size.
+              surface === "ink" ? "text-accent-400" : "text-primary"
+            )}
+          >
+            {eyebrow}
+          </p>
         )}
         <h2 className="text-2xl font-bold tracking-tight md:text-3xl">{title}</h2>
-        <div className="mt-8">{children}</div>
+        <div className={cn("mt-8", center && "text-left")}>{children}</div>
       </div>
     </section>
   )
@@ -70,7 +124,9 @@ export default function LandingPage() {
 
   return (
     <div className="bg-background min-h-svh">
-      <header className="border-border sticky top-0 z-10 border-b backdrop-blur">
+      {/* Needs its own translucent ground: bare backdrop-blur left the header
+          transparent, so the ink-navy wordmark vanished over the ink section. */}
+      <header className="border-border bg-background/85 sticky top-0 z-10 border-b backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Wordmark size="md" />
           <nav className="flex items-center gap-2">
@@ -83,8 +139,9 @@ export default function LandingPage() {
       {/* Hero + the audience fork. The product itself branches on
           WorkflowDefinition.variant standard|foreign, so the page does too. */}
       <section className="px-4 py-16 md:py-24">
-        <div className="mx-auto max-w-5xl">
-          <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-balance md:text-5xl">
+        <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1.05fr_0.95fr]">
+          <div>
+          <h1 className="text-3xl font-bold tracking-tight text-balance md:text-5xl">
             Register your business in Ghana, without the guesswork.
           </h1>
           <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
@@ -139,7 +196,23 @@ export default function LandingPage() {
             />
             <Button render={<a href="#pricing">See pricing</a>} nativeButton={false} variant="outline" size="lg" />
           </div>
+          </div>
+
+          {/* The page's main image: the product's own case timeline. */}
+          <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-700">
+            <StageTracker audience={audience} />
+          </div>
         </div>
+
+        {/* Figures derived from the workflow library, not marketing claims. */}
+        <dl className="mx-auto mt-16 grid max-w-5xl grid-cols-3 gap-6 border-t pt-8">
+          {figures.map((f) => (
+            <div key={f.label}>
+              <dt className="font-heading text-3xl font-semibold md:text-4xl">{f.value}</dt>
+              <dd className="text-muted-foreground mt-1 text-sm">{f.label}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       {hasTrustSignals && (
@@ -186,7 +259,7 @@ export default function LandingPage() {
               },
             ].map(({ icon: Icon, title, body }) => (
               <div key={title}>
-                <Icon className="text-primary size-5" />
+                <IconTile icon={Icon} />
                 <h3 className="mt-3 font-semibold">{title}</h3>
                 <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{body}</p>
               </div>
@@ -195,11 +268,7 @@ export default function LandingPage() {
         </Section>
       )}
 
-      <Section
-        id="pricing"
-        eyebrow="Pricing"
-        title="What it costs, all in"
-      >
+      <Section id="pricing" eyebrow="Pricing" title="What it costs, all in" surface="tinted">
         {/* The fee-split point now sits under the grid: it is reassurance, and
             it was standing between the reader and the actual prices. */}
         <div className="grid gap-4 md:grid-cols-2">
@@ -237,7 +306,7 @@ export default function LandingPage() {
         </p>
       </Section>
 
-      <Section eyebrow="How it works" title="Four steps, tracked end to end">
+      <Section eyebrow="How it works" title="Four steps, tracked end to end" center>
         <ol className="grid gap-6 md:grid-cols-4">
           {[
             ["Tell us about the business", "A guided questionnaire works out the right structure and what the law requires of it."],
@@ -291,7 +360,7 @@ export default function LandingPage() {
         </Section>
       )}
 
-      <Section eyebrow="After you're registered" title="The part that catches people out">
+      <Section eyebrow="After you're registered" title="The part that catches people out" surface="ink">
         <div className="grid gap-8 md:grid-cols-2">
           <div>
             <p className="text-sm leading-relaxed">
@@ -338,7 +407,7 @@ export default function LandingPage() {
         </div>
       </Section>
 
-      <Section eyebrow="For firms" title="Law and accounting firms">
+      <Section eyebrow="For firms" title="Law and accounting firms" width="narrow">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
             Register clients through our partner API, under your own branding. You keep the
@@ -356,7 +425,9 @@ export default function LandingPage() {
         </div>
       </Section>
 
-      <Section title="Ready to start?">
+      <Section title="Ready to start?" width="narrow">
+        <div className="grid items-center gap-10 sm:grid-cols-[1fr_auto]">
+          <div>
         <div className="flex flex-wrap gap-3">
           <Button
             render={
@@ -375,6 +446,12 @@ export default function LandingPage() {
               size="lg"
             />
           )}
+            </div>
+            <p className="text-muted-foreground mt-4 text-sm">
+              Most registrations start the same day we receive your documents.
+            </p>
+          </div>
+          <CertificateMark className="hidden h-44 w-auto sm:block" />
         </div>
       </Section>
 
