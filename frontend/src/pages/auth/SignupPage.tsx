@@ -4,12 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { Eye, EyeOff } from "lucide-react"
+import { isValidPhoneNumber } from "libphonenumber-js/min"
 import { toast } from "sonner"
 
 import { signup } from "@/api/auth"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { PhoneField } from "@/components/PhoneField"
 import {
   Form,
   FormControl,
@@ -20,28 +22,16 @@ import {
 } from "@/components/ui/form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
-// Mirrors normalize_mobile() on the backend exactly, including the Ghanaian
-// 02x/03x/05x prefixes -- a looser client rule just moves the rejection to a
-// 422 after submit. Anything non-Ghanaian must be E.164 so founders abroad
-// can sign up. Shape validation only: it cannot tell a real number from a
-// well-formed one.
-const mobileRe = /^(0(2\d|5\d|3\d)\d{7}|\+[1-9]\d{6,14})$/
-const stripSpacing = (v: string) => v.replace(/[\s-]/g, "")
+// PhoneField hands us E.164, so validation is real per-country metadata rather
+// than a shape regex: this rejects a number that is the wrong length for its
+// country, or in an unassigned range.
+const INVALID_MOBILE = "Enter a valid mobile number for the country you selected"
 
 const signupSchema = z.object({
   full_name: z.string().min(2, "Enter your full name"),
   email: z.string().email("Enter a valid email address"),
-  phone: z
-    .string()
-    .transform(stripSpacing)
-    .refine((v) => mobileRe.test(v), "Enter a valid mobile number, e.g. 024 000 0000 or +44 7700 900000"),
-  secondary_phone: z
-    .string()
-    .transform(stripSpacing)
-    .refine(
-      (v) => v === "" || mobileRe.test(v),
-      "Enter a valid mobile number, e.g. 024 000 0000 or +44 7700 900000"
-    ),
+  phone: z.string().refine((v) => isValidPhoneNumber(v), INVALID_MOBILE),
+  secondary_phone: z.string().refine((v) => v === "" || isValidPhoneNumber(v), INVALID_MOBILE),
   is_whatsapp_reachable: z.boolean(),
   password: z.string().min(8, "Password must be at least 8 characters"),
 })
@@ -139,7 +129,13 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Mobile number</FormLabel>
                     <FormControl>
-                      <Input type="tel" placeholder="024 000 0000" {...field} />
+                      <PhoneField
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        placeholder="24 000 0000"
+                        ariaLabel="Mobile number"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,7 +170,13 @@ export default function SignupPage() {
                       <span className="text-muted-foreground font-normal">(optional)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input type="tel" placeholder="Another number we can reach you on" {...field} />
+                      <PhoneField
+                        value={field.value}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
+                        placeholder="Another number for you"
+                        ariaLabel="Secondary mobile number"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
