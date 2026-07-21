@@ -31,7 +31,7 @@ function EmptyState() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button render={<Link to="/app/start">Start a new business</Link>} />
+        <Button render={<Link to="/app/start">Start a new business</Link>} nativeButton={false} />
       </CardContent>
     </Card>
   )

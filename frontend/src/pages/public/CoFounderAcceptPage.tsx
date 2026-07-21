@@ -68,7 +68,10 @@ export default function CoFounderAcceptPage() {
                     <CheckCircle2 className="size-5" />
                     You've joined {data.business_name}.
                   </div>
-                  <Button render={<Link to="/app">Go to your dashboard to verify your ID</Link>} />
+                  <Button
+                    render={<Link to="/app">Go to your dashboard to verify your ID</Link>}
+                    nativeButton={false}
+                  />
                 </div>
               ) : !user ? (
                 <div className="grid gap-3 text-sm">

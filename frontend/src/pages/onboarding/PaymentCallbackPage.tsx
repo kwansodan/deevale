@@ -34,7 +34,7 @@ export default function PaymentCallbackPage() {
     return (
       <div className="mx-auto max-w-xl text-center">
         <p className="text-muted-foreground text-sm">Missing case reference.</p>
-        <Button className="mt-4" render={<Link to="/app">Go to dashboard</Link>} />
+        <Button className="mt-4" render={<Link to="/app">Go to dashboard</Link>} nativeButton={false} />
       </div>
     )
   }
@@ -78,7 +78,7 @@ export default function PaymentCallbackPage() {
             </p>
           )}
           <div className="mt-6 flex justify-center">
-            <Button render={<Link to="/app">Go to my dashboard</Link>} />
+            <Button render={<Link to="/app">Go to my dashboard</Link>} nativeButton={false} />
           </div>
         </CardContent>
       </Card>

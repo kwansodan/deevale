@@ -2,10 +2,12 @@ import { lazy, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import { useAuthBootstrap } from "@/hooks/useAuthBootstrap"
+import { useAuthStore } from "@/stores/auth"
 import { RequireAuth, RequireStaff } from "@/routes/AuthGuard"
 import ClientLayout from "@/layouts/ClientLayout"
 import OpsLayout from "@/layouts/OpsLayout"
 
+const LandingPage = lazy(() => import("@/pages/public/LandingPage"))
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"))
 const SignupPage = lazy(() => import("@/pages/auth/SignupPage"))
 const VerifyOtpPage = lazy(() => import("@/pages/auth/VerifyOtpPage"))
@@ -32,6 +34,15 @@ const ReportsPage = lazy(() => import("@/pages/ops/ReportsPage"))
 const PartnersPage = lazy(() => import("@/pages/ops/PartnersPage"))
 const SettingsPage = lazy(() => import("@/pages/ops/SettingsPage"))
 
+/**
+ * "/" is the public marketing page for logged-out visitors, but people who are
+ * already signed in expect the app, not a sales pitch.
+ */
+function RootRoute() {
+  const accessToken = useAuthStore((s) => s.accessToken)
+  return accessToken ? <Navigate to="/app" replace /> : <LandingPage />
+}
+
 function PageFallback() {
   return (
     <div className="text-muted-foreground flex min-h-svh items-center justify-center text-sm">Loading…</div>
@@ -48,7 +59,7 @@ export default function App() {
   return (
     <Suspense fallback={<PageFallback />}>
       <Routes>
-        <Route path="/" element={<Navigate to="/app" replace />} />
+        <Route path="/" element={<RootRoute />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/verify-otp" element={<VerifyOtpPage />} />
