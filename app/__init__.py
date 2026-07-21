@@ -19,7 +19,13 @@ def create_app(env_name: str | None = None) -> Flask:
     jwt.init_app(app)
     cors.init_app(app, resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}}, supports_credentials=True)
     limiter.init_app(app)
-    socketio.init_app(app, message_queue=app.config["REDIS_URL"])
+    # The frontend is served from a different origin (Vercel), so the socket
+    # handshake is cross-origin and must be pinned to the same allowlist as REST.
+    socketio.init_app(
+        app,
+        message_queue=app.config["REDIS_URL"],
+        cors_allowed_origins=app.config["CORS_ORIGINS"],
+    )
     api.init_app(app)
 
     register_error_handlers(app)

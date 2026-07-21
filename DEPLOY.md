@@ -1,40 +1,70 @@
-# Deploying Deevale GH to a single VPS
+# Deploying Deevale GH
 
-Target: one Ubuntu VPS (DigitalOcean / Hetzner, 2 GB RAM minimum) running
-Docker Compose, with Caddy terminating TLS in front of the stack.
+The frontend and backend are deployed separately:
 
-## 1. Server prep
+| Piece | Where | Hostname |
+|---|---|---|
+| React SPA | Vercel (static) | `app.deevalegh.com` |
+| Flask API, Celery, Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
+
+They are **different origins**, so the browser talks to the API cross-origin.
+That works because auth is Bearer-token based, not cookie based — but it means
+`CORS_ORIGINS` on the API must list the exact frontend origin or every request
+fails in the browser while working fine from curl.
+
+> **All-in-one alternative.** If you would rather run everything on the VPS
+> under one hostname, `frontend/Dockerfile` + `frontend/nginx.conf` still do
+> that: nginx serves the bundle and proxies `/api/` and `/socket.io/` to Flask
+> on the same origin. Re-add the `web` service to `docker-compose.prod.yml`,
+> skip the Vercel section, and note that API paths then gain an `/api` prefix.
+> Everything below assumes the split deploy.
+
+---
+
+## Part 1 — Backend on the VPS
+
+### 1. Server prep
+
+2 GB RAM minimum (WeasyPrint and the Node-free API image are the floor; 4 GB
+if you also run backups on the box).
 
 ```bash
 apt update && apt install -y docker.io docker-compose-v2 caddy
 ```
 
-Point your DNS `A` record (e.g. `app.deevalegh.com`) at the server.
+Point a DNS `A` record for `api.deevalegh.com` at the server.
 
-## 2. Clone and configure
+### 2. Clone and configure
 
 ```bash
-git clone <your-repo> /opt/deevalegh && cd /opt/deevalegh
+git clone https://github.com/kwansodan/deevalegh.git /opt/deevalegh
+cd /opt/deevalegh
 cp .env.example .env
 ```
 
-Edit `.env` and set **real values** — every secret must come from here, never
-from code:
+Edit `.env` and set **real values** — every secret comes from here, never from
+code:
 
 - `SECRET_KEY`, `JWT_SECRET_KEY` — long random strings (`openssl rand -hex 32`)
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`
 - `S3_ACCESS_KEY`, `S3_SECRET_KEY` — MinIO root credentials
-- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` — **live** keys from the Paystack dashboard
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` — **live** keys
 - `SENDGRID_API_KEY`, `EMAIL_SENDER=sendgrid`, `EMAIL_FROM_ADDRESS`
 - `CORS_ORIGINS=https://app.deevalegh.com`
 
-## 3. Build and start
+> ⚠️ **`CORS_ORIGINS` order is load-bearing.** The first entry doubles as the
+> public frontend base URL when generating invoice payment links
+> (`app/bookkeeping/tasks.py`) and referral / co-founder links
+> (`app/referrals/routes.py`). If you put a preview or localhost origin first,
+> clients get emailed broken links. Production origin goes first, always.
+
+### 3. Build and start
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-First boot only — run migrations and seed the workflow/fee data:
+First boot only — migrations and seed data:
 
 ```bash
 docker compose -f docker-compose.prod.yml exec api flask --app wsgi db upgrade
@@ -43,16 +73,16 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_fee_sche
 docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow_definitions
 ```
 
-Then update the fee schedule amounts with the real current government fees via
+Then replace the seeded fee amounts with the real current government fees via
 the admin UI (`/ops/settings`) — the seeded figures are placeholders.
 
-## 4. TLS with Caddy
+### 4. TLS with Caddy
 
 `/etc/caddy/Caddyfile`:
 
 ```
-app.deevalegh.com {
-    reverse_proxy 127.0.0.1:8080
+api.deevalegh.com {
+    reverse_proxy 127.0.0.1:8000
 }
 ```
 
@@ -60,23 +90,77 @@ app.deevalegh.com {
 systemctl reload caddy
 ```
 
-Caddy provisions and renews Let's Encrypt certificates automatically. The
-`web` container serves the SPA and proxies `/api/` + `/socket.io/` to Flask
-internally, so only port 8080 (bound to localhost) needs exposing to Caddy.
+Caddy provisions and renews Let's Encrypt certificates automatically, and
+proxies WebSocket upgrades for `/socket.io/` without extra configuration. The
+API container binds to `127.0.0.1:8000`, so it is only reachable through Caddy.
 
-## 5. Paystack webhook
+Verify before touching the frontend:
 
-In the Paystack dashboard set the webhook URL to:
-
-```
-https://app.deevalegh.com/api/payments/webhook/paystack
+```bash
+curl https://api.deevalegh.com/health
 ```
 
-## 6. Operations
+### 5. Paystack webhook
+
+```
+https://api.deevalegh.com/payments/webhook/paystack
+```
+
+> Note the **absence of an `/api` prefix**. Blueprints are mounted at the root;
+> the old prefix existed only because the nginx container rewrote `/api/` →
+> `/`. In the split deploy the browser and Paystack hit Flask directly.
+
+---
+
+## Part 2 — Frontend on Vercel
+
+Import the GitHub repo at vercel.com, then:
+
+- **Root Directory**: `frontend` (the repo root is Python)
+- Uncheck "Include source files outside of the Root Directory"
+- Framework preset: **Vite** — build command and output dir come from
+  `frontend/vercel.json`
+
+Environment variables (Production **and** Preview):
+
+| Key | Value |
+|---|---|
+| `VITE_API_BASE_URL` | `https://api.deevalegh.com` |
+| `VITE_SOCKET_URL` | `https://api.deevalegh.com` |
+
+These are **baked into the bundle at build time**, so changing one needs a
+redeploy, not a restart. They are also readable by anyone who opens devtools —
+never put a secret behind a `VITE_` prefix.
+
+Add `app.deevalegh.com` under Domains and point the CNAME.
+
+`frontend/vercel.json` supplies the SPA catch-all rewrite (so deep links and
+the public `/pay/:token` and `/sign/:token` pages survive a hard refresh) and
+sets `sw.js` to revalidate, so the auto-updating service worker is never
+pinned to a stale shell by the CDN.
+
+---
+
+## Operations
 
 - **Logs**: `docker compose -f docker-compose.prod.yml logs -f api worker`
 - **Update**: `git pull && docker compose -f docker-compose.prod.yml up -d --build`
 - **DB backup**: `docker compose -f docker-compose.prod.yml exec postgres pg_dump -U $POSTGRES_USER deevalegh > backup.sql`
-- **MinIO bucket policy**: the documents bucket is private by default; all
-  client access goes through short-lived presigned URLs issued by the API.
-  Never attach a public-read policy to it.
+- **MinIO bucket policy**: the documents bucket is private; all client access
+  goes through short-lived presigned URLs issued by the API. Never attach a
+  public-read policy to it.
+
+### Socket.IO and worker count
+
+`app/extensions.py` runs Socket.IO in `threading` mode. Two things keep that
+safe across the 4 gunicorn workers in `Dockerfile`:
+
+1. `message_queue` is set to Redis, so an event emitted by one worker reaches
+   clients connected to any other.
+2. `simple-websocket` is installed, so clients get a real WebSocket — one
+   persistent connection pinned to one worker.
+
+If you remove `simple-websocket`, Socket.IO silently falls back to HTTP
+long-polling, where consecutive polls land on different workers and the
+session breaks. In that case you must drop to one worker or configure sticky
+sessions in Caddy.

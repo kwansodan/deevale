@@ -39,6 +39,10 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
+    # Caddy terminates TLS on the host and proxies to this port. Bound to
+    # loopback so the API is never reachable except through Caddy.
+    ports:
+      - "127.0.0.1:8000:8000"
     environment:
       DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/deevalegh
       REDIS_URL: redis://redis:6379/0
@@ -81,14 +85,11 @@ services:
     depends_on:
       - api
 
-  web:
-    build:
-      context: ./frontend
-    restart: unless-stopped
-    depends_on:
-      - api
-    ports:
-      - "127.0.0.1:8080:80"
+  # NOTE: there is deliberately no `web` service here. The SPA is deployed to
+  # Vercel and talks to this stack cross-origin at api.deevalegh.com, so the
+  # nginx container that used to serve the bundle and proxy /api is redundant.
+  # frontend/Dockerfile + frontend/nginx.conf are kept for the all-in-one
+  # fallback (see DEPLOY.md) but are not built by this compose file.
 
 volumes:
   pgdata:
