@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Wordmark } from "@/components/Wordmark"
 import {
   company,
   compliance,
@@ -70,7 +71,7 @@ export default function LandingPage() {
     <div className="bg-background min-h-svh">
       <header className="border-border sticky top-0 z-10 border-b backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="text-primary text-lg font-bold">Deevale GH</span>
+          <Wordmark size="md" />
           <nav className="flex items-center gap-2">
             <Button render={<Link to="/login">Log in</Link>} nativeButton={false} variant="ghost" size="sm" />
             <Button render={<Link to="/signup">Get started</Link>} nativeButton={false} size="sm" />

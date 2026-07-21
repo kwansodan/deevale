@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Wordmark } from "@/components/Wordmark"
 
 function SignatureCanvas({ onChange }: { onChange: (dataUrl: string | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -23,7 +24,9 @@ function SignatureCanvas({ onChange }: { onChange: (dataUrl: string | null) => v
     if (!ctx) return
     ctx.lineWidth = 2
     ctx.lineCap = "round"
-    ctx.strokeStyle = "#14532D"
+    // Signature ink, not a brand colour -- this ends up on an executed
+    // document, where anything other than near-black reads as a novelty.
+    ctx.strokeStyle = "#1A1D21"
   }, [])
 
   function pos(e: React.PointerEvent<HTMLCanvasElement>) {
@@ -119,7 +122,7 @@ export default function SignPage() {
   return (
     <div className="bg-background flex min-h-svh items-start justify-center px-4 py-8">
       <div className="w-full max-w-xl">
-        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
+        <p className="mb-4 text-center"><Wordmark size="md" /></p>
         {isLoading ? (
           <Skeleton className="h-96 w-full" />
         ) : isError || !data ? (

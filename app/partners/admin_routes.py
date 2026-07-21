@@ -42,7 +42,7 @@ def create_partner_route(payload):
         slug=payload["slug"],
         contact_email=payload.get("contact_email"),
         logo_url=payload.get("logo_url"),
-        accent_color=payload.get("accent_color", "#14532D"),
+        accent_color=payload.get("accent_color", "#131A24"),
         rate_limit_per_hour=payload.get("rate_limit_per_hour", 1000),
     )
     db.session.add(partner)

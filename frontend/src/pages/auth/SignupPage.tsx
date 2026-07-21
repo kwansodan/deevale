@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Wordmark } from "@/components/Wordmark"
 
 // PhoneField hands us E.164, so validation is real per-country metadata rather
 // than a shape regex: this rejects a number that is the wrong length for its
@@ -88,7 +89,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm border-border">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">
-            <span className="text-primary text-2xl font-bold">Deevale GH</span>
+            <Wordmark size="lg" />
           </div>
           <CardTitle className="text-xl">Start your business journey</CardTitle>
           <CardDescription>Register in minutes, we'll guide you the rest of the way.</CardDescription>

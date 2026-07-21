@@ -78,7 +78,7 @@ class PartnerSchema(Schema):
     slug = fields.String(required=True, validate=validate.Length(min=1, max=64))
     contact_email = fields.Email(load_default=None, allow_none=True)
     logo_url = fields.String(load_default=None, allow_none=True)
-    accent_color = fields.String(load_default="#14532D")
+    accent_color = fields.String(load_default="#131A24")
     status = fields.String(dump_only=True)
     rate_limit_per_hour = fields.Integer(load_default=1000)
     created_at = fields.DateTime(dump_only=True)

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import { formatMoney, getPublicInvoice } from "@/api/bookkeeping"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Wordmark } from "@/components/Wordmark"
 
 type PublicInvoice = {
   invoice_number: string
@@ -31,7 +32,7 @@ export default function PayInvoicePage() {
   return (
     <div className="bg-background flex min-h-svh items-start justify-center px-4 py-10">
       <div className="w-full max-w-lg">
-        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
+        <p className="mb-4 text-center"><Wordmark size="md" /></p>
         {isLoading ? (
           <Skeleton className="h-80 w-full" />
         ) : isError || !data ? (

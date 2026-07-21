@@ -2,11 +2,18 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/newsreader";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  /* "Ink & Bone": a near-monochrome ink-navy on warm bone paper, with brass
+     used sparingly. Authority comes from typography and whitespace rather than
+     colour, which is why the hues below are so restrained.
+
+     Newsreader carries headings and the wordmark; Geist stays on body copy,
+     forms and data, where a serif would cost legibility in the ops queue. */
+  --font-heading: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Geist Variable', sans-serif;
 
   /* shadcn semantic tokens -- dark-mode aware via :root / .dark below */
@@ -43,29 +50,29 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Full brand ramps -- fixed swatches (bg-primary-50..900, bg-accent-50..900),
-     independent of light/dark mode. #14532D sits at primary-800, #D4A017 at
-     accent-500, matching the brief's "centered on" values. */
-  --color-primary-50: #eaf6ee;
-  --color-primary-100: #cdebd7;
-  --color-primary-200: #a0d9b3;
-  --color-primary-300: #6cbe8b;
-  --color-primary-400: #429f68;
-  --color-primary-500: #2a7d4c;
-  --color-primary-600: #1f663c;
-  --color-primary-700: #1a5834;
-  --color-primary-800: #14532d;
-  --color-primary-900: #0d3a1f;
+     independent of light/dark mode. Ink navy #131A24 sits at primary-900 (it is
+     deliberately near-black); brass #8A6D3B at accent-500. */
+  --color-primary-50: #f4f6f8;
+  --color-primary-100: #e6eaef;
+  --color-primary-200: #c9d1db;
+  --color-primary-300: #a3afbf;
+  --color-primary-400: #74839a;
+  --color-primary-500: #4e5d75;
+  --color-primary-600: #384559;
+  --color-primary-700: #262f3e;
+  --color-primary-800: #1a2230;
+  --color-primary-900: #131a24;
 
-  --color-accent-50: #fdf6e3;
-  --color-accent-100: #faeac0;
-  --color-accent-200: #f5d68a;
-  --color-accent-300: #efc154;
-  --color-accent-400: #e2ae2e;
-  --color-accent-500: #d4a017;
-  --color-accent-600: #b27f13;
-  --color-accent-700: #8f6410;
-  --color-accent-800: #6d4c0d;
-  --color-accent-900: #3d2e05;
+  --color-accent-50: #faf6ee;
+  --color-accent-100: #f2e9d6;
+  --color-accent-200: #e4d2ae;
+  --color-accent-300: #d2b67f;
+  --color-accent-400: #b8934f;
+  --color-accent-500: #8a6d3b;
+  --color-accent-600: #745b31;
+  --color-accent-700: #5c4826;
+  --color-accent-800: #45361c;
+  --color-accent-900: #2b2111;
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -75,78 +82,85 @@
 }
 
 :root {
-  /* Chart series tokens -- validated (dataviz six checks) against the card
-     surface per mode. Fixed categorical order: 1=green, 2=gold. */
-  --chart-1: #2a7d4c;
-  --chart-2: #b27f13;
-  --background: #f7f4ee;
-  --foreground: #1c2b27;
+  /* Chart series tokens -- validated with the dataviz six checks against this
+     mode's card surface. Fixed categorical order: 1=ink blue, 2=brass. These
+     carry more chroma than the rest of the palette on purpose: the UI is
+     near-monochrome, but series still have to be told apart, and the chroma
+     floor check fails on the muted brand hues. Re-run the validator if changed. */
+  --chart-1: #2f5fa8;
+  --chart-2: #b07d2a;
+  --background: #faf8f4;
+  --foreground: #1a1d21;
   --card: #ffffff;
-  --card-foreground: #1c2b27;
+  --card-foreground: #1a1d21;
   --popover: #ffffff;
-  --popover-foreground: #1c2b27;
-  --primary: #14532d;
-  --primary-foreground: #f7f4ee;
-  --secondary: #ede7d8;
-  --secondary-foreground: #1c2b27;
-  --muted: #efeae0;
-  --muted-foreground: #6b6f65;
-  --accent: #d4a017;
-  --accent-foreground: #3d2e05;
-  --destructive: #b3261e;
+  --popover-foreground: #1a1d21;
+  --primary: #131a24;
+  --primary-foreground: #faf8f4;
+  --secondary: #efebe4;
+  --secondary-foreground: #1a1d21;
+  --muted: #f1ede6;
+  --muted-foreground: #6b6862;
+  --accent: #8a6d3b;
+  --accent-foreground: #faf8f4;
+  --destructive: #a3231b;
   --destructive-foreground: #ffffff;
-  --success: #2e7d32;
-  --warning: #b45309;
-  --error: #b3261e;
-  --info: #1d4ed8;
-  --border: #e3ded0;
-  --input: #e3ded0;
-  --ring: #14532d;
-  --radius: 0.625rem;
+  --success: #2f6b45;
+  --warning: #8a5a12;
+  --error: #a3231b;
+  --info: #2c4a7c;
+  --border: #e4dfd6;
+  --input: #e4dfd6;
+  --ring: #131a24;
+  /* Tighter than the previous 0.625rem: squarer corners read more formal and
+     more editorial, which is most of the "law firm" impression at small sizes. */
+  --radius: 0.375rem;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1c2b27;
-  --sidebar-primary: #14532d;
-  --sidebar-primary-foreground: #f7f4ee;
-  --sidebar-accent: #f1eee4;
-  --sidebar-accent-foreground: #1c2b27;
-  --sidebar-border: #e3ded0;
-  --sidebar-ring: #14532d;
+  --sidebar-foreground: #1a1d21;
+  --sidebar-primary: #131a24;
+  --sidebar-primary-foreground: #faf8f4;
+  --sidebar-accent: #f1ede6;
+  --sidebar-accent-foreground: #1a1d21;
+  --sidebar-border: #e4dfd6;
+  --sidebar-ring: #131a24;
 }
 
 .dark {
-  --chart-1: #429f68;
-  --chart-2: #b27f13;
-  --background: #0e1b16;
-  --foreground: #eaf6ee;
-  --card: #142620;
-  --card-foreground: #eaf6ee;
-  --popover: #142620;
-  --popover-foreground: #eaf6ee;
-  --primary: #4ade80;
-  --primary-foreground: #0e1b16;
-  --secondary: #1b2e26;
-  --secondary-foreground: #eaf6ee;
-  --muted: #17281f;
-  --muted-foreground: #8fae9c;
-  --accent: #d4a017;
-  --accent-foreground: #3d2e05;
-  --destructive: #e5534b;
-  --destructive-foreground: #0e1b16;
-  --success: #4ade80;
-  --warning: #f0b429;
-  --error: #e5534b;
-  --info: #60a5fa;
+  --chart-1: #4c7cc4;
+  --chart-2: #b07d2a;
+  --background: #14171b;
+  --foreground: #edeae4;
+  --card: #1b1f24;
+  --card-foreground: #edeae4;
+  --popover: #1b1f24;
+  --popover-foreground: #edeae4;
+  /* Inverted on purpose: on an ink background the high-contrast surface IS the
+     paper, so primary actions are bone-on-ink rather than a lightened navy. */
+  --primary: #e8e4dc;
+  --primary-foreground: #14171b;
+  --secondary: #23272d;
+  --secondary-foreground: #edeae4;
+  --muted: #1f232a;
+  --muted-foreground: #9a968e;
+  --accent: #c09a57;
+  --accent-foreground: #14171b;
+  --destructive: #e0625a;
+  --destructive-foreground: #14171b;
+  --success: #5aa87a;
+  --warning: #d3a33f;
+  --error: #e0625a;
+  --info: #7ba5e8;
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.12);
-  --ring: #4ade80;
-  --sidebar: #142620;
-  --sidebar-foreground: #eaf6ee;
-  --sidebar-primary: #4ade80;
-  --sidebar-primary-foreground: #0e1b16;
-  --sidebar-accent: #1b2e26;
-  --sidebar-accent-foreground: #eaf6ee;
+  --ring: #e8e4dc;
+  --sidebar: #1b1f24;
+  --sidebar-foreground: #edeae4;
+  --sidebar-primary: #e8e4dc;
+  --sidebar-primary-foreground: #14171b;
+  --sidebar-accent: #23272d;
+  --sidebar-accent-foreground: #edeae4;
   --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #4ade80;
+  --sidebar-ring: #e8e4dc;
 }
 
 @layer base {
@@ -158,5 +172,13 @@
   }
   html {
     @apply font-sans;
+  }
+  /* Headings take the serif globally, so pages do not each have to opt in.
+     Card/Dialog/Sheet titles already reference font-heading directly. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
   }
 }

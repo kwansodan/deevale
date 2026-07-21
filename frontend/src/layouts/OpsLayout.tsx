@@ -15,6 +15,7 @@ import { useAuthStore, hasRole } from "@/stores/auth"
 import { logout as apiLogout } from "@/api/auth"
 import { useNotificationSocket } from "@/hooks/useNotificationSocket"
 import { cn } from "@/lib/utils"
+import { Wordmark } from "@/components/Wordmark"
 
 // Role-gated navigation: reviewers see the review queue only, finance sees
 // payments (+ fee schedule settings), admin sees everything.
@@ -56,7 +57,7 @@ export default function OpsLayout() {
     <div className="bg-background flex min-h-svh">
       <aside className="border-border bg-card flex w-56 shrink-0 flex-col border-r">
         <div className="border-border border-b px-4 py-4">
-          <span className="text-primary text-lg font-bold">Deevale GH</span>
+          <Wordmark size="sm" />
           <p className="text-muted-foreground text-xs">Ops Console</p>
         </div>
         <nav className="flex-1 space-y-1 p-2">

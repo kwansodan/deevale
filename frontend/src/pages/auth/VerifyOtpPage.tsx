@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Wordmark } from "@/components/Wordmark"
 
 const otpSchema = z.object({
   code: z.string().length(6, "Enter the 6-digit code"),
@@ -57,7 +58,7 @@ export default function VerifyOtpPage() {
       <Card className="w-full max-w-sm border-border">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">
-            <span className="text-primary text-2xl font-bold">Deevale GH</span>
+            <Wordmark size="lg" />
           </div>
           <CardTitle className="text-xl">Verify your account</CardTitle>
           <CardDescription>

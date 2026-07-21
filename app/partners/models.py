@@ -19,7 +19,7 @@ class Partner(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
     contact_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     logo_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     # White-label accent applied via a CSS variable override on the partner console.
-    accent_color: Mapped[str] = mapped_column(String(9), default="#14532D", nullable=False)
+    accent_color: Mapped[str] = mapped_column(String(9), default="#131A24", nullable=False)
     status: Mapped[str] = mapped_column(String(16), default="active", nullable=False)
     # Per-partner API rate limit (requests/hour); enforced by Flask-Limiter.
     rate_limit_per_hour: Mapped[int] = mapped_column(Integer, default=1000, nullable=False)

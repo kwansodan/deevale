@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { Wordmark } from "@/components/Wordmark"
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -65,7 +66,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm border-border">
         <CardHeader className="text-center">
           <div className="mb-2 flex justify-center">
-            <span className="text-primary text-2xl font-bold">Deevale GH</span>
+            <Wordmark size="lg" />
           </div>
           <CardTitle className="text-xl">{t("auth.welcomeBack")}</CardTitle>
           <CardDescription>{t("auth.loginSubtitle")}</CardDescription>

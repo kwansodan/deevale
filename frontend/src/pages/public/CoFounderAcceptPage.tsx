@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Wordmark } from "@/components/Wordmark"
 
 export default function CoFounderAcceptPage() {
   const { token } = useParams<{ token: string }>()
@@ -44,7 +45,7 @@ export default function CoFounderAcceptPage() {
   return (
     <div className="bg-background flex min-h-svh items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <p className="text-primary mb-4 text-center text-lg font-bold">Deevale GH</p>
+        <p className="mb-4 text-center"><Wordmark size="md" /></p>
         {isLoading ? (
           <Skeleton className="h-64 w-full" />
         ) : isError || !data ? (

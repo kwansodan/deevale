@@ -7,6 +7,7 @@ import { useNotificationSocket } from "@/hooks/useNotificationSocket"
 import { NotificationBell } from "@/components/NotificationBell"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Wordmark } from "@/components/Wordmark"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,8 +54,8 @@ export default function ClientLayout() {
       <header className="border-border bg-card sticky top-0 z-10 border-b">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-5">
-            <Link to="/app" className="text-primary text-lg font-bold">
-              Deevale GH
+            <Link to="/app">
+              <Wordmark size="sm" />
             </Link>
             <nav className="flex items-center gap-4 text-sm" aria-label="Primary">
               <Link to="/app" className="text-muted-foreground hover:text-foreground">
