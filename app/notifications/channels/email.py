@@ -18,30 +18,33 @@ class ConsoleEmailSender(EmailSender):
         logger.info("[DEV EMAIL] To: %s | Subject: %s\n%s", to_email, subject, text_body)
 
 
-class SendGridEmailSender(EmailSender):
-    """SendGrid-compatible backend for production. Kept behind the same
-    EmailSender interface as ConsoleEmailSender so swapping backends is just
-    an EMAIL_SENDER config change."""
+class ResendEmailSender(EmailSender):
+    """Resend backend for production. Kept behind the same EmailSender
+    interface as ConsoleEmailSender so swapping backends is just an
+    EMAIL_SENDER config change."""
 
     def send(self, to_email: str, subject: str, html_body: str, text_body: str) -> None:
-        import sendgrid
-        from sendgrid.helpers.mail import Mail
+        import requests
 
-        client = sendgrid.SendGridAPIClient(api_key=current_app.config["SENDGRID_API_KEY"])
-        message = Mail(
-            from_email=current_app.config["EMAIL_FROM_ADDRESS"],
-            to_emails=to_email,
-            subject=subject,
-            html_content=html_body,
-            plain_text_content=text_body,
+        response = requests.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {current_app.config['RESEND_API_KEY']}"},
+            json={
+                "from": current_app.config["EMAIL_FROM_ADDRESS"],
+                "to": [to_email],
+                "subject": subject,
+                "html": html_body,
+                "text": text_body,
+            },
+            timeout=15,
         )
-        client.send(message)
+        response.raise_for_status()
 
 
 def get_email_sender() -> EmailSender:
     backend = current_app.config.get("EMAIL_SENDER", "console")
-    if backend == "sendgrid":
-        return SendGridEmailSender()
+    if backend == "resend":
+        return ResendEmailSender()
     return ConsoleEmailSender()
 
 

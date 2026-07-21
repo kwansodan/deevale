@@ -23,4 +23,3 @@ marshmallow==3.21.3
 python-dotenv==1.0.1
 requests==2.32.3
 gunicorn==23.0.0
-sendgrid==6.11.0

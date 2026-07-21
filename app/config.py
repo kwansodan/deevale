@@ -44,8 +44,8 @@ class Config:
     MAIL_RETENTION_DAYS = int(os.environ.get("MAIL_RETENTION_DAYS", "90"))
 
     OTP_SENDER = os.environ.get("OTP_SENDER", "console")
-    EMAIL_SENDER = os.environ.get("EMAIL_SENDER", "console")
-    SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "")
+    EMAIL_SENDER = os.environ.get("EMAIL_SENDER", "console")  # console | resend
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
     EMAIL_FROM_ADDRESS = os.environ.get("EMAIL_FROM_ADDRESS", "notifications@deevalegh.com")
 
     SMS_SENDER = os.environ.get("SMS_SENDER", "console")  # console | twilio | hubtel

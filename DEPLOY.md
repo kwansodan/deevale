@@ -49,7 +49,7 @@ code:
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`
 - `S3_ACCESS_KEY`, `S3_SECRET_KEY` — MinIO root credentials
 - `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` — **live** keys
-- `SENDGRID_API_KEY`, `EMAIL_SENDER=sendgrid`, `EMAIL_FROM_ADDRESS`
+- `RESEND_API_KEY`, `EMAIL_SENDER=resend`, `EMAIL_FROM_ADDRESS`
 - `CORS_ORIGINS=https://app.deevalegh.com`
 
 > ⚠️ **`CORS_ORIGINS` order is load-bearing.** The first entry doubles as the
