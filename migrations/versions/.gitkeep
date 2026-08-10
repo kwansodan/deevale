@@ -1,0 +1,3 @@
+# Keeps migrations/versions/ present in every checkout. Git will not track an
+# empty directory, and without it both `flask db migrate` and the Dockerfile
+# `COPY migrations` step fail on a fresh clone with a missing-path error.
