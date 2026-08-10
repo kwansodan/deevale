@@ -85,9 +85,10 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow
 
 ### Running it from Komodo
 
-Point the stack at `docker-compose.prod.yml`, **not** `docker-compose.yml`. The
-dev file contains only backing services plus Mailhog and no application at all;
-deploying it gives you four healthy containers and nothing serving the API.
+`docker-compose.prod.yml` is the single, self-contained stack — postgres,
+redis, minio, migrate, api, worker, beat. Point Komodo's File Paths at it.
+(The name keeps the `.prod` suffix only because Komodo already references it;
+there is no dev compose file to contrast with anymore.)
 
 Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` — the
 image `COPY`s `app/`, `migrations/`, `seeds/` and the wsgi/celery entrypoints,

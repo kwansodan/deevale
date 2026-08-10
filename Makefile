@@ -1,10 +1,8 @@
-.PHONY: dev-up dev-down install migrate upgrade downgrade seed demo run worker beat test lint typecheck
-
-dev-up:
-	docker compose up -d
-
-dev-down:
-	docker compose down
+# The stack runs entirely in containers on the server via
+# docker-compose.prod.yml (deployed by Komodo). There is no separate local
+# backing-services file; these targets run against whatever DATABASE_URL /
+# REDIS_URL point at, e.g. inside a service container or in CI.
+.PHONY: install migrate upgrade downgrade seed demo run worker beat test lint typecheck
 
 install:
 	pip install -r requirements-dev.txt
