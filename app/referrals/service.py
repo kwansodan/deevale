@@ -65,13 +65,12 @@ def apply_credits_to_invoice(invoice) -> int:
     item and marks the consumed credits 'applied'. Cash-basis, append-only --
     a real ledger could reconcile these later."""
     from app.payments.models import InvoiceLineItem
+    from app.workflow.models import BusinessCase
 
-    client_id = invoice.business_case.client_id if invoice.business_case else None
-    if client_id is None:
-        from app.workflow.models import BusinessCase
-
-        case = BusinessCase.query.get(invoice.business_case_id)
-        client_id = case.client_id if case else None
+    # Invoice has no `business_case` relationship, only the FK column, so resolve
+    # the client through the case directly.
+    case = BusinessCase.query.get(invoice.business_case_id) if invoice.business_case_id else None
+    client_id = case.client_id if case else None
     if client_id is None:
         return 0
 

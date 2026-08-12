@@ -21,7 +21,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      # -d deevalegh: without it pg_isready probes a database named after the
+      # user, which does not exist, and postgres logs a FATAL every interval.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d deevalegh"]
       interval: 10s
       timeout: 5s
       retries: 10
