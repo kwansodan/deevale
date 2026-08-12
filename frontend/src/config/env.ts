@@ -10,7 +10,18 @@
  */
 function resolveApiBaseUrl(): string {
   const configured = import.meta.env.VITE_API_BASE_URL?.trim()
-  if (configured) return configured
+  if (configured) {
+    // Must be absolute. Without a scheme, axios treats the value as a path on
+    // the current origin, so "api.deevalegh.com" becomes
+    // https://<frontend>/api.deevalegh.com/... and every request 404/405s.
+    if (!/^https?:\/\//i.test(configured)) {
+      throw new Error(
+        `VITE_API_BASE_URL must start with http:// or https:// — got "${configured}". ` +
+          "Use the full URL, e.g. https://api.deevalegh.com, then redeploy.",
+      )
+    }
+    return configured
+  }
   if (import.meta.env.DEV) return "http://localhost:5000"
   throw new Error(
     "VITE_API_BASE_URL is not set. Set it to the backend URL " +
