@@ -102,8 +102,8 @@ function Section({
           <p
             className={cn(
               "mb-2 text-sm font-semibold tracking-wide uppercase",
-              // On the charcoal ink section the bright yellow accent-400 reads
-              // cleanly; on light sections the eyebrow uses charcoal primary.
+              // On the slate-green ink section the bright yellow accent-400
+              // reads cleanly; on light sections the eyebrow uses the primary.
               surface === "ink" ? "text-accent-400" : "text-primary"
             )}
           >

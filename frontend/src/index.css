@@ -56,18 +56,18 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* Full brand ramps -- fixed swatches (bg-primary-50..900, bg-accent-50..900).
-     Primary is a neutral charcoal ramp (#45474B at 700, the primary action
-     colour); accent is the yellow ramp with #F4CE14 at 400. */
-  --color-primary-50: #f5f7f8;
-  --color-primary-100: #e7ebed;
-  --color-primary-200: #cbd2d5;
-  --color-primary-300: #aab2b6;
-  --color-primary-400: #808a8e;
-  --color-primary-500: #5e666a;
-  --color-primary-600: #4c5155;
-  --color-primary-700: #45474b;
-  --color-primary-800: #35373a;
-  --color-primary-900: #2a2b2e;
+     Primary is a slate-green ramp (#495E57 at 600, the primary action colour);
+     accent is the yellow ramp with #F4CE14 at 400. */
+  --color-primary-50: #f2f5f4;
+  --color-primary-100: #e2ebe8;
+  --color-primary-200: #c5d5cf;
+  --color-primary-300: #9fb8af;
+  --color-primary-400: #739389;
+  --color-primary-500: #57756b;
+  --color-primary-600: #495e57;
+  --color-primary-700: #3d4e48;
+  --color-primary-800: #31403b;
+  --color-primary-900: #26322e;
 
   --color-accent-50: #fefce7;
   --color-accent-100: #fcf6b3;
@@ -101,7 +101,7 @@
   --card-foreground: #45474b;
   --popover: #ffffff;
   --popover-foreground: #45474b;
-  --primary: #45474b;
+  --primary: #495e57;
   --primary-foreground: #f5f7f8;
   --secondary: #e7ebed;
   --secondary-foreground: #45474b;
@@ -125,7 +125,7 @@
   --radius: 0.375rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #45474b;
-  --sidebar-primary: #45474b;
+  --sidebar-primary: #495e57;
   --sidebar-primary-foreground: #f5f7f8;
   --sidebar-accent: #ebeef0;
   --sidebar-accent-foreground: #45474b;

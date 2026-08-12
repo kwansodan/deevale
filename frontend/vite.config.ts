@@ -16,7 +16,7 @@ export default defineConfig({
         name: 'Deevale GH',
         short_name: 'Deevale',
         description: 'Register and run your business in Ghana — end to end.',
-        theme_color: '#45474B',
+        theme_color: '#495E57',
         background_color: '#F5F7F8',
         display: 'standalone',
         start_url: '/app',
