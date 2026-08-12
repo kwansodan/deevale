@@ -40,7 +40,13 @@ services:
   minio:
     image: minio/minio:latest
     restart: unless-stopped
-    command: server /data
+    # --console-address pins the console to a fixed port. Without it MinIO binds
+    # the console to a RANDOM free port on every start, and -- combined with the
+    # browser redirect below -- a presigned download opened in a browser was
+    # being 307-redirected to files.deevalegh.com:<random>, which nothing
+    # exposes, so it timed out. The console is not published to the host at all
+    # (no ports: entry), so :9001 is internal-only.
+    command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY:?set in .env}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:?set in .env}
@@ -48,6 +54,12 @@ services:
       # The presigned signature is the real authorisation, so allowing any
       # origin to attempt the request is safe. Avoids browser CORS failures.
       MINIO_API_CORS_ALLOW_ORIGIN: "*"
+      # Serve the S3 API to browsers directly. By default MinIO redirects any
+      # browser request on the API port to the console UI; for a presigned
+      # object URL opened in a tab that redirect is exactly wrong -- we want the
+      # bytes, not the console. Turning the redirect off makes files.deevalegh.com
+      # return the object.
+      MINIO_BROWSER_REDIRECT: "false"
     volumes:
       - minio_data:/data
 
