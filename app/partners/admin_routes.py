@@ -1,3 +1,4 @@
+import secrets
 import uuid
 
 from flask_smorest import Blueprint
@@ -13,7 +14,9 @@ from app.partners.schemas import (
     ApiKeySchema,
     CreateApiKeySchema,
     PartnerSchema,
+    PartnerWebhookCreateSchema,
     PartnerWebhookListSchema,
+    PartnerWebhookSchema,
 )
 from app.workflow.models import BusinessCase
 from app.workflow.schemas import CaseSummarySchema
@@ -112,6 +115,37 @@ def revoke_key_route(key_id):
 def list_partner_webhooks_route(partner_id):
     partner = _partner_or_404(partner_id)
     return PartnerWebhook.query.filter_by(partner_id=partner.id).all()
+
+
+@blp.route("/<string:partner_id>/webhooks", methods=["POST"])
+@require_roles(RoleName.ADMIN)
+@blp.arguments(PartnerWebhookCreateSchema)
+@blp.response(201, PartnerWebhookSchema)
+def create_partner_webhook_route(payload, partner_id):
+    """Register a webhook for a partner on their behalf. Returns the signing
+    secret exactly once. (Partners can also self-manage via the partner API.)"""
+    partner = _partner_or_404(partner_id)
+    webhook = PartnerWebhook(
+        partner_id=partner.id,
+        url=payload["url"],
+        secret=secrets.token_urlsafe(32),
+        event_types=payload["event_types"],
+    )
+    db.session.add(webhook)
+    db.session.commit()
+    return webhook
+
+
+@blp.route("/webhooks/<string:webhook_id>", methods=["DELETE"])
+@require_roles(RoleName.ADMIN)
+@blp.response(200)
+def delete_partner_webhook_route(webhook_id):
+    webhook = PartnerWebhook.query.get(uuid.UUID(webhook_id))
+    if webhook is None:
+        raise NotFoundError("Webhook not found")
+    db.session.delete(webhook)
+    db.session.commit()
+    return {"message": "deleted"}
 
 
 @blp.route("/<string:partner_id>/cases", methods=["GET"])

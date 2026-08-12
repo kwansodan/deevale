@@ -28,9 +28,19 @@ export type PartnerWebhook = {
   url: string
   event_types: string[]
   is_active: boolean
+  secret?: string // returned once on creation
 }
 
 export const API_SCOPES = ["cases:read", "cases:write", "documents:write", "webhooks:manage"]
+
+export const PARTNER_EVENT_TYPES = [
+  "case.created",
+  "stage.completed",
+  "document.approved",
+  "document.rejected",
+  "payment.received",
+  "case.blocked",
+]
 
 export async function listPartners() {
   const { data } = await apiClient.get<Partner[]>("/admin/partners")
@@ -64,6 +74,18 @@ export async function createPartnerKey(partnerId: string, name: string, scopes: 
 export async function revokePartnerKey(keyId: string) {
   const { data } = await apiClient.post<ApiKey>(`/admin/partners/keys/${keyId}/revoke`)
   return data
+}
+
+export async function createPartnerWebhook(partnerId: string, url: string, eventTypes: string[]) {
+  const { data } = await apiClient.post<PartnerWebhook>(`/admin/partners/${partnerId}/webhooks`, {
+    url,
+    event_types: eventTypes,
+  })
+  return data
+}
+
+export async function deletePartnerWebhook(webhookId: string) {
+  await apiClient.delete(`/admin/partners/webhooks/${webhookId}`)
 }
 
 export async function listPartnerWebhooks(partnerId: string) {

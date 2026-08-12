@@ -1,12 +1,15 @@
 import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Copy, KeyRound, Plus } from "lucide-react"
+import { Copy, KeyRound, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 import {
   API_SCOPES,
+  PARTNER_EVENT_TYPES,
   createPartner,
   createPartnerKey,
+  createPartnerWebhook,
+  deletePartnerWebhook,
   listPartnerCases,
   listPartnerKeys,
   listPartnerWebhooks,
@@ -164,6 +167,113 @@ function KeyManager({ partnerId }: { partnerId: string }) {
   )
 }
 
+function WebhookManager({
+  partnerId,
+  webhooks,
+}: {
+  partnerId: string
+  webhooks: { id: string; url: string; event_types: string[] }[]
+}) {
+  const queryClient = useQueryClient()
+  const [url, setUrl] = useState("")
+  const [events, setEvents] = useState<string[]>([])
+  const [freshSecret, setFreshSecret] = useState<string | null>(null)
+
+  const createMutation = useMutation({
+    mutationFn: () => createPartnerWebhook(partnerId, url, events),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["partner-webhooks", partnerId] })
+      setFreshSecret(data.secret ?? null)
+      setUrl("")
+      setEvents([])
+    },
+    onError: () => toast.error("Couldn't create the webhook."),
+  })
+  const deleteMutation = useMutation({
+    mutationFn: deletePartnerWebhook,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["partner-webhooks", partnerId] })
+      toast.success("Webhook deleted.")
+    },
+    onError: () => toast.error("Couldn't delete the webhook."),
+  })
+
+  const toggle = (evt: string) =>
+    setEvents((s) => (s.includes(evt) ? s.filter((e) => e !== evt) : [...s, evt]))
+
+  return (
+    <div className="grid gap-4">
+      {freshSecret && (
+        <div className="border-accent/40 bg-accent/5 grid gap-1 rounded-md border p-3 text-sm">
+          <p className="font-medium">Copy this signing secret now — it won't be shown again.</p>
+          <div className="flex items-center gap-2">
+            <code className="bg-muted flex-1 truncate rounded px-2 py-1 text-xs">{freshSecret}</code>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(freshSecret)
+                toast.success("Copied.")
+              }}
+            >
+              <Copy className="size-3.5" /> Copy
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {webhooks.length === 0 ? (
+        <p className="text-muted-foreground text-sm">No webhook subscriptions yet.</p>
+      ) : (
+        <ul className="grid gap-1.5 text-sm">
+          {webhooks.map((w) => (
+            <li key={w.id} className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <p className="truncate">{w.url}</p>
+                <p className="text-muted-foreground text-xs">{w.event_types.join(", ")}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Delete webhook"
+                disabled={deleteMutation.isPending}
+                onClick={() => deleteMutation.mutate(w.id)}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="grid gap-2 border-t pt-3">
+        <Input
+          type="url"
+          placeholder="https://partner.example.com/hooks"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          {PARTNER_EVENT_TYPES.map((evt) => (
+            <label key={evt} className="flex items-center gap-1.5 text-xs">
+              <input type="checkbox" checked={events.includes(evt)} onChange={() => toggle(evt)} />
+              {evt}
+            </label>
+          ))}
+        </div>
+        <Button
+          className="justify-self-start"
+          size="sm"
+          disabled={createMutation.isPending || !url.trim() || events.length === 0}
+          onClick={() => createMutation.mutate()}
+        >
+          <Plus className="size-3.5" /> Add webhook
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 function PartnerDetail({ partner }: { partner: Partner }) {
   const { data: webhooks } = useQuery({
     queryKey: ["partner-webhooks", partner.id],
@@ -188,21 +298,10 @@ function PartnerDetail({ partner }: { partner: Partner }) {
       <Card className="border-border">
         <CardHeader>
           <CardTitle className="text-base">Webhooks</CardTitle>
-          <CardDescription>Partners manage subscriptions through the API; shown here read-only.</CardDescription>
+          <CardDescription>Register a callback URL for this partner. Partners can also self-manage via the API.</CardDescription>
         </CardHeader>
         <CardContent>
-          {(webhooks ?? []).length === 0 ? (
-            <p className="text-muted-foreground text-sm">No webhook subscriptions.</p>
-          ) : (
-            <ul className="grid gap-1.5 text-sm">
-              {(webhooks ?? []).map((w) => (
-                <li key={w.id} className="flex items-center justify-between gap-2">
-                  <span className="truncate">{w.url}</span>
-                  <span className="text-muted-foreground text-xs">{w.event_types.join(", ")}</span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <WebhookManager partnerId={partner.id} webhooks={webhooks ?? []} />
         </CardContent>
       </Card>
 
