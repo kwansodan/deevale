@@ -14,6 +14,15 @@ export type QuotePreview = {
   currency: string
 }
 
+export type TaskField = {
+  name: string
+  label: string
+  type?: "text" | "textarea" | "select"
+  required?: boolean
+  placeholder?: string
+  options?: { value: string; label: string }[]
+}
+
 export type CaseTask = {
   id: string
   code: string
@@ -25,6 +34,8 @@ export type CaseTask = {
   is_required: boolean
   requires_document: boolean
   required_document_type: string | null
+  input_schema: TaskField[] | null
+  submitted_data: Record<string, string> | null
   linked_document_id: string | null
   government_reference_note: string | null
   deadline_at: string | null
@@ -115,10 +126,17 @@ export async function getCase(caseId: string) {
   return data
 }
 
-export async function completeClientTask(caseId: string, taskId: string, note?: string) {
+export async function completeClientTask(
+  caseId: string,
+  taskId: string,
+  opts?: { note?: string; submitted_data?: Record<string, string> }
+) {
+  const body: Record<string, unknown> = {}
+  if (opts?.note) body.note = opts.note
+  if (opts?.submitted_data) body.submitted_data = opts.submitted_data
   const { data } = await apiClient.post<BusinessCase>(
     `/cases/${caseId}/tasks/${taskId}/complete`,
-    note ? { note } : {}
+    body
   )
   return data
 }

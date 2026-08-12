@@ -38,6 +38,8 @@ class CaseTaskSchema(Schema):
     is_required = fields.Boolean(dump_only=True)
     requires_document = fields.Boolean(dump_only=True)
     required_document_type = fields.String(dump_only=True, allow_none=True)
+    input_schema = fields.Raw(dump_only=True, allow_none=True)
+    submitted_data = fields.Raw(dump_only=True, allow_none=True)
     linked_document_id = fields.String(dump_only=True, allow_none=True)
     government_reference_note = fields.String(dump_only=True, allow_none=True)
     deadline_at = fields.DateTime(dump_only=True, allow_none=True)
@@ -183,3 +185,6 @@ class TaskTransitionRequestSchema(Schema):
 
 class TaskCompleteRequestSchema(Schema):
     note = fields.String(required=False, allow_none=True)
+    # Answers to the task's input_schema fields, keyed by field name. Ignored
+    # for tasks that declare no schema.
+    submitted_data = fields.Dict(required=False, load_default=None, allow_none=True)

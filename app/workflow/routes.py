@@ -323,6 +323,13 @@ def complete_task_route(payload, case_id, task_id):
     if task.assignee_type != "client":
         raise ValidationAppError("This task is not assigned to the client")
 
+    # Data-entry task: validate the answers against the field spec and store
+    # them before advancing. Cleaned to only the declared fields.
+    if task.input_schema:
+        from app.workflow.task_input import validate_submission
+
+        task.submitted_data = validate_submission(task.input_schema, payload.get("submitted_data"))
+
     target = TaskStatus.AWAITING_REVIEW if task.requires_document else TaskStatus.DONE
     TaskStateMachine.transition(task, target, actor=user, note=payload.get("note"))
     db.session.commit()

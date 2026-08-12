@@ -66,6 +66,9 @@ class TaskDefinition(db.Model, UUIDPrimaryKeyMixin):
     requires_document: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     required_document_type: Mapped[str | None] = mapped_column(String(64), nullable=True)
     allowed_transition_roles: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    # Optional form spec: a list of field descriptors the client fills in for
+    # this task (see app/workflow/task_input.py). Null means no data entry.
+    input_schema: Mapped[list | None] = mapped_column(JSONB, nullable=True)
 
     stage_definition: Mapped["StageDefinition"] = relationship(back_populates="task_definitions")
 
@@ -153,6 +156,10 @@ class CaseTask(db.Model, UUIDPrimaryKeyMixin):
     requires_document: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     required_document_type: Mapped[str | None] = mapped_column(String(64), nullable=True)
     allowed_transition_roles: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    # Copied from the task definition at case creation; submitted_data holds the
+    # client's answers to those fields.
+    input_schema: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    submitted_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     linked_document_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("documents.id", use_alter=True), nullable=True
     )

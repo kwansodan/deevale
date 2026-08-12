@@ -28,6 +28,17 @@ def build_stages() -> list[dict]:
                     assignee_type=AssigneeType.CLIENT.value,
                     is_required=True,
                     requires_document=False,
+                    input_schema=[
+                        {
+                            "name": "name_1",
+                            "label": "First choice",
+                            "type": "text",
+                            "required": True,
+                            "placeholder": "e.g. Deevale Ventures",
+                        },
+                        {"name": "name_2", "label": "Second choice", "type": "text"},
+                        {"name": "name_3", "label": "Third choice", "type": "text"},
+                    ],
                 ),
                 dict(
                     code="orc_name_search",
@@ -344,11 +355,35 @@ def build_foreign_stages() -> list[dict]:
     return result
 
 
+def _sync_task_input_schemas(workflow: WorkflowDefinition, stages: list[dict]) -> None:
+    desired = {
+        task["code"]: task["input_schema"]
+        for stage in stages
+        for task in stage.get("tasks", [])
+        if "input_schema" in task
+    }
+    if not desired:
+        return
+    changed = False
+    for stage in workflow.stage_definitions:
+        for task in stage.task_definitions:
+            wanted = desired.get(task.code)
+            if wanted is not None and task.input_schema != wanted:
+                task.input_schema = wanted
+                changed = True
+    if changed:
+        db.session.commit()
+
+
 def seed_workflow(entity_type: str, variant: str, stages: list[dict]) -> WorkflowDefinition:
     existing = WorkflowDefinition.query.filter_by(
         entity_type=entity_type, variant=variant, is_active=True
     ).first()
     if existing is not None:
+        # Re-running the seed applies input_schema changes to the existing task
+        # definitions (by code), so adding a form to a task does not require
+        # rebuilding the whole workflow.
+        _sync_task_input_schemas(existing, stages)
         return existing
 
     workflow = WorkflowDefinition(entity_type=entity_type, variant=variant, version=1, is_active=True)

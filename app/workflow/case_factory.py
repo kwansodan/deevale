@@ -120,6 +120,7 @@ class CaseFactory:
                         requires_document=task_def.requires_document,
                         required_document_type=task_def.required_document_type,
                         allowed_transition_roles=task_def.allowed_transition_roles,
+                        input_schema=task_def.input_schema,
                     )
                 )
 
