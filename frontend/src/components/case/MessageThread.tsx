@@ -55,7 +55,7 @@ export function MessageThread({ caseId }: { caseId: string }) {
       <div className="grid max-h-96 gap-3 overflow-y-auto pr-1">
         {(messages ?? []).length === 0 && (
           <p className="text-muted-foreground text-sm">
-            No messages yet. Your case officer is one message away — ask anything about your registration.
+            No messages yet. Your case officer is one message away - ask anything about your registration.
           </p>
         )}
         {(messages ?? []).map((message) => {

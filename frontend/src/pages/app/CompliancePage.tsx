@@ -164,7 +164,7 @@ function SubscribeUpsell({
           Let us handle your filings
         </CardTitle>
         <CardDescription>
-          The Deevale GH compliance plan unlocks "File it for me" on every deadline — our team files,
+          The Deevale GH compliance plan unlocks "File it for me" on every deadline - our team files,
           you get the receipts.
         </CardDescription>
       </CardHeader>
@@ -173,7 +173,7 @@ function SubscribeUpsell({
           {formatGhs(monthlyPrice)}/month
         </Button>
         <Button variant="outline" disabled={isRedirecting} onClick={() => handleSubscribe("annual")}>
-          {formatGhs(annualPrice)}/year — 2 months free
+          {formatGhs(annualPrice)}/year - 2 months free
         </Button>
       </CardContent>
     </Card>
@@ -197,7 +197,7 @@ export default function CompliancePage() {
     mutationFn: requestFiling,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["obligations"] })
-      toast.success("We're on it — our team will file this for you.")
+      toast.success("We're on it - our team will file this for you.")
     },
     onError: (err: unknown) => {
       const message =
@@ -224,7 +224,7 @@ export default function CompliancePage() {
       <div>
         <h1 className="text-xl font-semibold">Compliance calendar</h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Every deadline your business owes the state — we remind you at 30, 14, 7 and 2 days out.
+          Every deadline your business owes the state - we remind you at 30, 14, 7 and 2 days out.
         </p>
       </div>
 
@@ -284,7 +284,7 @@ export default function CompliancePage() {
                         </p>
                         <p className={cn("mt-0.5 text-xs", URGENCY_TEXT[urgency])}>
                           Due {format(new Date(obligation.due_date), "d MMMM yyyy")}
-                          {urgency === "overdue" && " — overdue"}
+                          {urgency === "overdue" && " - overdue"}
                         </p>
                         {obligation.description && (
                           <p className="text-muted-foreground mt-0.5 text-xs">{obligation.description}</p>
@@ -318,7 +318,7 @@ export default function CompliancePage() {
                   {handled.map((obligation) => (
                     <p key={obligation.id} className="text-muted-foreground flex items-center gap-2 py-1 text-sm">
                       <CheckCircle2 className="text-success size-3.5" />
-                      {obligation.title} — {format(new Date(obligation.due_date), "d MMM yyyy")}
+                      {obligation.title} - {format(new Date(obligation.due_date), "d MMM yyyy")}
                       {obligation.status === "filed_by_us" && " (filed by Deevale GH)"}
                     </p>
                   ))}

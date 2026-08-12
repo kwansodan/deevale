@@ -8,7 +8,7 @@ The frontend and backend are deployed separately:
 | Flask API, Celery, Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
 
 They are **different origins**, so the browser talks to the API cross-origin.
-That works because auth is Bearer-token based, not cookie based — but it means
+That works because auth is Bearer-token based, not cookie based - but it means
 `CORS_ORIGINS` on the API must list the exact frontend origin or every request
 fails in the browser while working fine from curl.
 
@@ -21,7 +21,7 @@ fails in the browser while working fine from curl.
 
 ---
 
-## Part 1 — Backend on the VPS
+## Part 1 - Backend on the VPS
 
 ### 1. Server prep
 
@@ -42,13 +42,13 @@ cd /opt/deevalegh
 cp .env.example .env
 ```
 
-Edit `.env` and set **real values** — every secret comes from here, never from
+Edit `.env` and set **real values** - every secret comes from here, never from
 code:
 
-- `SECRET_KEY`, `JWT_SECRET_KEY` — long random strings (`openssl rand -hex 32`)
+- `SECRET_KEY`, `JWT_SECRET_KEY` - long random strings (`openssl rand -hex 32`)
 - `POSTGRES_USER`, `POSTGRES_PASSWORD`
-- `S3_ACCESS_KEY`, `S3_SECRET_KEY` — MinIO root credentials
-- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` — **live** keys
+- `S3_ACCESS_KEY`, `S3_SECRET_KEY` - MinIO root credentials
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` - **live** keys
 - `RESEND_API_KEY`, `EMAIL_SENDER=resend`, `EMAIL_FROM_ADDRESS`
 - `CORS_ORIGINS=https://app.deevalegh.com`
 
@@ -64,7 +64,7 @@ code:
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Six services come up: `postgres`, `redis`, `minio`, `api`, `worker`, `beat` —
+Six services come up: `postgres`, `redis`, `minio`, `api`, `worker`, `beat` -
 plus a one-shot `migrate` that runs `flask db upgrade` and exits. `api`,
 `worker` and `beat` all wait on it via `service_completed_successfully`, so a
 failed migration means nothing starts on a schema it cannot use. Migrations
@@ -75,7 +75,7 @@ therefore need no manual step on any deploy or redeploy.
 > are intentional: better a stack that refuses to start than an API returning
 > 500s because no tables exist.
 
-First boot only — seed the reference data:
+First boot only - seed the reference data:
 
 ```bash
 docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_roles
@@ -85,23 +85,23 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow
 
 ### Running it from Komodo
 
-`docker-compose.prod.yml` is the single, self-contained stack — postgres,
+`docker-compose.prod.yml` is the single, self-contained stack - postgres,
 redis, minio, migrate, api, worker, beat. Point Komodo's File Paths at it.
 (The name keeps the `.prod` suffix only because Komodo already references it;
 there is no dev compose file to contrast with anymore.)
 
-Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` — the
+Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` - the
 image `COPY`s `app/`, `migrations/`, `seeds/` and the wsgi/celery entrypoints,
 all of which live at the root. One build serves `migrate`, `api`, `worker` and
 `beat`; they differ only by `command`.
 
 Then replace the seeded fee amounts with the real current government fees via
-the admin UI (`/ops/settings`) — the seeded figures are placeholders.
+the admin UI (`/ops/settings`) - the seeded figures are placeholders.
 
-### 4. TLS — the `caddy` service (in the stack)
+### 4. TLS - the `caddy` service (in the stack)
 
 TLS is handled by the `caddy` service in `docker-compose.prod.yml`, so there is
-**no separate install** — it deploys with everything else. It runs
+**no separate install** - it deploys with everything else. It runs
 `caddy reverse-proxy --from $API_DOMAIN --to api:8000` (no config file, so
 nothing to bind-mount), provisions and renews the Let's Encrypt certificate for
 `API_DOMAIN` automatically, and proxies WebSocket upgrades for `/socket.io/`
@@ -137,13 +137,13 @@ https://api.deevalegh.com/payments/webhook/paystack
 
 ---
 
-## Part 2 — Frontend on Vercel
+## Part 2 - Frontend on Vercel
 
 Import the GitHub repo at vercel.com, then:
 
 - **Root Directory**: `frontend` (the repo root is Python)
 - Uncheck "Include source files outside of the Root Directory"
-- Framework preset: **Vite** — build command and output dir come from
+- Framework preset: **Vite** - build command and output dir come from
   `frontend/vercel.json`
 
 Environment variables (Production **and** Preview):
@@ -154,7 +154,7 @@ Environment variables (Production **and** Preview):
 | `VITE_SOCKET_URL` | `https://api.deevalegh.com` |
 
 These are **baked into the bundle at build time**, so changing one needs a
-redeploy, not a restart. They are also readable by anyone who opens devtools —
+redeploy, not a restart. They are also readable by anyone who opens devtools -
 never put a secret behind a `VITE_` prefix.
 
 Add `app.deevalegh.com` under Domains and point the CNAME.
@@ -182,7 +182,7 @@ safe across the 4 gunicorn workers in `Dockerfile`:
 
 1. `message_queue` is set to Redis, so an event emitted by one worker reaches
    clients connected to any other.
-2. `simple-websocket` is installed, so clients get a real WebSocket — one
+2. `simple-websocket` is installed, so clients get a real WebSocket - one
    persistent connection pinned to one worker.
 
 If you remove `simple-websocket`, Socket.IO silently falls back to HTTP

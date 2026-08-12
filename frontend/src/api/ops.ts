@@ -1,6 +1,9 @@
 import { apiClient } from "@/api/client"
 import type { BusinessCase, CaseSummary } from "@/api/cases"
+import type { LandingConfig } from "@/api/public"
 import type { CurrentUser } from "@/stores/auth"
+
+export type { LandingConfig } from "@/api/public"
 
 export type PaginatedCases = {
   items: (CaseSummary & {
@@ -164,6 +167,33 @@ export async function upsertNotificationTemplate(template: {
 
 export async function resetNotificationTemplate(category: string) {
   await apiClient.delete(`/admin/notification-templates/${category}`)
+}
+
+// --- Admin: platform settings (referral rewards & landing figures) ---------
+
+export type ReferralSettings = {
+  reward_minor: number
+  welcome_minor: number
+}
+
+export async function getReferralSettings() {
+  const { data } = await apiClient.get<ReferralSettings>("/admin/settings/referral")
+  return data
+}
+
+export async function updateReferralSettings(settings: ReferralSettings) {
+  const { data } = await apiClient.put<ReferralSettings>("/admin/settings/referral", settings)
+  return data
+}
+
+export async function getLandingSettings() {
+  const { data } = await apiClient.get<LandingConfig>("/admin/settings/landing")
+  return data
+}
+
+export async function updateLandingSettings(config: LandingConfig) {
+  const { data } = await apiClient.put<LandingConfig>("/admin/settings/landing", config)
+  return data
 }
 
 export type ReportKpis = {

@@ -283,7 +283,7 @@ def build_gipc_stage(sequence_order: int) -> dict:
                 code="open_corporate_bank_account",
                 name="Open a corporate bank account",
                 description=(
-                    "Open a Ghana corporate bank account for the new company — GIPC needs it to "
+                    "Open a Ghana corporate bank account for the new company - GIPC needs it to "
                     "verify your equity transfer. Any commercial bank works; tell us once it's open."
                 ),
                 sequence_order=1,

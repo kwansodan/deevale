@@ -118,7 +118,7 @@ export function TaskSheet({
     onSuccess: (_doc, file) => {
       setUploadedFileName(file.name)
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
-      toast.success("Uploaded — now submit it for review.")
+      toast.success("Uploaded - now submit it for review.")
     },
     onError: () => toast.error("Upload failed. Please try again."),
   })

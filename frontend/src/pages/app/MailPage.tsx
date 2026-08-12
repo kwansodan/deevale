@@ -39,7 +39,7 @@ function EnrollmentCard({ caseId }: { caseId: string }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mail-disclaimer", caseId] })
       setShowConsent(false)
-      toast.success("You're enrolled — your registered address is now active.")
+      toast.success("You're enrolled - your registered address is now active.")
     },
     onError: (err: unknown) => {
       const message =
@@ -59,7 +59,7 @@ function EnrollmentCard({ caseId }: { caseId: string }) {
           Use our address as your registered office
         </CardTitle>
         <CardDescription>
-          We'll receive, scan, and forward your official mail — {disclaimer.office_address}
+          We'll receive, scan, and forward your official mail - {disclaimer.office_address}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -74,7 +74,7 @@ function EnrollmentCard({ caseId }: { caseId: string }) {
           </DialogHeader>
           <p className="text-muted-foreground max-h-64 overflow-y-auto text-sm">{disclaimer.disclaimer}</p>
           <Button disabled={enrollMutation.isPending} onClick={() => enrollMutation.mutate()}>
-            {enrollMutation.isPending ? "Enrolling…" : "I agree — enroll me"}
+            {enrollMutation.isPending ? "Enrolling…" : "I agree - enroll me"}
           </Button>
         </DialogContent>
       </Dialog>

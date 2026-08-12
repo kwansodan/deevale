@@ -103,7 +103,7 @@ def file_it_for_me_route(obligation_id):
         ServiceRequest.obligation_id == obligation.id, ServiceRequest.status.in_(["new", "in_progress"])
     ).first()
     if existing is not None:
-        raise ValidationAppError("We're already on it — this filing has an open request.")
+        raise ValidationAppError("We're already on it - this filing has an open request.")
 
     service_request = ServiceRequest(
         obligation_id=obligation.id,

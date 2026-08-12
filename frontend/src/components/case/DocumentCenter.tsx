@@ -44,7 +44,7 @@ function ReviewBadge({ doc }: { doc: CaseDocument }) {
       {status === "approved" && "Approved"}
       {status === "pending_review" && "Pending review"}
       {status === "rejected" &&
-        `Rejected — ${REASON_LABELS[version.review_reason_code ?? ""] ?? "see note"}`}
+        `Rejected - ${REASON_LABELS[version.review_reason_code ?? ""] ?? "see note"}`}
     </span>
   )
 }
@@ -66,7 +66,7 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
-      toast.success("New version uploaded — it's back in the review queue.")
+      toast.success("New version uploaded - it's back in the review queue.")
     },
     onError: () => toast.error("Upload failed. Please try again."),
   })
@@ -125,7 +125,7 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
         <h3 className="text-sm font-semibold">Your documents</h3>
         {regularDocs.length === 0 ? (
           <p className="text-muted-foreground mt-2 text-sm">
-            No documents yet — tasks that need an upload will appear in your action list.
+            No documents yet - tasks that need an upload will appear in your action list.
           </p>
         ) : (
           <div className="mt-2 overflow-x-auto">

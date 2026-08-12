@@ -42,8 +42,8 @@ const RANGE_PRESETS = [
   { value: "180", label: "Last 180 days" },
 ]
 
-const SERIES_1 = "var(--chart-1)" // green — first categorical slot
-const SERIES_2 = "var(--chart-2)" // gold — second categorical slot
+const SERIES_1 = "var(--chart-1)" // green - first categorical slot
+const SERIES_2 = "var(--chart-2)" // gold - second categorical slot
 const GRID = "var(--border)"
 const MUTED_TEXT = "var(--muted-foreground)"
 
@@ -152,20 +152,20 @@ export default function ReportsPage() {
             <StatTile label="Cases completed" value={String(kpis.cases_completed)} />
             <StatTile
               label="Median cycle time"
-              value={kpis.median_cycle_days != null ? `${kpis.median_cycle_days}d` : "—"}
+              value={kpis.median_cycle_days != null ? `${kpis.median_cycle_days}d` : "-"}
             />
             <StatTile
               label="First-pass approval"
               value={
                 kpis.first_pass_approval_rate != null
                   ? `${Math.round(kpis.first_pass_approval_rate * 100)}%`
-                  : "—"
+                  : "-"
               }
               hint={`${kpis.first_pass_reviewed} reviews`}
             />
             <StatTile
               label="SLA breach rate"
-              value={kpis.sla_breach_rate != null ? `${Math.round(kpis.sla_breach_rate * 100)}%` : "—"}
+              value={kpis.sla_breach_rate != null ? `${Math.round(kpis.sla_breach_rate * 100)}%` : "-"}
               hint={`${kpis.sla_tasks} timed tasks`}
             />
             <StatTile label="Subscription conversions" value={String(kpis.subscription_conversions)} />

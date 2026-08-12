@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { getOnboardingDraft, saveOnboardingDraft } from "@/api/cases"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -13,6 +14,7 @@ import { StepQuote } from "./steps/StepQuote"
 import { StepReview } from "./steps/StepReview"
 
 export default function StartPage() {
+  const { t } = useTranslation()
   const [step, setStep] = useState(1)
   const [data, setData] = useState<WizardData>(EMPTY_WIZARD_DATA)
   const [loaded, setLoaded] = useState(false)
@@ -53,10 +55,8 @@ export default function StartPage() {
 
   return (
     <div className="mx-auto max-w-xl">
-      <h1 className="text-xl font-semibold">Start your business</h1>
-      <p className="text-muted-foreground mt-1 mb-6 text-sm">
-        Six quick steps — your progress is saved as you go.
-      </p>
+      <h1 className="text-xl font-semibold">{t("wizard.title")}</h1>
+      <p className="text-muted-foreground mt-1 mb-6 text-sm">{t("wizard.subtitle")}</p>
       <Card className="border-border">
         <CardHeader>
           <WizardProgress currentStep={step} />

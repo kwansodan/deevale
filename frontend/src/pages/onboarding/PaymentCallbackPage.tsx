@@ -48,7 +48,7 @@ export default function PaymentCallbackPage() {
             Your journey to {businessName} has begun
           </h1>
           <p className="text-primary-foreground/80 mt-2 text-sm">
-            Payment received — our team is on it. Here's what we need from you next.
+            Payment received - our team is on it. Here's what we need from you next.
           </p>
         </div>
         <CardContent className="pt-5">
@@ -74,7 +74,7 @@ export default function PaymentCallbackPage() {
             </div>
           ) : (
             <p className="text-muted-foreground text-sm">
-              Nothing needed from you right now — we'll notify you the moment something changes.
+              Nothing needed from you right now - we'll notify you the moment something changes.
             </p>
           )}
           <div className="mt-6 flex justify-center">

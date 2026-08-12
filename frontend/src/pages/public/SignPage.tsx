@@ -108,7 +108,7 @@ export default function SignPage() {
       await submitSignature(token, type, value)
       setDone(true)
       await refetch()
-      toast.success("Signed — thank you!")
+      toast.success("Signed - thank you!")
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??

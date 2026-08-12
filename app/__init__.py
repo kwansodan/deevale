@@ -65,6 +65,7 @@ def _register_blueprints(api) -> None:
     from app.partners.admin_routes import blp as partner_admin_blp
     from app.partners.api_v1 import blp as partner_v1_blp
     from app.payments.routes import blp as payments_blp
+    from app.public.routes import blp as public_blp
     from app.referrals.routes import blp as referrals_blp
     from app.reports.routes import blp as reports_blp
     from app.signatures.routes import blp as signatures_blp
@@ -86,6 +87,7 @@ def _register_blueprints(api) -> None:
     api.register_blueprint(partner_admin_blp)
     api.register_blueprint(partner_v1_blp)
     api.register_blueprint(referrals_blp)
+    api.register_blueprint(public_blp)
 
 
 def _apply_security_headers(app: Flask) -> None:

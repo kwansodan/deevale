@@ -47,7 +47,7 @@ def build_partnership_stages() -> list[dict]:
                 dict(
                     code="client_submit_partnership_deed",
                     name="Submit partnership agreement",
-                    description="Upload your signed partnership agreement/deed — we can share a template.",
+                    description="Upload your signed partnership agreement/deed - we can share a template.",
                     sequence_order=2,
                     assignee_type=AssigneeType.CLIENT.value,
                     is_required=True,

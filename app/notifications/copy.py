@@ -60,13 +60,13 @@ NOTIFICATION_COPY = {
 
 
 # Twi (Akan) copy for the top client-facing notification categories.
-# MACHINE-DRAFT — every string is a machine-generated draft and must be
+# MACHINE-DRAFT - every string is a machine-generated draft and must be
 # reviewed by a fluent Twi speaker before release. Categories missing here fall
 # back to the English copy above at runtime.
 NOTIFICATION_COPY_TW = {
     "stage_completed": {
         "title": "Nkyekyɛmu awie: {stage_name}",
-        "body": "\U0001f389 Asɛmpa — '{stage_name}' awie ama {business_name}. {next_step}",
+        "body": "\U0001f389 Asɛmpa - '{stage_name}' awie ama {business_name}. {next_step}",
     },
     "action_required": {
         "title": "Deɛ ɛsɛ sɛ woyɛ: {task_name}",

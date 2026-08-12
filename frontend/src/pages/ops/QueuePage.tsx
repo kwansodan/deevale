@@ -67,7 +67,7 @@ function SlaCell({ dueAt, breached }: { dueAt: string | null; breached: boolean 
     return <span className="text-error text-xs font-semibold">Breached</span>
   }
   if (!dueAt) {
-    return <span className="text-muted-foreground text-xs">—</span>
+    return <span className="text-muted-foreground text-xs">-</span>
   }
   const due = new Date(dueAt)
   const overdue = isPast(due)
@@ -239,7 +239,7 @@ export default function QueuePage() {
                     </Link>
                   </TableCell>
                   <TableCell>{c.business_name}</TableCell>
-                  <TableCell>{c.current_stage_name ?? "—"}</TableCell>
+                  <TableCell>{c.current_stage_name ?? "-"}</TableCell>
                   <TableCell>
                     <StatusChip label={caseStatusDisplay(c.status)} />
                   </TableCell>

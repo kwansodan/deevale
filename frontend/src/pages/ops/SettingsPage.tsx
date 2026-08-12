@@ -5,12 +5,17 @@ import { Pencil, RotateCcw } from "lucide-react"
 
 import { formatGhs } from "@/api/cases"
 import {
+  getLandingSettings,
+  getReferralSettings,
   listFeeSchedule,
   listNotificationTemplates,
   resetNotificationTemplate,
   updateFeeScheduleItem,
+  updateLandingSettings,
+  updateReferralSettings,
   upsertNotificationTemplate,
   type FeeScheduleItem,
+  type LandingConfig,
   type NotificationTemplate,
 } from "@/api/ops"
 import { useAuthStore, hasRole } from "@/stores/auth"
@@ -104,7 +109,7 @@ function FeeScheduleManager() {
           <DialogHeader>
             <DialogTitle>Edit fee: {editing?.code}</DialogTitle>
             <DialogDescription>
-              Changes apply to new quotes only — existing quotes keep their snapshot.
+              Changes apply to new quotes only - existing quotes keep their snapshot.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3">
@@ -247,6 +252,173 @@ function TemplateManager() {
   )
 }
 
+function ReferralSettingsManager() {
+  const queryClient = useQueryClient()
+  const { data, isLoading } = useQuery({ queryKey: ["referral-settings"], queryFn: getReferralSettings })
+  const [reward, setReward] = useState("")
+  const [welcome, setWelcome] = useState("")
+  const [seeded, setSeeded] = useState(false)
+
+  if (data && !seeded) {
+    setReward((data.reward_minor / 100).toFixed(2))
+    setWelcome((data.welcome_minor / 100).toFixed(2))
+    setSeeded(true)
+  }
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      updateReferralSettings({
+        reward_minor: Math.round(Number(reward) * 100),
+        welcome_minor: Math.round(Number(welcome) * 100),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["referral-settings"] })
+      toast.success("Referral rewards updated.")
+    },
+    onError: () => toast.error("Couldn't update referral rewards."),
+  })
+
+  if (isLoading) return <Skeleton className="h-40 w-full" />
+
+  return (
+    <div className="grid max-w-md gap-4">
+      <p className="text-muted-foreground text-sm">
+        Credits applied to Deevale GH invoices. The reward goes to the referrer on the referred
+        client's first payment; the welcome credit goes to the new client (and to co-founder invitees).
+      </p>
+      <label className="grid gap-1.5 text-sm font-medium">
+        Referrer reward (GHS)
+        <Input type="number" min="0" step="0.01" value={reward} onChange={(e) => setReward(e.target.value)} />
+      </label>
+      <label className="grid gap-1.5 text-sm font-medium">
+        New-client welcome credit (GHS)
+        <Input type="number" min="0" step="0.01" value={welcome} onChange={(e) => setWelcome(e.target.value)} />
+      </label>
+      <Button
+        className="justify-self-start"
+        disabled={mutation.isPending || Number.isNaN(Number(reward)) || Number.isNaN(Number(welcome))}
+        onClick={() => mutation.mutate()}
+      >
+        Save reward amounts
+      </Button>
+    </div>
+  )
+}
+
+// Groups of editable landing figures. `entity`-typed sections key off the same
+// entity keys the public site and backend use.
+const ENTITY_LABELS: Record<string, string> = {
+  ltd_shares: "Company Ltd by Shares",
+  sole_proprietorship: "Sole Proprietorship",
+  partnership: "Partnership",
+  ltd_guarantee: "Company Ltd by Guarantee",
+  external_company: "External Company",
+  foreign_ltd_shares: "Foreign-Owned + GIPC",
+}
+const COMPANY_LABELS: Record<string, string> = {
+  legalName: "Legal name",
+  registrationNumber: "Registration number",
+  address: "Address",
+  email: "Email",
+  phone: "Phone",
+  whatsapp: "WhatsApp (digits, intl, no +)",
+  yearsOperating: "Years operating (number)",
+  casesCompleted: "Registrations completed (number)",
+  dataProtectionNumber: "Data Protection reg. number",
+}
+const GIPC_LABELS: Record<string, string> = {
+  jointVenture: "Joint-venture min. capital",
+  whollyForeign: "Wholly-foreign min. capital",
+  trading: "Trading min. capital",
+  registrationFee: "GIPC registration fee",
+}
+const COMPLIANCE_LABELS: Record<string, string> = {
+  monthlyPrice: "Compliance (monthly)",
+  annualPrice: "Compliance (annual)",
+  registeredAddressPrice: "Registered address",
+}
+const LEGAL_LABELS: Record<string, string> = {
+  termsUrl: "Terms URL",
+  privacyUrl: "Privacy URL",
+  refundUrl: "Refund URL",
+}
+
+function LandingSettingsManager() {
+  const queryClient = useQueryClient()
+  const { data, isLoading } = useQuery({ queryKey: ["landing-settings"], queryFn: getLandingSettings })
+  const [draft, setDraft] = useState<LandingConfig | null>(null)
+
+  if (data && draft === null) setDraft(structuredClone(data))
+
+  const mutation = useMutation({
+    mutationFn: () => updateLandingSettings(draft as LandingConfig),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["landing-settings"] })
+      queryClient.invalidateQueries({ queryKey: ["landing-config"] })
+      toast.success("Landing page updated.")
+    },
+    onError: () => toast.error("Couldn't update the landing page."),
+  })
+
+  if (isLoading || !draft) return <Skeleton className="h-64 w-full" />
+
+  function setField(section: keyof LandingConfig, key: string, value: string) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const numericCompany = section === "company" && (key === "yearsOperating" || key === "casesCompleted")
+      const parsed = value.trim() === "" ? null : numericCompany ? Number(value) : value
+      return { ...prev, [section]: { ...prev[section], [key]: parsed } }
+    })
+  }
+
+  function Section({
+    title,
+    section,
+    labels,
+  }: {
+    title: string
+    section: keyof LandingConfig
+    labels: Record<string, string>
+  }) {
+    const group = draft![section] as Record<string, string | number | null>
+    return (
+      <div className="grid gap-2">
+        <h3 className="text-sm font-semibold">{title}</h3>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {Object.entries(labels).map(([key, label]) => (
+            <label key={key} className="grid gap-1 text-xs font-medium">
+              {label}
+              <Input
+                value={group[key] == null ? "" : String(group[key])}
+                onChange={(e) => setField(section, key, e.target.value)}
+                placeholder="Unset (hidden on site)"
+              />
+            </label>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid gap-5">
+      <p className="text-muted-foreground text-sm">
+        These figures show on the public landing page. Leave a field blank to hide it (the page shows
+        "Request a quote" rather than an invented number). Changes apply immediately, no redeploy.
+      </p>
+      <Section title="Company / trust signals" section="company" labels={COMPANY_LABELS} />
+      <Section title="Prices (all-in, government fees included)" section="prices" labels={ENTITY_LABELS} />
+      <Section title="Timelines" section="timelines" labels={ENTITY_LABELS} />
+      <Section title="GIPC thresholds" section="gipc" labels={GIPC_LABELS} />
+      <Section title="Recurring services" section="compliance" labels={COMPLIANCE_LABELS} />
+      <Section title="Legal links" section="legal" labels={LEGAL_LABELS} />
+      <Button className="justify-self-start" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
+        Save landing page
+      </Button>
+    </div>
+  )
+}
+
 export default function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const isAdmin = hasRole(user?.roles, "admin")
@@ -265,13 +437,17 @@ export default function SettingsPage() {
       <Card className="border-border">
         <CardHeader>
           <CardTitle>Settings</CardTitle>
-          <CardDescription>Fee schedule and client-facing notification templates.</CardDescription>
+          <CardDescription>
+            Fee schedule, notification templates, referral rewards and public landing-page figures.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="fees">
             <TabsList>
               <TabsTrigger value="fees">Fee schedule</TabsTrigger>
               {isAdmin && <TabsTrigger value="templates">Notification templates</TabsTrigger>}
+              {isAdmin && <TabsTrigger value="referral">Referral rewards</TabsTrigger>}
+              {isAdmin && <TabsTrigger value="landing">Landing page</TabsTrigger>}
             </TabsList>
             <TabsContent value="fees" className="pt-4">
               <FeeScheduleManager />
@@ -279,6 +455,16 @@ export default function SettingsPage() {
             {isAdmin && (
               <TabsContent value="templates" className="pt-4">
                 <TemplateManager />
+              </TabsContent>
+            )}
+            {isAdmin && (
+              <TabsContent value="referral" className="pt-4">
+                <ReferralSettingsManager />
+              </TabsContent>
+            )}
+            {isAdmin && (
+              <TabsContent value="landing" className="pt-4">
+                <LandingSettingsManager />
               </TabsContent>
             )}
           </Tabs>

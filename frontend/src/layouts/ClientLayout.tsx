@@ -97,7 +97,7 @@ export default function ClientLayout() {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem render={<Link to="/app/notifications">{t("nav.notifications")}</Link>} />
-                <DropdownMenuItem onSelect={handleLogout}>{t("nav.logout")}</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>{t("nav.logout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

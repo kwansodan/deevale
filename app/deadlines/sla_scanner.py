@@ -80,7 +80,7 @@ def scan_sla_breaches() -> dict:
             NotificationCategory.STAFF_SLA_BREACH,
             {
                 "case_number": case.case_number,
-                "task_name": f"ESCALATION — {task.name} (unresolved {ESCALATION_AFTER_HOURS}h after breach)",
+                "task_name": f"ESCALATION - {task.name} (unresolved {ESCALATION_AFTER_HOURS}h after breach)",
             },
             related_case_id=case.id,
         )

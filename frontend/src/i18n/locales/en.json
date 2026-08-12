@@ -69,5 +69,17 @@
     "save": "Save",
     "loading": "Loading…",
     "language": "Language"
+  },
+  "wizard": {
+    "title": "Start your business",
+    "subtitle": "Six quick steps - your progress is saved as you go.",
+    "steps": {
+      "aboutYou": "About you",
+      "business": "Your business",
+      "ownership": "Ownership",
+      "recommendation": "Recommendation",
+      "quote": "Quote",
+      "review": "Review & pay"
+    }
   }
 }

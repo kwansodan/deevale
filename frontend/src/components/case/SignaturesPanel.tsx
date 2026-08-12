@@ -46,7 +46,7 @@ function CreateDialog({ caseId, onClose }: { caseId: string; onClose: () => void
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["signature-requests", caseId] })
-      toast.success("Draft created — send it when you're ready.")
+      toast.success("Draft created - send it when you're ready.")
       onClose()
     },
     onError: () => toast.error("Couldn't create the request."),

@@ -1,12 +1,17 @@
 import { Check } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
-import { WIZARD_STEPS } from "./constants"
+
+// Keys into wizard.steps.* (see i18n locales); order matches the wizard flow.
+const STEP_KEYS = ["aboutYou", "business", "ownership", "recommendation", "quote", "review"] as const
 
 export function WizardProgress({ currentStep }: { currentStep: number }) {
+  const { t } = useTranslation()
   return (
-    <ol className="flex items-center justify-between gap-1" aria-label="Onboarding progress">
-      {WIZARD_STEPS.map((label, index) => {
+    <ol className="flex items-center justify-between gap-1" aria-label={t("wizard.title")}>
+      {STEP_KEYS.map((key, index) => {
+        const label = t(`wizard.steps.${key}`)
         const stepNumber = index + 1
         const isDone = stepNumber < currentStep
         const isActive = stepNumber === currentStep

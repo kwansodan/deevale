@@ -1,9 +1,10 @@
-import { lazy, Suspense } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import { useAuthBootstrap } from "@/hooks/useAuthBootstrap"
 import { useAuthStore } from "@/stores/auth"
 import { RequireAuth, RequireStaff } from "@/routes/AuthGuard"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
 import ClientLayout from "@/layouts/ClientLayout"
 import OpsLayout from "@/layouts/OpsLayout"
 
@@ -52,13 +53,20 @@ function PageFallback() {
 export default function App() {
   const bootstrapped = useAuthBootstrap()
 
+  // A clean mount means the current bundle loaded, so clear the one-shot
+  // chunk-reload guard and let a future stale-chunk error self-heal again.
+  useEffect(() => {
+    sessionStorage.removeItem("deevalegh.chunk-reloaded")
+  }, [])
+
   if (!bootstrapped) {
     return <PageFallback />
   }
 
   return (
-    <Suspense fallback={<PageFallback />}>
-      <Routes>
+    <ErrorBoundary>
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
         <Route path="/" element={<RootRoute />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -96,7 +104,8 @@ export default function App() {
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
   )
 }

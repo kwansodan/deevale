@@ -2,12 +2,16 @@ import uuid
 
 from flask_smorest import Blueprint
 
+from app.admin import settings_service
+from app.admin.models import PlatformSetting  # noqa: F401  (registers the table)
 from app.admin.schemas import (
     FeeScheduleItemSchema,
     FeeScheduleItemUpdateSchema,
+    LandingConfigSchema,
     NotificationTemplateSchema,
     OfficerWorkloadSchema,
     PublicHolidaySchema,
+    ReferralSettingsSchema,
 )
 from app.core.audit import write_audit_log
 from app.core.current_user import get_current_user
@@ -170,6 +174,63 @@ def officer_workload_route():
             }
         )
     return result
+
+
+# --- Platform settings: referral rewards & landing figures -------------------
+
+
+@blp.route("/settings/referral", methods=["GET"])
+@require_roles(RoleName.ADMIN)
+@blp.response(200, ReferralSettingsSchema)
+def get_referral_settings_route():
+    return settings_service.referral_settings()
+
+
+@blp.route("/settings/referral", methods=["PUT"])
+@require_roles(RoleName.ADMIN)
+@blp.arguments(ReferralSettingsSchema)
+@blp.response(200, ReferralSettingsSchema)
+def update_referral_settings_route(payload):
+    user = get_current_user()
+    settings_service.set_json(
+        settings_service.REFERRAL_KEY,
+        {"reward_minor": payload["reward_minor"], "welcome_minor": payload["welcome_minor"]},
+        user_id=user.id,
+    )
+    write_audit_log(
+        action="referral_settings_updated",
+        actor_user_id=user.id,
+        entity_type="platform_setting",
+        entity_id=None,
+        context=payload,
+    )
+    db.session.commit()
+    return settings_service.referral_settings()
+
+
+@blp.route("/settings/landing", methods=["GET"])
+@require_roles(RoleName.ADMIN)
+@blp.response(200, LandingConfigSchema)
+def get_landing_settings_route():
+    return settings_service.landing_config()
+
+
+@blp.route("/settings/landing", methods=["PUT"])
+@require_roles(RoleName.ADMIN)
+@blp.arguments(LandingConfigSchema)
+@blp.response(200, LandingConfigSchema)
+def update_landing_settings_route(payload):
+    user = get_current_user()
+    settings_service.set_json(settings_service.LANDING_KEY, dict(payload), user_id=user.id)
+    write_audit_log(
+        action="landing_settings_updated",
+        actor_user_id=user.id,
+        entity_type="platform_setting",
+        entity_id=None,
+        context={"sections": list(payload.keys())},
+    )
+    db.session.commit()
+    return settings_service.landing_config()
 
 
 # --- Notification templates ----------------------------------------------------

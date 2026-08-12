@@ -189,7 +189,7 @@ def submit_signature_route(payload, sign_token):
     if party.status == "signed":
         raise ValidationAppError("You have already signed this document.")
     if not can_party_sign(party):
-        raise ForbiddenError("It's not your turn to sign yet — an earlier party must sign first.")
+        raise ForbiddenError("It's not your turn to sign yet - an earlier party must sign first.")
 
     record_signature(party, payload["signature_type"], payload["signature_data"], request.remote_addr)
     write_audit_log(

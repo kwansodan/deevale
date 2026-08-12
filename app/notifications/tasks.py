@@ -39,7 +39,7 @@ def send_notification_delivery(self, delivery_id: str) -> None:
             )
             get_email_sender().send(user.email, notification.title, html_body, text_body)
         elif delivery.channel == "sms":
-            cost = get_sms_sender().send(user.phone, f"{notification.title} — {notification.body}")
+            cost = get_sms_sender().send(user.phone, f"{notification.title} - {notification.body}")
             delivery.cost_minor = cost
         elif delivery.channel == "whatsapp":
             payload = delivery.payload or {}
@@ -118,7 +118,7 @@ def send_weekly_digests() -> int:
                 if stage.deadline_at and stage.status in ("in_progress", "not_started"):
                     days = (stage.deadline_at - utcnow()).days
                     if 0 <= days <= 14:
-                        deadline_lines.append(f"{business_name} — {stage.name} deadline in {days} day(s)")
+                        deadline_lines.append(f"{business_name} - {stage.name} deadline in {days} day(s)")
 
         body = "Your week at a glance:\n" + "\n".join(f"• {line}" for line in case_lines)
         if deadline_lines:

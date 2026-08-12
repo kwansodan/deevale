@@ -1,7 +1,7 @@
 {
   "_meta": {
     "language": "Twi (Akan)",
-    "status": "MACHINE-DRAFT — every string below is a machine-generated draft and MUST be reviewed by a fluent Twi speaker before release. Keys without a reviewed value fall back to English at runtime.",
+    "status": "MACHINE-DRAFT - every string below is a machine-generated draft and MUST be reviewed by a fluent Twi speaker before release. Keys without a reviewed value fall back to English at runtime.",
     "reviewed": false
   },
   "nav": {
@@ -39,7 +39,7 @@
     "progress": "Nkɔsoɔ",
     "documents": "Nkrataa",
     "messages": "Nkra",
-    "nothingNeeded": "Biribiara nhia wo seesei — yɛbɛma woate bere a biribi sesa. 🎉"
+    "nothingNeeded": "Biribiara nhia wo seesei - yɛbɛma woate bere a biribi sesa. 🎉"
   },
   "status": {
     "notStarted": "Emfii ase",
@@ -52,7 +52,7 @@
   "money": {
     "title": "Sika",
     "subtitle": "Fa nkrataa kɔ wo adetɔfoɔ hɔ na di wo ka ho dwuma.",
-    "notAccountingNote": "Yei yɛ adwinnadeɛ a ɛnyɛ duru, ɛnyɛ akawntabuo software a ɛyɛ ma. Ɛremfa wo tow — fa CSV no kɔma wo akawntanibuni.",
+    "notAccountingNote": "Yei yɛ adwinnadeɛ a ɛnyɛ duru, ɛnyɛ akawntabuo software a ɛyɛ ma. Ɛremfa wo tow - fa CSV no kɔma wo akawntanibuni.",
     "invoices": "Nkrataa",
     "expenses": "Ka a wobɔ",
     "reports": "Amanneɛbɔ",
@@ -65,7 +65,7 @@
     "copyLink": "Kopi nsɛmpa link",
     "balance": "Sika a ɛwɔ hɔ",
     "ledger": "Sika abakɔsɛm",
-    "empty": "Sika biara nni hɔ — kyɛ wo koodu na fi ase nya."
+    "empty": "Sika biara nni hɔ - kyɛ wo koodu na fi ase nya."
   },
   "common": {
     "back": "San kɔ",
@@ -74,5 +74,17 @@
     "save": "Kora",
     "loading": "Ɛreload…",
     "language": "Kasa"
+  },
+  "wizard": {
+    "title": "Fi wo adwuma ase",
+    "subtitle": "Anammɔn ntɛntɛm nsia - yɛkora wo nkɔsoɔ bere a worekɔ.",
+    "steps": {
+      "aboutYou": "Wo ho asɛm",
+      "business": "Wo adwuma",
+      "ownership": "Wura",
+      "recommendation": "Afotuo",
+      "quote": "Boɔ",
+      "review": "Hwɛ na tua"
+    }
   }
 }

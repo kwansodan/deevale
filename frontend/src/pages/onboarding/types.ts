@@ -9,20 +9,20 @@ export type OwnerEntry = {
 }
 
 export type WizardData = {
-  // Step 1 — About you
+  // Step 1 - About you
   nationality: "ghanaian" | "foreign" | ""
   residency: "resident" | "non_resident" | ""
   id_type: "ghana_card" | "passport" | ""
   id_number: string
-  // Step 2 — Your business
+  // Step 2 - Your business
   venture_type: "for_profit" | "ngo" | "branch" | ""
   business_name: string
   sector: string
   planned_employees: number
   region: string
-  // Step 3 — Ownership
+  // Step 3 - Ownership
   owners: OwnerEntry[]
-  // Step 4 — Recommendation
+  // Step 4 - Recommendation
   entity_type: string
 }
 

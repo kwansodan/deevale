@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { OWNER_ROLES } from "../constants"
+import { COUNTRIES, OWNER_ROLES } from "../constants"
 import type { WizardData } from "../types"
 
 const ownerSchema = z
@@ -57,6 +57,7 @@ const schema = z.object({
 type Values = z.infer<typeof schema>
 
 const ROLE_ITEMS = OWNER_ROLES.map((r) => ({ value: r.value, label: r.label }))
+const COUNTRY_ITEMS = COUNTRIES.map((c) => ({ value: c, label: c }))
 const NATIONALITY_ITEMS = [
   { value: "ghanaian", label: "Ghanaian" },
   { value: "foreign", label: "Non-Ghanaian" },
@@ -181,7 +182,7 @@ export function StepOwnership({
             {form.watch(`owners.${index}.nationality`) === "foreign" && (
               <div className="border-info/30 bg-info/5 grid gap-3 rounded-md border p-3">
                 <p className="text-info text-xs font-medium">
-                  Non-Ghanaian parties need a non-citizen TIN — we'll obtain it from GRA using these
+                  Non-Ghanaian parties need a non-citizen TIN - we'll obtain it from GRA using these
                   passport details.
                 </p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -204,9 +205,24 @@ export function StepOwnership({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Issuing country</FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. United Kingdom" {...field} value={field.value ?? ""} />
-                        </FormControl>
+                        <Select
+                          items={COUNTRY_ITEMS}
+                          value={field.value || null}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select country" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {COUNTRY_ITEMS.map((item) => (
+                              <SelectItem key={item.value} value={item.value}>
+                                {item.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

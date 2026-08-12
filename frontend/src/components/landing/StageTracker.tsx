@@ -29,7 +29,7 @@ function StateDot({ state }: { state: StageState }) {
  * The hero's product device: the case timeline a client actually watches.
  *
  * This is the page's main image. It is built from the real workflow rather than
- * invented UI, so it doubles as proof of the "every stage tracked" claim — and
+ * invented UI, so it doubles as proof of the "every stage tracked" claim - and
  * it is labelled as an example so nobody mistakes it for their own live case.
  */
 export function StageTracker({ audience }: { audience: "local" | "foreign" }) {

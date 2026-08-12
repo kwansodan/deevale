@@ -54,7 +54,7 @@ export function FileDropzone({
     >
       <UploadCloud className="size-6" />
       <span>{label}</span>
-      <span className="text-xs">PDF, JPG or PNG — max 10 MB</span>
+      <span className="text-xs">PDF, JPG or PNG - max 10 MB</span>
       <input
         ref={inputRef}
         type="file"

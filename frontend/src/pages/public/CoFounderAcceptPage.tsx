@@ -31,7 +31,7 @@ export default function CoFounderAcceptPage() {
     try {
       await acceptCoFounderInvite(token)
       setAccepted(true)
-      toast.success("You've joined — next, verify your ID from your dashboard.")
+      toast.success("You've joined - next, verify your ID from your dashboard.")
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
@@ -77,7 +77,7 @@ export default function CoFounderAcceptPage() {
               ) : !user ? (
                 <div className="grid gap-3 text-sm">
                   <p className="text-muted-foreground">
-                    First, create your own Deevale GH account (or log in) — your ID verification stays
+                    First, create your own Deevale GH account (or log in) - your ID verification stays
                     private to you.
                   </p>
                   <div className="flex gap-2">

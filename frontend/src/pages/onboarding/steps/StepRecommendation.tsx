@@ -20,7 +20,7 @@ function computeRecommendation(data: WizardData): Recommendation {
     return {
       entity_type: "external_company",
       reasons: [
-        "A branch of an existing foreign company registers in Ghana as an External Company — the parent stays the legal entity.",
+        "A branch of an existing foreign company registers in Ghana as an External Company - the parent stays the legal entity.",
         "You'll provide notarized copies of the parent's incorporation documents and appoint a local manager by power of attorney.",
         "If you'd rather have a separate Ghanaian legal entity, a Company Limited by Shares subsidiary is the alternative.",
       ],
@@ -30,7 +30,7 @@ function computeRecommendation(data: WizardData): Recommendation {
     return {
       entity_type: "company_limited_by_guarantee",
       reasons: [
-        "Non-profits in Ghana incorporate as Companies Limited by Guarantee — there are no shareholders, and income can't be distributed as profit.",
+        "Non-profits in Ghana incorporate as Companies Limited by Guarantee - there are no shareholders, and income can't be distributed as profit.",
         "Expect a higher-scrutiny document set: executive council IDs and a beneficial ownership profile are required.",
         "This structure is what donors and the NGO directorate expect to see.",
       ],
@@ -40,7 +40,7 @@ function computeRecommendation(data: WizardData): Recommendation {
     return {
       entity_type: "company_limited_by_shares",
       reasons: [
-        "Foreign participation requires an incorporated company — sole proprietorships are only open to Ghanaian citizens.",
+        "Foreign participation requires an incorporated company - sole proprietorships are only open to Ghanaian citizens.",
         "A company limited by shares gives every investor clear, transferable ownership through shares.",
         "It's the structure GIPC expects when registering foreign investment.",
       ],
@@ -50,9 +50,9 @@ function computeRecommendation(data: WizardData): Recommendation {
     return {
       entity_type: "company_limited_by_shares",
       reasons: [
-        `With ${ownerCount} owners, a company limited by shares protects each person — liability stops at what each shareholder puts in.`,
+        `With ${ownerCount} owners, a company limited by shares protects each person - liability stops at what each shareholder puts in.`,
         "Shares make it easy to split ownership fairly and bring in new investors later.",
-        "Prefer a lighter structure? An Incorporated Private Partnership is also available below — but partners stay personally liable.",
+        "Prefer a lighter structure? An Incorporated Private Partnership is also available below - but partners stay personally liable.",
       ],
     }
   }
@@ -61,7 +61,7 @@ function computeRecommendation(data: WizardData): Recommendation {
     reasons: [
       "As a solo founder you could also run a sole proprietorship, but a limited company keeps your personal assets separate from business debts.",
       "It's easier to add co-founders or investors later without re-registering.",
-      "Most clients on Deevale GH choose this structure — it grows with you.",
+      "Most clients on Deevale GH choose this structure - it grows with you.",
     ],
   }
 }
@@ -127,7 +127,7 @@ export function StepRecommendation({
             <p className="text-info font-medium">Foreign-owned setups include GIPC registration.</p>
             <p className="text-foreground/80 mt-1">
               Because your business has non-Ghanaian participation, it will also be registered with the
-              Ghana Investment Promotion Centre. We'll guide you through the extra requirements — this is
+              Ghana Investment Promotion Centre. We'll guide you through the extra requirements - this is
               included in your journey, with GIPC-specific steps coming in a later phase.
             </p>
           </div>

@@ -110,7 +110,7 @@ export function StageTimeline({
               {isActive && (
                 <p className="text-muted-foreground mt-1 text-sm">
                   {stage.status === "blocked_on_payment"
-                    ? "Waiting on payment — this stage unlocks as soon as your invoice is settled."
+                    ? "Waiting on payment - this stage unlocks as soon as your invoice is settled."
                     : STAGE_KB[stage.code]?.summary ?? "In progress."}
                 </p>
               )}

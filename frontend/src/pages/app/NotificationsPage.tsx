@@ -16,6 +16,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
+/** Never let a malformed timestamp throw and blank the page. */
+function formatWhen(value: string): string {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? "" : format(date, "d MMM yyyy, HH:mm")
+}
+
 const CATEGORY_LABELS: Record<string, string> = {
   stage_completed: "Stage completed",
   action_required: "Action required",
@@ -52,7 +58,7 @@ function NotificationList() {
     return (
       <div className="text-muted-foreground flex flex-col items-center gap-2 py-10 text-sm">
         <BellOff className="size-6" />
-        Nothing here yet — updates about your case will land in this inbox.
+        Nothing here yet - updates about your case will land in this inbox.
       </div>
     )
   }
@@ -71,9 +77,7 @@ function NotificationList() {
             <div className="min-w-0">
               <p className={cn("text-sm", !n.is_read && "font-medium")}>{n.title}</p>
               <p className="text-muted-foreground mt-0.5 text-sm">{n.body}</p>
-              <p className="text-muted-foreground/70 mt-1 text-xs">
-                {format(new Date(n.created_at), "d MMM yyyy, HH:mm")}
-              </p>
+              <p className="text-muted-foreground/70 mt-1 text-xs">{formatWhen(n.created_at)}</p>
             </div>
             {!n.is_read && (
               <Button
@@ -212,7 +216,7 @@ function PreferenceSettings() {
 
       <p className="text-muted-foreground mt-2 text-xs">
         In-app notifications stay on so you never miss a required action. SMS pauses overnight
-        (21:00–07:00) — anything urgent is delivered at 7 am.
+        (21:00-07:00) - anything urgent is delivered at 7 am.
       </p>
     </div>
   )

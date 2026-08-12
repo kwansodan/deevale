@@ -82,7 +82,7 @@ export function StepQuote({
       <div className="border-border bg-card flex items-center gap-3 rounded-lg border p-3 text-sm">
         <Clock className="text-accent-600 size-5 shrink-0" />
         <div>
-          <p className="font-medium">Estimated timeline: 4–6 weeks</p>
+          <p className="font-medium">Estimated timeline: 4-6 weeks</p>
           <p className="text-muted-foreground text-xs">
             From name reservation to your business operating permit, assuming documents come in promptly.
           </p>

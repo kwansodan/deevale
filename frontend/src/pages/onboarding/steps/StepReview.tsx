@@ -32,6 +32,10 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
         id_type: data.id_type,
         id_number: data.id_number,
         sector: data.sector,
+        // ISIC Rev.4 classification carried alongside the curated sector so
+        // staff filings reference a standard code.
+        sector_isic: sector ? `${sector.isic.section}${sector.isic.code}` : null,
+        sector_isic_label: sector?.isic.label ?? null,
         planned_employees: data.planned_employees,
         region: data.region,
         owners: data.owners,
@@ -56,7 +60,7 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
       <div>
         <h3 className="text-lg font-semibold">One last look</h3>
         <p className="text-muted-foreground mt-1 text-sm">
-          Check everything is right — then pay securely with card or Mobile Money via Paystack.
+          Check everything is right - then pay securely with card or Mobile Money via Paystack.
         </p>
       </div>
 
@@ -65,6 +69,9 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
           <Row label="Business name" value={data.business_name} />
           <Row label="Entity type" value={ENTITY_TYPE_LABELS[data.entity_type]} />
           <Row label="Sector" value={sector?.label ?? data.sector} />
+          {sector && (
+            <Row label="ISIC class" value={`${sector.isic.section}${sector.isic.code} · ${sector.isic.label}`} />
+          )}
           <Row label="Region" value={data.region} />
           <Row label="Planned employees" value={String(data.planned_employees)} />
           <Separator className="my-1" />

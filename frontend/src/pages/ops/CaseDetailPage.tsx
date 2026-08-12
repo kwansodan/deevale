@@ -123,7 +123,7 @@ function StageTaskTree({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
       queryClient.invalidateQueries({ queryKey: ["case", caseId] })
-      toast.success("Evidence uploaded — approve it in the Documents tab to unlock the task.")
+      toast.success("Evidence uploaded - approve it in the Documents tab to unlock the task.")
       setEvidenceTask(null)
     },
     onError: () => toast.error("Upload failed."),
@@ -415,7 +415,7 @@ function DocumentReviewPanel({ caseId }: { caseId: string }) {
               Reject {rejectTarget ? typeLabel(rejectTarget.document_type_code) : "document"}
             </DialogTitle>
             <DialogDescription>
-              The client sees the reason you pick, plus your note — keep it actionable.
+              The client sees the reason you pick, plus your note - keep it actionable.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3">

@@ -4,6 +4,7 @@ from flask import current_app
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint
 
+from app.admin import settings_service
 from app.core.current_user import get_current_user
 from app.core.errors import ForbiddenError, NotFoundError, ValidationAppError
 from app.core.model_mixins import utcnow
@@ -168,7 +169,7 @@ def accept_invite_route(token):
     db.session.add(
         ReferralCredit(
             user_id=invite.inviter_id,
-            amount_minor=current_app.config["REFERRAL_WELCOME_MINOR"],
+            amount_minor=settings_service.referral_welcome_minor(),
             source="cofounder",
         )
     )

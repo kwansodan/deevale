@@ -31,7 +31,7 @@ function renderCountry(c: Country) {
   )
 }
 
-/** 🇬🇭 from "GH" — regional indicator letters, no flag asset needed. */
+/** 🇬🇭 from "GH" - regional indicator letters, no flag asset needed. */
 function flagOf(code: string): string {
   return String.fromCodePoint(
     ...[...code].map((c) => 0x1f1e6 + c.charCodeAt(0) - "A".charCodeAt(0))

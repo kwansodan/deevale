@@ -472,7 +472,7 @@ export default function MoneyPage() {
         <Info className="text-info mt-0.5 size-4 shrink-0" />
         <p className="text-foreground/80">
           This is a lightweight record-keeping tool, not full accounting software. It won't file
-          your taxes — export the CSV for your accountant when you need a proper set of books.
+          your taxes - export the CSV for your accountant when you need a proper set of books.
         </p>
       </div>
 

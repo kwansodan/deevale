@@ -59,7 +59,7 @@ function LogMailForm() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mailroom-items"] })
-      toast.success("Mail logged — upload the scan below.")
+      toast.success("Mail logged - upload the scan below.")
       setSender("")
       setSubject("")
     },
@@ -126,7 +126,7 @@ function MailList() {
     mutationFn: ({ mailId, file }: { mailId: string; file: File }) => uploadMailScan(mailId, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mailroom-items"] })
-      toast.success("Scan uploaded — client notified.")
+      toast.success("Scan uploaded - client notified.")
     },
     onError: () => toast.error("Scan upload failed."),
   })
@@ -173,7 +173,7 @@ function MailList() {
             {scanned.map((item) => (
               <li key={item.id} className="text-muted-foreground flex items-center justify-between text-sm">
                 <span>
-                  {item.sender} — {item.subject ?? "No subject"}
+                  {item.sender} - {item.subject ?? "No subject"}
                 </span>
                 <span className="text-xs">{item.read_at ? "read" : "delivered"}</span>
               </li>

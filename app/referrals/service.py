@@ -1,7 +1,6 @@
 import uuid
 
-from flask import current_app
-
+from app.admin import settings_service
 from app.extensions import db
 from app.referrals.models import Referral, ReferralCode, ReferralCredit
 
@@ -43,14 +42,14 @@ def grant_referral_rewards(referred_user_id) -> bool:
     db.session.add(
         ReferralCredit(
             user_id=referral.referrer_id,
-            amount_minor=current_app.config["REFERRAL_REWARD_MINOR"],
+            amount_minor=settings_service.referral_reward_minor(),
             source="referral",
         )
     )
     db.session.add(
         ReferralCredit(
             user_id=referral.referred_user_id,
-            amount_minor=current_app.config["REFERRAL_WELCOME_MINOR"],
+            amount_minor=settings_service.referral_welcome_minor(),
             source="welcome",
         )
     )

@@ -1,7 +1,20 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import INCLUDE, Schema, fields, validate
 
 from app.notifications.enums import NotificationCategory
 from app.workflow.enums import FeeType
+
+
+class ReferralSettingsSchema(Schema):
+    # Reward to the referrer and welcome credit to the referred user, in pesewas.
+    reward_minor = fields.Integer(required=True, validate=validate.Range(min=0))
+    welcome_minor = fields.Integer(required=True, validate=validate.Range(min=0))
+
+
+class LandingConfigSchema(Schema):
+    # The landing figures are a nested, entirely-optional blob; the service owns
+    # the shape and fills defaults, so accept whatever the admin form sends.
+    class Meta:
+        unknown = INCLUDE
 
 
 class FeeScheduleItemSchema(Schema):

@@ -22,15 +22,7 @@ import { StageTracker } from "@/components/landing/StageTracker"
 import { CertificateMark } from "@/components/landing/CertificateMark"
 import { useInView } from "@/hooks/useInView"
 import { cn } from "@/lib/utils"
-import {
-  company,
-  compliance,
-  entities,
-  figures,
-  gipc,
-  hasTrustSignals,
-  legal,
-} from "@/config/landing"
+import { figures, useLandingConfig } from "@/config/landing"
 
 // Deliberately not translated. tw.json is still a machine draft
 // (_meta.reviewed:false); unreviewed Twi on the page whose whole job is
@@ -119,6 +111,7 @@ function Section({
 
 export default function LandingPage() {
   const [audience, setAudience] = useState<Audience>("local")
+  const { company, compliance, entities, gipc, hasTrustSignals, legal } = useLandingConfig()
   const isForeign = audience === "foreign"
   const visibleEntities = entities.filter((e) => (isForeign ? true : !e.foreignTrack))
 
@@ -221,7 +214,7 @@ export default function LandingPage() {
             {company.registrationNumber && (
               <span className="flex items-center gap-2">
                 <ShieldCheck className="text-primary size-4" />
-                Registered in Ghana — {company.registrationNumber}
+                Registered in Ghana - {company.registrationNumber}
               </span>
             )}
             {company.yearsOperating && <span>{company.yearsOperating}+ years operating</span>}
@@ -229,7 +222,7 @@ export default function LandingPage() {
               <span>{company.casesCompleted.toLocaleString()} registrations completed</span>
             )}
             {company.dataProtectionNumber && (
-              <span>Data Protection Commission — {company.dataProtectionNumber}</span>
+              <span>Data Protection Commission - {company.dataProtectionNumber}</span>
             )}
           </div>
         </div>

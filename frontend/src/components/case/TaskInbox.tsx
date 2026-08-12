@@ -23,7 +23,7 @@ export function TaskInbox({
   if (tasks.length === 0) {
     return (
       <p className="text-muted-foreground text-sm">
-        Nothing needed from you right now — we'll let you know the moment that changes. 🎉
+        Nothing needed from you right now - we'll let you know the moment that changes. 🎉
       </p>
     )
   }

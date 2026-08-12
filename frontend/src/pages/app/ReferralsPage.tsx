@@ -51,7 +51,7 @@ function CoFounderInvites({ caseId }: { caseId: string }) {
           Invite a co-founder or director
         </CardTitle>
         <CardDescription>
-          They'll create their own account and complete their own ID verification — no need to share
+          They'll create their own account and complete their own ID verification - no need to share
           documents with you.
         </CardDescription>
       </CardHeader>

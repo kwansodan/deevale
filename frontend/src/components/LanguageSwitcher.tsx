@@ -36,7 +36,7 @@ export function LanguageSwitcher() {
       />
       <DropdownMenuContent align="end">
         {SUPPORTED_LANGUAGES.map((lang) => (
-          <DropdownMenuItem key={lang.code} onSelect={() => changeLanguage(lang.code)}>
+          <DropdownMenuItem key={lang.code} onClick={() => changeLanguage(lang.code)}>
             {lang.label}
           </DropdownMenuItem>
         ))}

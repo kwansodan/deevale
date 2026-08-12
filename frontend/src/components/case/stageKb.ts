@@ -10,7 +10,7 @@ export const STAGE_KB: Record<string, StageKbEntry> = {
     summary: "We're checking your proposed names with the ORC and reserving the best available one.",
     learnMore:
       "The Office of the Registrar of Companies keeps a register of every business name in Ghana. " +
-      "We search it for conflicts, then reserve your name — the reservation holds it for you for " +
+      "We search it for conflicts, then reserve your name - the reservation holds it for you for " +
       "about 30 days while incorporation is prepared.",
   },
   incorporation: {
@@ -24,7 +24,7 @@ export const STAGE_KB: Record<string, StageKbEntry> = {
     summary: "We're registering your foreign investment with the Ghana Investment Promotion Centre.",
     learnMore:
       "Every company with foreign participation registers with GIPC. Two things happen first: " +
-      "(1) you open a Ghana corporate bank account, and (2) the foreign equity is transferred in — " +
+      "(1) you open a Ghana corporate bank account, and (2) the foreign equity is transferred in - " +
       "cash transfers generate a Bank of Ghana confirmation letter through your bank, while " +
       "equipment or goods use their customs import declaration as proof. We then assemble the " +
       "document pack (Certificate of Incorporation, constitution, Form 3, beneficial ownership " +
@@ -34,7 +34,7 @@ export const STAGE_KB: Record<string, StageKbEntry> = {
   tax_registration: {
     summary: "We're registering your company with the GRA for its tax identification number.",
     learnMore:
-      "The Ghana Revenue Authority issues your company TIN — you need it to invoice, open some " +
+      "The Ghana Revenue Authority issues your company TIN - you need it to invoice, open some " +
       "bank accounts, and bid for contracts. Non-Ghanaian directors also get individual " +
       "non-citizen TINs issued against their passports; we handle both.",
   },
@@ -49,12 +49,12 @@ export const STAGE_KB: Record<string, StageKbEntry> = {
     summary: "We're applying for your operating permit with the local assembly.",
     learnMore:
       "Every business premises needs a Business Operating Permit from its Metropolitan, Municipal " +
-      "or District Assembly (MMDA). It renews annually — we'll remind you before it lapses.",
+      "or District Assembly (MMDA). It renews annually - we'll remind you before it lapses.",
   },
   completed: {
-    summary: "All registrations are complete — your business is fully set up!",
+    summary: "All registrations are complete - your business is fully set up!",
     learnMore:
       "Your certificates live in the document vault. Next up: annual returns, tax filings and " +
-      "permit renewals — your compliance calendar tracks every deadline.",
+      "permit renewals - your compliance calendar tracks every deadline.",
   },
 }

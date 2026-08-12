@@ -59,7 +59,7 @@ def generate_obligations(case: BusinessCase) -> list[ComplianceObligation]:
         dict(
             code="orc_annual_return",
             title=annual_return_title,
-            description=f"Annual return for {business_name} — due each year on your registration anniversary.",
+            description=f"Annual return for {business_name} - due each year on your registration anniversary.",
             due_date=_add_years(completion, 1),
             recurrence="annual",
         )
@@ -81,7 +81,7 @@ def generate_obligations(case: BusinessCase) -> list[ComplianceObligation]:
             dict(
                 code="corporate_income_tax",
                 title="Corporate income tax return (GRA)",
-                description="Annual income tax return — due four months after your financial year end.",
+                description="Annual income tax return - due four months after your financial year end.",
                 due_date=date(completion.year + 1, 4, 30),
                 recurrence="annual",
             )
@@ -93,7 +93,7 @@ def generate_obligations(case: BusinessCase) -> list[ComplianceObligation]:
                 dict(
                     code="vat_return",
                     title="VAT return (GRA)",
-                    description="Monthly VAT return — due by the last working day of the following month.",
+                    description="Monthly VAT return - due by the last working day of the following month.",
                     due_date=_next_month_end(completion, offset),
                     recurrence="monthly",
                 )
