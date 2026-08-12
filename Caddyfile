@@ -1,0 +1,16 @@
+# Baked into the caddy image (Dockerfile.caddy) rather than bind-mounted --
+# Komodo runs compose from a managed directory that does not contain the repo's
+# files, so a `./Caddyfile` volume has no source. The build context does have
+# the repo, so COPY works. Domains come from the environment.
+
+# The JSON API.
+{$API_DOMAIN} {
+	reverse_proxy api:8000
+}
+
+# Browser-facing object storage: presigned MinIO uploads/downloads. Caddy
+# preserves the Host header, so the SigV4 signature (bound to FILES_DOMAIN)
+# still validates at MinIO. WebSocket/large uploads pass through unchanged.
+{$FILES_DOMAIN} {
+	reverse_proxy minio:9000
+}

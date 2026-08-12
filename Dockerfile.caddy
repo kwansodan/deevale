@@ -1,0 +1,6 @@
+# Caddy with the repo Caddyfile baked in. A separate image (not the app image)
+# so the reverse proxy stays tiny. Built by the caddy service in
+# docker-compose.prod.yml; the default entrypoint runs
+# `caddy run --config /etc/caddy/Caddyfile`.
+FROM caddy:2-alpine
+COPY Caddyfile /etc/caddy/Caddyfile

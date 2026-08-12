@@ -44,6 +44,10 @@ services:
     environment:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY:?set in .env}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:?set in .env}
+      # Presigned uploads/downloads are cross-origin (frontend -> files.domain).
+      # The presigned signature is the real authorisation, so allowing any
+      # origin to attempt the request is safe. Avoids browser CORS failures.
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
     volumes:
       - minio_data:/data
 
@@ -117,13 +121,16 @@ services:
   # caddy_data MUST persist: it holds the certificates. Without it every deploy
   # re-requests them and quickly trips Let's Encrypt rate limits.
   caddy:
-    image: caddy:2-alpine
+    # Built from Dockerfile.caddy so the two-domain Caddyfile (api + files) is
+    # baked into the image -- a bind mount has no source in Komodo's managed run
+    # directory. Automatic HTTPS for both domains; certs persist in caddy_data.
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
     restart: unless-stopped
-    # `caddy reverse-proxy` needs no config file, so there is no bind mount to
-    # break on Komodo's managed run directory (which holds the compose file but
-    # not the repo's other files). It still provisions automatic HTTPS for the
-    # public --from domain and proxies WebSocket upgrades transparently.
-    command: caddy reverse-proxy --from ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com} --to api:8000
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com}
+      FILES_DOMAIN: ${FILES_DOMAIN:?set in .env, e.g. files.deevalegh.com}
     ports:
       - "80:80"
       - "443:443"
