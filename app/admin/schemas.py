@@ -12,7 +12,18 @@ class ReferralSettingsSchema(Schema):
 
 class LandingConfigSchema(Schema):
     # The landing figures are a nested, entirely-optional blob; the service owns
-    # the shape and fills defaults, so accept whatever the admin form sends.
+    # the shape and fills defaults. Each section is declared as a passthrough dict
+    # so it survives BOTH load and dump -- a fieldless schema would serialize to
+    # {} on dump (marshmallow's `unknown` only applies to load), which blanks the
+    # admin form and the public landing config. `unknown = INCLUDE` keeps any
+    # future section the service adds without a schema change.
+    company = fields.Dict(load_default=dict)
+    prices = fields.Dict(load_default=dict)
+    timelines = fields.Dict(load_default=dict)
+    gipc = fields.Dict(load_default=dict)
+    compliance = fields.Dict(load_default=dict)
+    legal = fields.Dict(load_default=dict)
+
     class Meta:
         unknown = INCLUDE
 
