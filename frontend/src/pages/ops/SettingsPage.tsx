@@ -128,7 +128,15 @@ function FeeScheduleManager() {
               />
             </label>
             <Button
-              disabled={updateMutation.isPending || !editLabel || Number.isNaN(Number(editAmount))}
+              disabled={
+                updateMutation.isPending ||
+                !editLabel.trim() ||
+                // Number("") is 0, not NaN, so an empty field would silently
+                // save GHS 0 -- reject empty and negative explicitly.
+                editAmount.trim() === "" ||
+                !Number.isFinite(Number(editAmount)) ||
+                Number(editAmount) < 0
+              }
               onClick={() => updateMutation.mutate()}
             >
               Save changes
@@ -343,6 +351,41 @@ const LEGAL_LABELS: Record<string, string> = {
   refundUrl: "Refund URL",
 }
 
+/**
+ * Hoisted to module scope on purpose: defined inside LandingSettingsManager it
+ * was a fresh component type every render, so React remounted every field on
+ * each keystroke and the input lost focus after one character.
+ */
+function LandingSection({
+  title,
+  labels,
+  group,
+  onChange,
+}: {
+  title: string
+  labels: Record<string, string>
+  group: Record<string, string | number | null>
+  onChange: (key: string, value: string) => void
+}) {
+  return (
+    <div className="grid gap-2">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {Object.entries(labels).map(([key, label]) => (
+          <label key={key} className="grid gap-1 text-xs font-medium">
+            {label}
+            <Input
+              value={group[key] == null ? "" : String(group[key])}
+              onChange={(e) => onChange(key, e.target.value)}
+              placeholder="Unset (hidden on site)"
+            />
+          </label>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function LandingSettingsManager() {
   const queryClient = useQueryClient()
   const { data, isLoading } = useQuery({ queryKey: ["landing-settings"], queryFn: getLandingSettings })
@@ -366,39 +409,21 @@ function LandingSettingsManager() {
     setDraft((prev) => {
       if (!prev) return prev
       const numericCompany = section === "company" && (key === "yearsOperating" || key === "casesCompleted")
-      const parsed = value.trim() === "" ? null : numericCompany ? Number(value) : value
+      let parsed: string | number | null
+      if (value.trim() === "") {
+        parsed = null
+      } else if (numericCompany) {
+        const n = Number(value)
+        parsed = Number.isFinite(n) ? n : null // never store NaN
+      } else {
+        parsed = value
+      }
       return { ...prev, [section]: { ...prev[section], [key]: parsed } }
     })
   }
 
-  function Section({
-    title,
-    section,
-    labels,
-  }: {
-    title: string
-    section: keyof LandingConfig
-    labels: Record<string, string>
-  }) {
-    const group = draft![section] as Record<string, string | number | null>
-    return (
-      <div className="grid gap-2">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        <div className="grid gap-2 sm:grid-cols-2">
-          {Object.entries(labels).map(([key, label]) => (
-            <label key={key} className="grid gap-1 text-xs font-medium">
-              {label}
-              <Input
-                value={group[key] == null ? "" : String(group[key])}
-                onChange={(e) => setField(section, key, e.target.value)}
-                placeholder="Unset (hidden on site)"
-              />
-            </label>
-          ))}
-        </div>
-      </div>
-    )
-  }
+  const groupOf = (section: keyof LandingConfig) =>
+    draft![section] as Record<string, string | number | null>
 
   return (
     <div className="grid gap-5">
@@ -406,12 +431,12 @@ function LandingSettingsManager() {
         These figures show on the public landing page. Leave a field blank to hide it (the page shows
         "Request a quote" rather than an invented number). Changes apply immediately, no redeploy.
       </p>
-      <Section title="Company / trust signals" section="company" labels={COMPANY_LABELS} />
-      <Section title="Prices (all-in, government fees included)" section="prices" labels={ENTITY_LABELS} />
-      <Section title="Timelines" section="timelines" labels={ENTITY_LABELS} />
-      <Section title="GIPC thresholds" section="gipc" labels={GIPC_LABELS} />
-      <Section title="Recurring services" section="compliance" labels={COMPLIANCE_LABELS} />
-      <Section title="Legal links" section="legal" labels={LEGAL_LABELS} />
+      <LandingSection title="Company / trust signals" labels={COMPANY_LABELS} group={groupOf("company")} onChange={(k, v) => setField("company", k, v)} />
+      <LandingSection title="Prices (all-in, government fees included)" labels={ENTITY_LABELS} group={groupOf("prices")} onChange={(k, v) => setField("prices", k, v)} />
+      <LandingSection title="Timelines" labels={ENTITY_LABELS} group={groupOf("timelines")} onChange={(k, v) => setField("timelines", k, v)} />
+      <LandingSection title="GIPC thresholds" labels={GIPC_LABELS} group={groupOf("gipc")} onChange={(k, v) => setField("gipc", k, v)} />
+      <LandingSection title="Recurring services" labels={COMPLIANCE_LABELS} group={groupOf("compliance")} onChange={(k, v) => setField("compliance", k, v)} />
+      <LandingSection title="Legal links" labels={LEGAL_LABELS} group={groupOf("legal")} onChange={(k, v) => setField("legal", k, v)} />
       <Button className="justify-self-start" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
         Save landing page
       </Button>
