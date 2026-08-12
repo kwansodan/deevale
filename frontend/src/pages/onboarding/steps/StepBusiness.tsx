@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { TriangleAlert } from "lucide-react"
@@ -36,11 +37,6 @@ type Values = z.infer<typeof schema>
 
 const SECTOR_ITEMS = SECTORS.map((s) => ({ value: s.value, label: s.label }))
 const REGION_ITEMS = GHANA_REGIONS.map((r) => ({ value: r, label: r }))
-const VENTURE_ITEMS = [
-  { value: "for_profit", label: "A new business (for profit)" },
-  { value: "ngo", label: "An NGO / non-profit" },
-  { value: "branch", label: "A branch of an existing foreign company" },
-]
 
 export function StepBusiness({
   data,
@@ -51,6 +47,12 @@ export function StepBusiness({
   onNext: (values: Partial<WizardData>) => void
   onBack: () => void
 }) {
+  const { t } = useTranslation()
+  const VENTURE_ITEMS = [
+    { value: "for_profit", label: t("wizard.business.forProfit") },
+    { value: "ngo", label: t("wizard.business.ngo") },
+    { value: "branch", label: t("wizard.business.branch") },
+  ]
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -80,11 +82,11 @@ export function StepBusiness({
           name="venture_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>What are you setting up?</FormLabel>
+              <FormLabel>{t("wizard.business.ventureLabel")}</FormLabel>
               <Select items={VENTURE_ITEMS} value={field.value ?? null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select one" />
+                    <SelectValue placeholder={t("wizard.business.selectOne")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -104,11 +106,11 @@ export function StepBusiness({
           name="business_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preferred business name</FormLabel>
+              <FormLabel>{t("wizard.business.nameLabel")}</FormLabel>
               <FormControl>
-                <Input placeholder="e.g. Accra Tech Solutions" {...field} />
+                <Input placeholder={t("wizard.business.namePlaceholder")} {...field} />
               </FormControl>
-              <FormDescription>We'll check availability with the ORC before reserving it.</FormDescription>
+              <FormDescription>{t("wizard.business.nameHint")}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -118,11 +120,11 @@ export function StepBusiness({
           name="sector"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>What will the business do?</FormLabel>
+              <FormLabel>{t("wizard.business.sectorLabel")}</FormLabel>
               <Select items={SECTOR_ITEMS} value={field.value || null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a sector" />
+                    <SelectValue placeholder={t("wizard.business.selectSector")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -144,11 +146,11 @@ export function StepBusiness({
           >
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />
             <div>
-              <p className="font-medium">This sector is reserved for Ghanaian citizens.</p>
+              <p className="font-medium">{t("wizard.business.reservedTitle")}</p>
               <p className="text-error/90 mt-1">
-                Under Ghana's investment law (GIPC Act), {selectedSector?.label.toLowerCase()} is not open
-                to foreign participation. Please choose a different sector, or continue with wholly
-                Ghanaian ownership.
+                {t("wizard.business.reservedBody", {
+                  sector: selectedSector?.label.toLowerCase() ?? "",
+                })}
               </p>
             </div>
           </div>
@@ -158,11 +160,11 @@ export function StepBusiness({
           name="planned_employees"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>How many employees do you plan to hire in year one?</FormLabel>
+              <FormLabel>{t("wizard.business.employeesLabel")}</FormLabel>
               <FormControl>
                 <Input type="number" min={0} {...field} />
               </FormControl>
-              <FormDescription>Used to plan your SSNIT employer registration. 0 is fine.</FormDescription>
+              <FormDescription>{t("wizard.business.employeesHint")}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -172,11 +174,11 @@ export function StepBusiness({
           name="region"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Region of operation</FormLabel>
+              <FormLabel>{t("wizard.business.regionLabel")}</FormLabel>
               <Select items={REGION_ITEMS} value={field.value || null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a region" />
+                    <SelectValue placeholder={t("wizard.business.selectRegion")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -193,10 +195,10 @@ export function StepBusiness({
         />
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={onBack}>
-            Back
+            {t("wizard.common.back")}
           </Button>
           <Button type="submit" disabled={reservedBlocked}>
-            Continue
+            {t("wizard.common.continue")}
           </Button>
         </div>
       </form>

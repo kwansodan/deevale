@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import { getCase, listCases, type CaseTask } from "@/api/cases"
@@ -22,35 +23,37 @@ import { MessageThread } from "@/components/case/MessageThread"
 import { StatusChip } from "@/components/case/StatusChip"
 
 function EmptyState() {
+  const { t } = useTranslation()
   return (
     <Card className="border-border">
       <CardHeader>
-        <CardTitle>Ready to launch your business?</CardTitle>
-        <CardDescription>
-          Answer a few questions, get an instant quote, and we'll handle every government office for you.
-        </CardDescription>
+        <CardTitle>{t("dashboard.noCasesTitle")}</CardTitle>
+        <CardDescription>{t("dashboard.noCasesBody")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button render={<Link to="/app/start">Start a new business</Link>} nativeButton={false} />
+        <Button
+          render={<Link to="/app/start">{t("nav.startBusiness")}</Link>}
+          nativeButton={false}
+        />
       </CardContent>
     </Card>
   )
 }
 
-function caseStatusDisplay(status: string): string {
-  switch (status) {
-    case "completed":
-      return "Done"
-    case "blocked":
-      return "Blocked"
-    case "active":
-      return "With government"
-    default:
-      return "Not started"
-  }
-}
-
 export default function DashboardPage() {
+  const { t } = useTranslation()
+  const caseStatusDisplay = (status: string): string => {
+    switch (status) {
+      case "completed":
+        return t("status.done")
+      case "blocked":
+        return t("status.blocked")
+      case "active":
+        return t("status.withGovernment")
+      default:
+        return t("status.notStarted")
+    }
+  }
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null)
   const [activeTask, setActiveTask] = useState<CaseTask | null>(null)
 
@@ -120,7 +123,8 @@ export default function DashboardPage() {
           <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-base">
-                Action needed{actionCount > 0 ? ` (${actionCount})` : ""}
+                {t("dashboard.actionNeeded")}
+                {actionCount > 0 ? ` (${actionCount})` : ""}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -130,9 +134,9 @@ export default function DashboardPage() {
 
           <Tabs defaultValue="progress">
             <TabsList>
-              <TabsTrigger value="progress">Progress</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="messages">Messages</TabsTrigger>
+              <TabsTrigger value="progress">{t("dashboard.progress")}</TabsTrigger>
+              <TabsTrigger value="documents">{t("dashboard.documents")}</TabsTrigger>
+              <TabsTrigger value="messages">{t("dashboard.messages")}</TabsTrigger>
             </TabsList>
             <TabsContent value="progress" className="pt-4">
               <Card className="border-border">

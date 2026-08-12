@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -26,6 +27,7 @@ const otpSchema = z.object({
 type OtpFormValues = z.infer<typeof otpSchema>
 
 export default function VerifyOtpPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const identifier = (location.state as { identifier?: string } | null)?.identifier ?? ""
@@ -60,11 +62,9 @@ export default function VerifyOtpPage() {
           <div className="mb-2 flex justify-center">
             <Wordmark size="lg" />
           </div>
-          <CardTitle className="text-xl">Verify your account</CardTitle>
+          <CardTitle className="text-xl">{t("verifyOtp.title")}</CardTitle>
           <CardDescription>
-            {identifier
-              ? `We sent a 6-digit code to ${identifier}.`
-              : "Enter the 6-digit code we sent you."}
+            {identifier ? t("verifyOtp.sentTo", { identifier }) : t("verifyOtp.subtitle")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,7 +75,7 @@ export default function VerifyOtpPage() {
                 name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Verification code</FormLabel>
+                    <FormLabel>{t("verifyOtp.codeLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         inputMode="numeric"
@@ -90,7 +90,7 @@ export default function VerifyOtpPage() {
                 )}
               />
               <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Verifying..." : "Verify"}
+                {isSubmitting ? t("verifyOtp.verifying") : t("verifyOtp.verify")}
               </Button>
             </form>
           </Form>

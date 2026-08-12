@@ -80,6 +80,109 @@
       "recommendation": "Recommendation",
       "quote": "Quote",
       "review": "Review & pay"
+    },
+    "common": {
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "about": {
+      "nationality": "Nationality",
+      "selectNationality": "Select nationality",
+      "ghanaian": "Ghanaian",
+      "nonGhanaian": "Non-Ghanaian",
+      "residency": "Where do you live?",
+      "selectResidency": "Select residency",
+      "resident": "Resident in Ghana",
+      "nonResident": "Living outside Ghana",
+      "idType": "ID document",
+      "selectIdType": "Select ID type",
+      "ghanaCard": "Ghana Card",
+      "passport": "Passport",
+      "idNumber": "ID number",
+      "idNumberPlaceholder": "GHA-000000000-0 or passport number"
+    },
+    "business": {
+      "ventureLabel": "What are you setting up?",
+      "selectOne": "Select one",
+      "forProfit": "A new business (for profit)",
+      "ngo": "An NGO / non-profit",
+      "branch": "A branch of an existing foreign company",
+      "nameLabel": "Preferred business name",
+      "namePlaceholder": "e.g. Accra Tech Solutions",
+      "nameHint": "We'll check availability with the ORC before reserving it.",
+      "sectorLabel": "What will the business do?",
+      "selectSector": "Select a sector",
+      "reservedTitle": "This sector is reserved for Ghanaian citizens.",
+      "reservedBody": "Under Ghana's investment law (GIPC Act), {{sector}} is not open to foreign participation. Please choose a different sector, or continue with wholly Ghanaian ownership.",
+      "employeesLabel": "How many employees do you plan to hire in year one?",
+      "employeesHint": "Used to plan your SSNIT employer registration. 0 is fine.",
+      "regionLabel": "Region of operation",
+      "selectRegion": "Select a region"
+    },
+    "ownership": {
+      "heading": "Owners & directors",
+      "intro": "A company limited by shares needs at least one director and one shareholder (can be the same person). Include yourself if you're an owner.",
+      "person": "Person {{n}}",
+      "removePerson": "Remove person {{n}}",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Full legal name",
+      "role": "Role",
+      "selectRole": "Select role",
+      "nationality": "Nationality",
+      "selectNationality": "Select nationality",
+      "foreignTinNote": "Non-Ghanaian parties need a non-citizen TIN - we'll obtain it from GRA using these passport details.",
+      "passportNumber": "Passport number",
+      "passportPlaceholder": "e.g. A1234567",
+      "issuingCountry": "Issuing country",
+      "selectCountry": "Select country",
+      "addPerson": "Add another person",
+      "sharesNote": "You can refine shareholding percentages with your case officer later."
+    },
+    "review": {
+      "heading": "One last look",
+      "subtitle": "Check everything is right - then pay securely with card or Mobile Money via Paystack.",
+      "businessName": "Business name",
+      "entityType": "Entity type",
+      "sector": "Sector",
+      "isicClass": "ISIC class",
+      "region": "Region",
+      "plannedEmployees": "Planned employees",
+      "gipcLabel": "GIPC registration",
+      "gipcValue": "Included (foreign participation)",
+      "settingUp": "Setting up payment…",
+      "payCta": "Create my case & pay",
+      "genericError": "Something went wrong creating your case. Please try again."
     }
+  },
+  "compliance": {
+    "title": "Compliance calendar",
+    "subtitle": "Your upcoming filing deadlines, in one place."
+  },
+  "mail": {
+    "title": "Registered mail",
+    "subtitle": "Physical mail received at your registered office, scanned for you."
+  },
+  "notificationsPage": {
+    "title": "Notifications",
+    "subtitle": "Everything that's happened on your cases, in one place.",
+    "inbox": "Inbox",
+    "settings": "Settings",
+    "empty": "Nothing here yet - updates about your case will land in this inbox.",
+    "markRead": "Mark read"
+  },
+  "signup": {
+    "whatsappReachable": "This number is on WhatsApp",
+    "secondaryPhone": "Secondary mobile number",
+    "optional": "optional",
+    "secondaryPlaceholder": "Another number for you"
+  },
+  "verifyOtp": {
+    "title": "Verify your account",
+    "subtitle": "Enter the 6-digit code we sent you.",
+    "sentTo": "We sent a 6-digit code to {{identifier}}.",
+    "codeLabel": "Verification code",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "resend": "Resend code"
   }
 }

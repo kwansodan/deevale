@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 import { createCase, createInvoice, initializeTransaction } from "@/api/cases"
@@ -18,6 +19,7 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export function StepReview({ data, onBack }: { data: WizardData; onBack: () => void }) {
+  const { t } = useTranslation()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const sector = SECTORS.find((s) => s.value === data.sector)
 
@@ -49,7 +51,7 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-        "Something went wrong creating your case. Please try again."
+        t("wizard.review.genericError")
       toast.error(message)
       setIsSubmitting(false)
     }
@@ -58,22 +60,23 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
   return (
     <div className="grid gap-5">
       <div>
-        <h3 className="text-lg font-semibold">One last look</h3>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Check everything is right - then pay securely with card or Mobile Money via Paystack.
-        </p>
+        <h3 className="text-lg font-semibold">{t("wizard.review.heading")}</h3>
+        <p className="text-muted-foreground mt-1 text-sm">{t("wizard.review.subtitle")}</p>
       </div>
 
       <Card className="border-border">
         <CardContent className="grid gap-2.5 pt-5">
-          <Row label="Business name" value={data.business_name} />
-          <Row label="Entity type" value={ENTITY_TYPE_LABELS[data.entity_type]} />
-          <Row label="Sector" value={sector?.label ?? data.sector} />
+          <Row label={t("wizard.review.businessName")} value={data.business_name} />
+          <Row label={t("wizard.review.entityType")} value={ENTITY_TYPE_LABELS[data.entity_type]} />
+          <Row label={t("wizard.review.sector")} value={sector?.label ?? data.sector} />
           {sector && (
-            <Row label="ISIC class" value={`${sector.isic.section}${sector.isic.code} · ${sector.isic.label}`} />
+            <Row
+              label={t("wizard.review.isicClass")}
+              value={`${sector.isic.section}${sector.isic.code} · ${sector.isic.label}`}
+            />
           )}
-          <Row label="Region" value={data.region} />
-          <Row label="Planned employees" value={String(data.planned_employees)} />
+          <Row label={t("wizard.review.region")} value={data.region} />
+          <Row label={t("wizard.review.plannedEmployees")} value={String(data.planned_employees)} />
           <Separator className="my-1" />
           {data.owners.map((owner, index) => (
             <Row
@@ -85,7 +88,7 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
           {hasForeignParticipation(data) && (
             <>
               <Separator className="my-1" />
-              <Row label="GIPC registration" value="Included (foreign participation)" />
+              <Row label={t("wizard.review.gipcLabel")} value={t("wizard.review.gipcValue")} />
             </>
           )}
         </CardContent>
@@ -93,10 +96,10 @@ export function StepReview({ data, onBack }: { data: WizardData; onBack: () => v
 
       <div className="flex justify-between">
         <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting}>
-          Back
+          {t("wizard.common.back")}
         </Button>
         <Button type="button" onClick={handlePay} disabled={isSubmitting}>
-          {isSubmitting ? "Setting up payment…" : "Create my case & pay"}
+          {isSubmitting ? t("wizard.review.settingUp") : t("wizard.review.payCta")}
         </Button>
       </div>
     </div>

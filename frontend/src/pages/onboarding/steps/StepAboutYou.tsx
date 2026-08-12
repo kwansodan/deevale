@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
@@ -30,19 +31,6 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>
 
-const NATIONALITY_ITEMS = [
-  { value: "ghanaian", label: "Ghanaian" },
-  { value: "foreign", label: "Non-Ghanaian" },
-]
-const RESIDENCY_ITEMS = [
-  { value: "resident", label: "Resident in Ghana" },
-  { value: "non_resident", label: "Living outside Ghana" },
-]
-const ID_TYPE_ITEMS = [
-  { value: "ghana_card", label: "Ghana Card" },
-  { value: "passport", label: "Passport" },
-]
-
 export function StepAboutYou({
   data,
   onNext,
@@ -50,6 +38,19 @@ export function StepAboutYou({
   data: WizardData
   onNext: (values: Partial<WizardData>) => void
 }) {
+  const { t } = useTranslation()
+  const NATIONALITY_ITEMS = [
+    { value: "ghanaian", label: t("wizard.about.ghanaian") },
+    { value: "foreign", label: t("wizard.about.nonGhanaian") },
+  ]
+  const RESIDENCY_ITEMS = [
+    { value: "resident", label: t("wizard.about.resident") },
+    { value: "non_resident", label: t("wizard.about.nonResident") },
+  ]
+  const ID_TYPE_ITEMS = [
+    { value: "ghana_card", label: t("wizard.about.ghanaCard") },
+    { value: "passport", label: t("wizard.about.passport") },
+  ]
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -68,11 +69,11 @@ export function StepAboutYou({
           name="nationality"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nationality</FormLabel>
+              <FormLabel>{t("wizard.about.nationality")}</FormLabel>
               <Select items={NATIONALITY_ITEMS} value={field.value ?? null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select nationality" />
+                    <SelectValue placeholder={t("wizard.about.selectNationality")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -92,11 +93,11 @@ export function StepAboutYou({
           name="residency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Where do you live?</FormLabel>
+              <FormLabel>{t("wizard.about.residency")}</FormLabel>
               <Select items={RESIDENCY_ITEMS} value={field.value ?? null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select residency" />
+                    <SelectValue placeholder={t("wizard.about.selectResidency")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -116,11 +117,11 @@ export function StepAboutYou({
           name="id_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID document</FormLabel>
+              <FormLabel>{t("wizard.about.idType")}</FormLabel>
               <Select items={ID_TYPE_ITEMS} value={field.value ?? null} onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select ID type" />
+                    <SelectValue placeholder={t("wizard.about.selectIdType")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -140,16 +141,16 @@ export function StepAboutYou({
           name="id_number"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID number</FormLabel>
+              <FormLabel>{t("wizard.about.idNumber")}</FormLabel>
               <FormControl>
-                <Input placeholder="GHA-000000000-0 or passport number" {...field} />
+                <Input placeholder={t("wizard.about.idNumberPlaceholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">Continue</Button>
+          <Button type="submit">{t("wizard.common.continue")}</Button>
         </div>
       </form>
     </Form>

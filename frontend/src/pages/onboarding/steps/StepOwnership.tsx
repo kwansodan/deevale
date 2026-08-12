@@ -1,4 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Plus, Trash2 } from "lucide-react"
@@ -58,10 +59,6 @@ type Values = z.infer<typeof schema>
 
 const ROLE_ITEMS = OWNER_ROLES.map((r) => ({ value: r.value, label: r.label }))
 const COUNTRY_ITEMS = COUNTRIES.map((c) => ({ value: c, label: c }))
-const NATIONALITY_ITEMS = [
-  { value: "ghanaian", label: "Ghanaian" },
-  { value: "foreign", label: "Non-Ghanaian" },
-]
 
 export function StepOwnership({
   data,
@@ -72,6 +69,11 @@ export function StepOwnership({
   onNext: (values: Partial<WizardData>) => void
   onBack: () => void
 }) {
+  const { t } = useTranslation()
+  const NATIONALITY_ITEMS = [
+    { value: "ghanaian", label: t("wizard.about.ghanaian") },
+    { value: "foreign", label: t("wizard.about.nonGhanaian") },
+  ]
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -87,25 +89,22 @@ export function StepOwnership({
     <Form {...form}>
       <form onSubmit={form.handleSubmit((values) => onNext(values))} className="grid gap-5">
         <div>
-          <h3 className="text-sm font-medium">Owners & directors</h3>
-          <p className="text-muted-foreground mt-1 text-sm">
-            A company limited by shares needs at least one director and one shareholder (can be the same
-            person). Include yourself if you're an owner.
-          </p>
+          <h3 className="text-sm font-medium">{t("wizard.ownership.heading")}</h3>
+          <p className="text-muted-foreground mt-1 text-sm">{t("wizard.ownership.intro")}</p>
         </div>
 
         {fields.map((field, index) => (
           <div key={field.id} className="border-border grid gap-3 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                Person {index + 1}
+                {t("wizard.ownership.person", { n: index + 1 })}
               </span>
               {fields.length > 1 && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Remove person ${index + 1}`}
+                  aria-label={t("wizard.ownership.removePerson", { n: index + 1 })}
                   onClick={() => remove(index)}
                 >
                   <Trash2 className="text-muted-foreground size-4" />
@@ -117,9 +116,9 @@ export function StepOwnership({
               name={`owners.${index}.full_name`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>{t("wizard.ownership.fullName")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Full legal name" {...field} />
+                    <Input placeholder={t("wizard.ownership.fullNamePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,11 +130,11 @@ export function StepOwnership({
                 name={`owners.${index}.role`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel>{t("wizard.ownership.role")}</FormLabel>
                     <Select items={ROLE_ITEMS} value={field.value || null} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select role" />
+                          <SelectValue placeholder={t("wizard.ownership.selectRole")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -155,7 +154,7 @@ export function StepOwnership({
                 name={`owners.${index}.nationality`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nationality</FormLabel>
+                    <FormLabel>{t("wizard.ownership.nationality")}</FormLabel>
                     <Select
                       items={NATIONALITY_ITEMS}
                       value={field.value ?? null}
@@ -163,7 +162,7 @@ export function StepOwnership({
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select nationality" />
+                          <SelectValue placeholder={t("wizard.ownership.selectNationality")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -181,19 +180,16 @@ export function StepOwnership({
             </div>
             {form.watch(`owners.${index}.nationality`) === "foreign" && (
               <div className="border-info/30 bg-info/5 grid gap-3 rounded-md border p-3">
-                <p className="text-info text-xs font-medium">
-                  Non-Ghanaian parties need a non-citizen TIN - we'll obtain it from GRA using these
-                  passport details.
-                </p>
+                <p className="text-info text-xs font-medium">{t("wizard.ownership.foreignTinNote")}</p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name={`owners.${index}.passport_number`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Passport number</FormLabel>
+                        <FormLabel>{t("wizard.ownership.passportNumber")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. A1234567" {...field} value={field.value ?? ""} />
+                          <Input placeholder={t("wizard.ownership.passportPlaceholder")} {...field} value={field.value ?? ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -204,7 +200,7 @@ export function StepOwnership({
                     name={`owners.${index}.passport_country`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Issuing country</FormLabel>
+                        <FormLabel>{t("wizard.ownership.issuingCountry")}</FormLabel>
                         <Select
                           items={COUNTRY_ITEMS}
                           value={field.value || null}
@@ -212,7 +208,7 @@ export function StepOwnership({
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select country" />
+                              <SelectValue placeholder={t("wizard.ownership.selectCountry")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -240,15 +236,15 @@ export function StepOwnership({
           onClick={() => append({ full_name: "", role: "shareholder", nationality: "ghanaian" })}
         >
           <Plus data-icon="inline-start" className="size-4" />
-          Add another person
+          {t("wizard.ownership.addPerson")}
         </Button>
-        <FormDescription>You can refine shareholding percentages with your case officer later.</FormDescription>
+        <FormDescription>{t("wizard.ownership.sharesNote")}</FormDescription>
 
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={onBack}>
-            Back
+            {t("wizard.common.back")}
           </Button>
-          <Button type="submit">Continue</Button>
+          <Button type="submit">{t("wizard.common.continue")}</Button>
         </div>
       </form>
     </Form>

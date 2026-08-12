@@ -85,6 +85,109 @@
       "recommendation": "Afotuo",
       "quote": "Boɔ",
       "review": "Hwɛ na tua"
+    },
+    "common": {
+      "back": "San kɔ",
+      "continue": "Toa so"
+    },
+    "about": {
+      "nationality": "Ɔman a wofiri mu",
+      "selectNationality": "Paw ɔman",
+      "ghanaian": "Ghanani",
+      "nonGhanaian": "Ɛnyɛ Ghanani",
+      "residency": "Ɛhefa na wote?",
+      "selectResidency": "Paw baabi a wote",
+      "resident": "Mete Ghana",
+      "nonResident": "Mete Ghana akyi",
+      "idType": "ID krataa",
+      "selectIdType": "Paw ID",
+      "ghanaCard": "Ghana Card",
+      "passport": "Passport",
+      "idNumber": "ID nɔma",
+      "idNumberPlaceholder": "GHA-000000000-0 anaa passport nɔma"
+    },
+    "business": {
+      "ventureLabel": "Ɛdeɛn na woresiesie?",
+      "selectOne": "Paw baako",
+      "forProfit": "Adwuma foforɔ (mfasoɔ nti)",
+      "ngo": "NGO / mfasoɔ nni mu",
+      "branch": "Ɔman foforɔ adwuma baa",
+      "nameLabel": "Din a wopɛ ma adwuma no",
+      "namePlaceholder": "sɛ ebia Accra Tech Solutions",
+      "nameHint": "Yɛbɛhwɛ ORC hɔ sɛ din no wɔ hɔ ansa na yɛasi so dua.",
+      "sectorLabel": "Ɛdeɛn na adwuma no bɛyɛ?",
+      "selectSector": "Paw dwumadibea",
+      "reservedTitle": "Saa dwumadibea yi yɛ Ghanafoɔ nko ara dea.",
+      "reservedBody": "Wɔ Ghana sikasɛm mmara (GIPC Act) ase no, {{sector}} mmue mma ananafoɔ. Yɛsrɛ wo paw dwumadibea foforɔ, anaa toa so wɔ Ghanafoɔ wura koraa mu.",
+      "employeesLabel": "Adwumayɛfoɔ dodoɔ sɛn na wobɛfa afe a ɛdi kan?",
+      "employeesHint": "Yɛde siesie wo SSNIT nkyerɛwee. 0 yɛ.",
+      "regionLabel": "Ɔmantam a wobɛyɛ adwuma",
+      "selectRegion": "Paw ɔmantam"
+    },
+    "ownership": {
+      "heading": "Wuranom & akwankyerɛfoɔ",
+      "intro": "Adwuma a kyɛfa wɔ mu hia akwankyerɛfoɔ baako ne kyɛfahoɔ baako (ɛbɛtumi ayɛ onipa korɔ). Fa wo ho ka ho sɛ woyɛ wura a.",
+      "person": "Onipa {{n}}",
+      "removePerson": "Yi onipa {{n}}",
+      "fullName": "Din a ɛyɛ ma",
+      "fullNamePlaceholder": "Din a ɛyɛ ma",
+      "role": "Dwuma",
+      "selectRole": "Paw dwuma",
+      "nationality": "Ɔman a wofiri mu",
+      "selectNationality": "Paw ɔman",
+      "foreignTinNote": "Ananafoɔ hia non-citizen TIN - yɛbɛnya afiri GRA hɔ de passport nsɛm yi.",
+      "passportNumber": "Passport nɔma",
+      "passportPlaceholder": "sɛ ebia A1234567",
+      "issuingCountry": "Ɔman a ɛmaa",
+      "selectCountry": "Paw ɔman",
+      "addPerson": "Fa onipa foforɔ ka ho",
+      "sharesNote": "Wobɛtumi ne wo case officer asiesie kyɛfa akyire yi."
+    },
+    "review": {
+      "heading": "Hwɛ bio",
+      "subtitle": "Hwɛ sɛ biribiara yɛ pɛ - na fa card anaa Mobile Money tua wɔ Paystack so.",
+      "businessName": "Adwuma din",
+      "entityType": "Adwuma su",
+      "sector": "Dwumadibea",
+      "isicClass": "ISIC su",
+      "region": "Ɔmantam",
+      "plannedEmployees": "Adwumayɛfoɔ a wɔhyehyɛ",
+      "gipcLabel": "GIPC nkyerɛwee",
+      "gipcValue": "Ɛka ho (ananafoɔ wura)",
+      "settingUp": "Ɛresiesie tua…",
+      "payCta": "Bɔ me case na tua",
+      "genericError": "Biribi kɔɔ bɔne wɔ wo case bɔ mu. Yɛsrɛ sɔ hwɛ bio."
     }
+  },
+  "compliance": {
+    "title": "Mmara so di kalɛnda",
+    "subtitle": "Wo nkyerɛwee mmerɛ a ɛreba, wɔ baabi korɔ."
+  },
+  "mail": {
+    "title": "Nkrataa a wɔakyerɛw",
+    "subtitle": "Nkrataa a wɔde baa wo dwumadibea, yɛascan ama wo."
+  },
+  "notificationsPage": {
+    "title": "Amanneɛbɔ",
+    "subtitle": "Deɛ asi wɔ wo nsɛm ho nyinaa, wɔ baabi korɔ.",
+    "inbox": "Nkrataa",
+    "settings": "Nhyehyɛeɛ",
+    "empty": "Biribiara nni ha - wo case ho amanneɛbɔ bɛba ha.",
+    "markRead": "Kae sɛ makenkan"
+  },
+  "signup": {
+    "whatsappReachable": "Saa nɔma yi wɔ WhatsApp so",
+    "secondaryPhone": "Telefon nɔma a ɛtɔ so mmienu",
+    "optional": "sɛ wopɛ a",
+    "secondaryPlaceholder": "Nɔma foforɔ ma wo"
+  },
+  "verifyOtp": {
+    "title": "Si wo akawnt so dua",
+    "subtitle": "Kyerɛw koodu a ɛwɔ nɔma nsia a yɛde brɛɛ wo.",
+    "sentTo": "Yɛde koodu a ɛwɔ nɔma nsia kɔmaa {{identifier}}.",
+    "codeLabel": "Nhyɛmu koodu",
+    "verify": "Si so dua",
+    "verifying": "Ɛresi so dua...",
+    "resend": "San soma koodu"
   }
 }

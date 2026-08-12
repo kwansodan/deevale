@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { format } from "date-fns"
 import { BellOff } from "lucide-react"
 import { toast } from "sonner"
@@ -34,6 +35,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 function NotificationList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications", "all"],
@@ -58,7 +60,7 @@ function NotificationList() {
     return (
       <div className="text-muted-foreground flex flex-col items-center gap-2 py-10 text-sm">
         <BellOff className="size-6" />
-        Nothing here yet - updates about your case will land in this inbox.
+        {t("notificationsPage.empty")}
       </div>
     )
   }
@@ -86,7 +88,7 @@ function NotificationList() {
                 onClick={() => markReadMutation.mutate(n.id)}
                 disabled={markReadMutation.isPending}
               >
-                Mark read
+                {t("notificationsPage.markRead")}
               </Button>
             )}
           </div>
@@ -223,18 +225,19 @@ function PreferenceSettings() {
 }
 
 export default function NotificationsPage() {
+  const { t } = useTranslation()
   return (
     <div className="mx-auto max-w-2xl">
       <Card className="border-border">
         <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-          <CardDescription>Everything that's happened on your cases, in one place.</CardDescription>
+          <CardTitle>{t("notificationsPage.title")}</CardTitle>
+          <CardDescription>{t("notificationsPage.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="inbox">
             <TabsList>
-              <TabsTrigger value="inbox">Inbox</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
+              <TabsTrigger value="inbox">{t("notificationsPage.inbox")}</TabsTrigger>
+              <TabsTrigger value="settings">{t("notificationsPage.settings")}</TabsTrigger>
             </TabsList>
             <TabsContent value="inbox" className="pt-4">
               <NotificationList />
