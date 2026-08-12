@@ -102,8 +102,8 @@ function Section({
           <p
             className={cn(
               "mb-2 text-sm font-semibold tracking-wide uppercase",
-              // accent-400 rather than --accent: brass at #8A6D3B is only
-              // 3.61:1 on the ink ground, which fails AA at this size.
+              // On the charcoal ink section the bright yellow accent-400 reads
+              // cleanly; on light sections the eyebrow uses charcoal primary.
               surface === "ink" ? "text-accent-400" : "text-primary"
             )}
           >

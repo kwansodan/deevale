@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <!-- Simplified from deevalegh-icon.svg: the dot below the mark closes up and
        muddies the shape at 16px, so the favicon carries the triangle alone. -->
-  <rect width="512" height="512" rx="72" fill="#131A24"/>
-  <path d="M256 128 L408 368 H104 Z" fill="#8A6D3B"/>
+  <rect width="512" height="512" rx="72" fill="#45474B"/>
+  <path d="M256 128 L408 368 H104 Z" fill="#F4CE14"/>
 </svg>
