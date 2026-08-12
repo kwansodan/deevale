@@ -16,8 +16,11 @@ export async function listCaseMessages(caseId: string) {
   return data
 }
 
-export async function sendCaseMessage(caseId: string, body: string) {
-  const { data } = await apiClient.post<CaseMessage>(`/cases/${caseId}/messages`, { body })
+export async function sendCaseMessage(caseId: string, body: string, attachmentDocumentId?: string) {
+  const { data } = await apiClient.post<CaseMessage>(`/cases/${caseId}/messages`, {
+    body,
+    ...(attachmentDocumentId ? { attachment_document_id: attachmentDocumentId } : {}),
+  })
   return data
 }
 
