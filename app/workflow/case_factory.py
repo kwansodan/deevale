@@ -1,6 +1,8 @@
 import uuid
 from datetime import UTC, datetime
 
+from sqlalchemy import func
+
 from app.core.audit import write_audit_log
 from app.core.errors import ValidationAppError
 from app.core.events.bus import bus
@@ -17,6 +19,17 @@ SUPPORTED_ENTITY_TYPES = {
     EntityType.COMPANY_LIMITED_BY_GUARANTEE.value,
     EntityType.EXTERNAL_COMPANY.value,
 }
+
+# Case-number prefix. Was "LGH" (LaunchGH) before the rename.
+CASE_NUMBER_PREFIX = "DGH"
+
+# Statuses that count as an in-flight registration for idempotency purposes;
+# COMPLETED / CANCELLED are terminal, so the same business may be started again.
+_IN_FLIGHT_STATUSES = (
+    CaseStatus.DRAFT.value,
+    CaseStatus.ACTIVE.value,
+    CaseStatus.BLOCKED.value,
+)
 
 
 class CaseFactory:
@@ -47,6 +60,23 @@ class CaseFactory:
             )
         if workflow_def is None:
             raise ValidationAppError(f"No active workflow definition found for entity type '{entity_type}'")
+
+        # Idempotency: repeated onboarding submissions -- a retry after an error,
+        # a double-click, a flaky connection -- must not each mint a new case.
+        # If this client already has an in-flight case for the same entity type
+        # and business name, return it rather than creating a duplicate. This
+        # guards the partner API path too, since it shares this factory.
+        business_name = (onboarding_payload.get("business_name") or "").strip()
+        if business_name:
+            existing = BusinessCase.query.filter(
+                BusinessCase.client_id == client.id,
+                BusinessCase.entity_type == entity_type,
+                BusinessCase.status.in_(_IN_FLIGHT_STATUSES),
+                func.lower(BusinessCase.onboarding_payload["business_name"].astext)
+                == business_name.lower(),
+            ).first()
+            if existing is not None:
+                return existing
 
         case = BusinessCase(
             id=uuid.uuid4(),
@@ -113,5 +143,14 @@ class CaseFactory:
 
 def _generate_case_number() -> str:
     year = datetime.now(UTC).year
-    count = BusinessCase.query.filter(BusinessCase.case_number.like(f"LGH-{year}-%")).count() + 1
-    return f"LGH-{year}-{count:06d}"
+    prefix = f"{CASE_NUMBER_PREFIX}-{year}-"
+    # Take the highest existing sequence, not count()+1: count() reuses a number
+    # after a case is deleted, which then collides with the unique case_number.
+    # Zero-padding makes lexical order match numeric order, so desc gives the max.
+    last = (
+        BusinessCase.query.filter(BusinessCase.case_number.like(f"{prefix}%"))
+        .order_by(BusinessCase.case_number.desc())
+        .first()
+    )
+    next_seq = 1 if last is None else int(last.case_number.rsplit("-", 1)[1]) + 1
+    return f"{prefix}{next_seq:06d}"
