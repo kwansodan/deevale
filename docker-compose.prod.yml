@@ -63,8 +63,9 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
-    # Caddy terminates TLS on the host and proxies to this port. Bound to
-    # loopback so the API is never reachable except through Caddy.
+    # Published on loopback only, for host-side debugging (curl
+    # 127.0.0.1:8000/health). Public traffic arrives through the caddy service,
+    # which reaches this container as api:8000 over the compose network.
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -103,6 +104,30 @@ services:
       migrate:
         condition: service_completed_successfully
 
+  # TLS-terminating reverse proxy for the API. Provisions and renews a Let's
+  # Encrypt certificate for API_DOMAIN automatically and forwards to the api
+  # service; WebSocket upgrades (/socket.io/) pass through with no extra config.
+  #
+  # No depends_on: Caddy is independent infrastructure. It comes up, obtains its
+  # cert (which needs only port 80 + DNS, not the app), and returns 502 until
+  # api is reachable -- so a broken app never blocks the proxy or its cert.
+  #
+  # caddy_data MUST persist: it holds the certificates. Without it every deploy
+  # re-requests them and quickly trips Let's Encrypt rate limits.
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
   # NOTE: there is deliberately no `web` service here. The SPA is deployed to
   # Vercel and talks to this stack cross-origin at api.deevalegh.com, so the
   # nginx container that used to serve the bundle and proxy /api is redundant.
@@ -112,3 +137,5 @@ services:
 volumes:
   pgdata:
   minio_data:
+  caddy_data:
+  caddy_config:

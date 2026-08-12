@@ -98,23 +98,25 @@ all of which live at the root. One build serves `migrate`, `api`, `worker` and
 Then replace the seeded fee amounts with the real current government fees via
 the admin UI (`/ops/settings`) — the seeded figures are placeholders.
 
-### 4. TLS with Caddy
+### 4. TLS — the `caddy` service (in the stack)
 
-`/etc/caddy/Caddyfile`:
+TLS is handled by the `caddy` service in `docker-compose.prod.yml`, so there is
+**no separate install** — it deploys with everything else. It reads the
+hostname from `API_DOMAIN` in `.env` (`root Caddyfile` is `{$API_DOMAIN}` →
+`reverse_proxy api:8000`), provisions and renews the Let's Encrypt certificate
+automatically, and proxies WebSocket upgrades for `/socket.io/` as-is.
 
-```
-api.deevalegh.com {
-    reverse_proxy 127.0.0.1:8000
-}
-```
+Two prerequisites, both external to the stack:
 
-```bash
-systemctl reload caddy
-```
+- **DNS**: `API_DOMAIN` must already resolve (an `A` record) to this server
+  before deploy, or the ACME challenge fails. Confirm with
+  `dig +short api.deevalegh.com`.
+- **Ports 80 and 443 must be free** on the host and open in the provider
+  firewall. Caddy binds them directly; nothing else may. On a shared box,
+  whichever proxy binds them first wins.
 
-Caddy provisions and renews Let's Encrypt certificates automatically, and
-proxies WebSocket upgrades for `/socket.io/` without extra configuration. The
-API container binds to `127.0.0.1:8000`, so it is only reachable through Caddy.
+The `api` service is published only on `127.0.0.1:8000` (host-side debugging);
+public traffic reaches it as `api:8000` through Caddy on the compose network.
 
 Verify before touching the frontend:
 
