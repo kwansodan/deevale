@@ -96,24 +96,33 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        {cases.length > 1 && (
-          <Select
-            items={cases.map((c) => ({ value: c.id, label: c.case_number }))}
-            value={caseId}
-            onValueChange={(v) => setSelectedCaseId(v as string)}
-          >
-            <SelectTrigger className="w-44">
-              <SelectValue placeholder="Switch case" />
-            </SelectTrigger>
-            <SelectContent>
-              {cases.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.case_number}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
+        <div className="flex items-center gap-2">
+          {cases.length > 1 && (
+            <Select
+              items={cases.map((c) => ({ value: c.id, label: c.case_number }))}
+              value={caseId}
+              onValueChange={(v) => setSelectedCaseId(v as string)}
+            >
+              <SelectTrigger className="w-44">
+                <SelectValue placeholder="Switch case" />
+              </SelectTrigger>
+              <SelectContent>
+                {cases.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.case_number}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {/* A logged-in client can always start another registration. */}
+          <Button
+            render={<Link to="/app/start">{t("nav.startBusiness")}</Link>}
+            nativeButton={false}
+            variant="outline"
+            size="sm"
+          />
+        </div>
       </div>
 
       {caseLoading || !businessCase ? (
