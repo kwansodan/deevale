@@ -4,8 +4,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { useAuthStore } from "@/stores/auth"
-
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ?? "http://localhost:5000"
+import { SOCKET_URL } from "@/config/env"
 
 let socket: Socket | null = null
 
