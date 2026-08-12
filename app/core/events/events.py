@@ -36,6 +36,13 @@ class TaskAwaitingClient(DomainEvent):
 
 
 @dataclass(frozen=True)
+class TaskCompleted(DomainEvent):
+    event_type: ClassVar[str] = "task.completed"
+    case_id: uuid.UUID
+    task_id: uuid.UUID
+
+
+@dataclass(frozen=True)
 class DocumentApproved(DomainEvent):
     event_type: ClassVar[str] = "document.approved"
     case_id: uuid.UUID

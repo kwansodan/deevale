@@ -29,7 +29,8 @@ const CATEGORY_LABELS: Record<string, string> = {
   document_rejected: "Document rejected",
   payment_due: "Payment due",
   payment_received: "Payment received",
-  gov_processing_update: "Government processing updates",
+  gov_processing_update: "Progress updates",
+  mail_received: "Mail received",
   deadline_countdown: "Deadline reminders",
   case_blocked: "Case blocked",
 }

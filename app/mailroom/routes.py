@@ -152,6 +152,29 @@ def log_mail_route(payload):
         entity_id=mail.id,
         context={"sender": payload["sender"]},
     )
+    db.session.flush()
+
+    # Notify the client (email by default) that mail arrived at their registered
+    # address, with the sender/subject/date. The scan itself is viewed in-app.
+    from app.auth.models import User
+    from app.notifications.dispatcher import dispatcher
+    from app.notifications.enums import NotificationCategory
+
+    client = User.query.get(case.client_id)
+    if client is not None:
+        business_name = (case.onboarding_payload or {}).get("business_name") or case.case_number
+        dispatcher.notify(
+            client,
+            NotificationCategory.MAIL_RECEIVED,
+            {
+                "business_name": business_name,
+                "sender": mail.sender,
+                "subject": mail.subject or "(no subject)",
+                "received_date": mail.received_date.isoformat(),
+            },
+            related_case_id=case.id,
+        )
+
     db.session.commit()
     return mail
 

@@ -36,6 +36,10 @@ NOTIFICATION_COPY = {
         "title": "Update on {business_name}",
         "body": "{update_text}",
     },
+    "mail_received": {
+        "title": "New mail for {business_name}",
+        "body": "Mail from {sender} arrived at your registered address on {received_date}: {subject}. View it in your dashboard.",
+    },
     "deadline_countdown": {
         "title": "{days_remaining} days left",
         "body": "⏰ Your {entity_label} for {business_name} needs attention in {days_remaining} days.",

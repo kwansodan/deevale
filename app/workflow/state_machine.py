@@ -4,7 +4,7 @@ from app.core.audit import write_audit_log
 from app.core.enums import RoleName
 from app.core.errors import ForbiddenError, GuardViolationError
 from app.core.events.bus import bus
-from app.core.events.events import StageCompleted, StageStarted, TaskAwaitingClient
+from app.core.events.events import StageCompleted, StageStarted, TaskAwaitingClient, TaskCompleted
 from app.core.model_mixins import utcnow
 from app.workflow.enums import AssigneeType, StageStatus, TaskStatus
 from app.workflow.models import CaseStage, CaseTask
@@ -92,6 +92,8 @@ class TaskStateMachine:
 
         if new_status == TaskStatus.AWAITING_CLIENT:
             bus.dispatch(TaskAwaitingClient(case_id=task.case_stage.business_case_id, task_id=task.id))
+        if new_status == TaskStatus.DONE:
+            bus.dispatch(TaskCompleted(case_id=task.case_stage.business_case_id, task_id=task.id))
 
         return task
 

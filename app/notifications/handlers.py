@@ -10,6 +10,7 @@ from app.core.events.events import (
     PaymentReceived,
     StageCompleted,
     TaskAwaitingClient,
+    TaskCompleted,
 )
 from app.documents.models import Document
 from app.notifications.dispatcher import dispatcher
@@ -50,6 +51,28 @@ def handle_stage_completed(event: StageCompleted) -> None:
             "stage_name": stage.name,
             "business_name": _business_name(case),
             "next_step": "We're moving on to the next step.",
+        },
+        related_case_id=case.id,
+    )
+
+
+def handle_task_completed(event: TaskCompleted) -> None:
+    """Keeps the client informed of every step forward. Only staff-completed
+    tasks notify -- a client completing their own task does not need telling.
+    Uses GOV_PROCESSING_UPDATE, which emails by default."""
+    task = CaseTask.query.get(event.task_id)
+    case = BusinessCase.query.get(event.case_id)
+    client = _client_of(case) if case else None
+    if task is None or case is None or client is None:
+        return
+    if task.assignee_type != "staff":
+        return
+    dispatcher.notify(
+        client,
+        NotificationCategory.GOV_PROCESSING_UPDATE,
+        {
+            "business_name": _business_name(case),
+            "update_text": f"We've completed a step on your registration: {task.name}.",
         },
         related_case_id=case.id,
     )
@@ -164,6 +187,7 @@ def handle_invoice_sent(event: InvoiceSent) -> None:
 
 def register(bus: DomainEventBus) -> None:
     bus.register("stage.completed", handle_stage_completed)
+    bus.register("task.completed", handle_task_completed)
     bus.register("task.awaiting_client", handle_task_awaiting_client)
     bus.register("document.rejected", handle_document_rejected)
     bus.register("payment.received", handle_payment_received)
