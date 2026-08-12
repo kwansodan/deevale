@@ -117,14 +117,16 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    # `caddy reverse-proxy` needs no config file, so there is no bind mount to
+    # break on Komodo's managed run directory (which holds the compose file but
+    # not the repo's other files). It still provisions automatic HTTPS for the
+    # public --from domain and proxies WebSocket upgrades transparently.
+    command: reverse-proxy --from ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com} --to api:8000
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
-    environment:
-      API_DOMAIN: ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com}
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
 

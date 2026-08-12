@@ -101,10 +101,11 @@ the admin UI (`/ops/settings`) — the seeded figures are placeholders.
 ### 4. TLS — the `caddy` service (in the stack)
 
 TLS is handled by the `caddy` service in `docker-compose.prod.yml`, so there is
-**no separate install** — it deploys with everything else. It reads the
-hostname from `API_DOMAIN` in `.env` (`root Caddyfile` is `{$API_DOMAIN}` →
-`reverse_proxy api:8000`), provisions and renews the Let's Encrypt certificate
-automatically, and proxies WebSocket upgrades for `/socket.io/` as-is.
+**no separate install** — it deploys with everything else. It runs
+`caddy reverse-proxy --from $API_DOMAIN --to api:8000` (no config file, so
+nothing to bind-mount), provisions and renews the Let's Encrypt certificate for
+`API_DOMAIN` automatically, and proxies WebSocket upgrades for `/socket.io/`
+as-is.
 
 Two prerequisites, both external to the stack:
 
