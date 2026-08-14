@@ -97,6 +97,9 @@ const EMPTY_CONFIG: LandingConfig = {
   gipc: { jointVenture: null, whollyForeign: null, trading: null, registrationFee: null },
   compliance: { monthlyPrice: null, annualPrice: null, registeredAddressPrice: null },
   legal: { termsUrl: null, privacyUrl: null, refundUrl: null },
+  testimonials: [],
+  logos: [],
+  rating: { score: null, count: null, source: null },
 }
 
 /**
@@ -124,6 +127,14 @@ export function useLandingConfig() {
       config.company.casesCompleted
   )
 
+  // Social-proof presence flags. A section renders only when it has real,
+  // admin-entered content -- never a fabricated placeholder. Guard the arrays
+  // in case an older stored blob predates these keys.
+  const testimonials = (config.testimonials ?? []).filter((t) => t?.quote && t?.name)
+  const logos = (config.logos ?? []).filter((l) => l?.name || l?.imageUrl)
+  const rating = config.rating ?? { score: null, count: null, source: null }
+  const hasRating = Boolean(rating.score)
+
   return {
     company: config.company,
     entities,
@@ -131,6 +142,12 @@ export function useLandingConfig() {
     compliance: config.compliance,
     legal: config.legal,
     hasTrustSignals,
+    testimonials,
+    logos,
+    rating,
+    hasTestimonials: testimonials.length > 0,
+    hasLogos: logos.length > 0,
+    hasRating,
   }
 }
 

@@ -15,6 +15,24 @@ export type EntityKey =
   | "external_company"
   | "foreign_ltd_shares"
 
+/** A real client/officer quote. Every field but `quote` and `name` is optional. */
+export type Testimonial = {
+  quote: string
+  name: string
+  role?: string | null
+  company?: string | null
+  avatarUrl?: string | null
+  /** Optional 1-5 star rating for this quote. */
+  rating?: number | string | null
+}
+
+/** A real client/partner. Renders `imageUrl` if given, else `name` as a wordmark. */
+export type Logo = {
+  name: string
+  imageUrl?: string | null
+  url?: string | null
+}
+
 export type LandingConfig = {
   company: {
     legalName: string | null
@@ -44,6 +62,14 @@ export type LandingConfig = {
     termsUrl: string | null
     privacyUrl: string | null
     refundUrl: string | null
+  }
+  // Real, admin-managed social proof. Empty/unset -> the section hides itself.
+  testimonials: Testimonial[]
+  logos: Logo[]
+  rating: {
+    score: string | null
+    count: string | null
+    source: string | null
   }
 }
 

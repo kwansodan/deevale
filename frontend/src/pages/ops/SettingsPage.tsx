@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { Pencil, RotateCcw } from "lucide-react"
+import { Pencil, Plus, RotateCcw, Trash2 } from "lucide-react"
 
 import { formatGhs } from "@/api/cases"
 import {
@@ -25,6 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 import {
   Dialog,
   DialogContent,
@@ -350,6 +351,95 @@ const LEGAL_LABELS: Record<string, string> = {
   privacyUrl: "Privacy URL",
   refundUrl: "Refund URL",
 }
+const RATING_LABELS: Record<string, string> = {
+  score: "Score (e.g. 4.9)",
+  count: "Number of reviews (e.g. 120)",
+  source: "Source (e.g. Google)",
+}
+
+// Field definitions for the repeatable-list sections (real social proof).
+type ListField = { key: string; label: string; type?: "text" | "textarea" }
+const TESTIMONIAL_FIELDS: ListField[] = [
+  { key: "quote", label: "Quote", type: "textarea" },
+  { key: "name", label: "Name" },
+  { key: "role", label: "Role" },
+  { key: "company", label: "Company" },
+  { key: "avatarUrl", label: "Avatar image URL (optional)" },
+  { key: "rating", label: "Stars 1-5 (optional)" },
+]
+const LOGO_FIELDS: ListField[] = [
+  { key: "name", label: "Client / partner name" },
+  { key: "imageUrl", label: "Logo image URL (optional)" },
+  { key: "url", label: "Link URL (optional)" },
+]
+
+/**
+ * Repeatable-row editor for the list sections (testimonials, logos). Module
+ * scope on purpose -- defined inside the manager it would be a new component
+ * type each render and every input would lose focus after one keystroke (the
+ * bug fixed for the flat landing fields in commit 3d2a94a).
+ */
+function LandingListEditor({
+  title,
+  description,
+  addLabel,
+  items,
+  fields,
+  emptyItem,
+  onChange,
+}: {
+  title: string
+  description: string
+  addLabel: string
+  items: Array<Record<string, string>>
+  fields: ListField[]
+  emptyItem: Record<string, string>
+  onChange: (items: Array<Record<string, string>>) => void
+}) {
+  const update = (i: number, key: string, value: string) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, [key]: value } : it)))
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+  const add = () => onChange([...items, { ...emptyItem }])
+
+  return (
+    <div className="grid gap-3">
+      <div>
+        <h3 className="text-sm font-semibold">{title}</h3>
+        <p className="text-muted-foreground text-xs">{description}</p>
+      </div>
+      {items.length === 0 && (
+        <p className="text-muted-foreground text-xs italic">
+          None yet — this section stays hidden on the site until you add one.
+        </p>
+      )}
+      {items.map((item, i) => (
+        <div key={i} className="border-border grid gap-2 rounded-md border p-3 sm:grid-cols-2">
+          {fields.map((f) => (
+            <label
+              key={f.key}
+              className={cn("grid gap-1 text-xs font-medium", f.type === "textarea" && "sm:col-span-2")}
+            >
+              {f.label}
+              {f.type === "textarea" ? (
+                <Textarea rows={2} value={item[f.key] ?? ""} onChange={(e) => update(i, f.key, e.target.value)} />
+              ) : (
+                <Input value={item[f.key] ?? ""} onChange={(e) => update(i, f.key, e.target.value)} />
+              )}
+            </label>
+          ))}
+          <div className="sm:col-span-2">
+            <Button type="button" variant="ghost" size="sm" onClick={() => remove(i)}>
+              <Trash2 /> Remove
+            </Button>
+          </div>
+        </div>
+      ))}
+      <Button type="button" variant="outline" size="sm" className="justify-self-start" onClick={add}>
+        <Plus /> {addLabel}
+      </Button>
+    </div>
+  )
+}
 
 /**
  * Hoisted to module scope on purpose: defined inside LandingSettingsManager it
@@ -425,6 +515,9 @@ function LandingSettingsManager() {
   const groupOf = (section: keyof LandingConfig) =>
     draft![section] as Record<string, string | number | null>
 
+  const setList = (section: "testimonials" | "logos", items: Array<Record<string, string>>) =>
+    setDraft((prev) => (prev ? ({ ...prev, [section]: items } as LandingConfig) : prev))
+
   return (
     <div className="grid gap-5">
       <p className="text-muted-foreground text-sm">
@@ -437,6 +530,35 @@ function LandingSettingsManager() {
       <LandingSection title="GIPC thresholds" labels={GIPC_LABELS} group={groupOf("gipc")} onChange={(k, v) => setField("gipc", k, v)} />
       <LandingSection title="Recurring services" labels={COMPLIANCE_LABELS} group={groupOf("compliance")} onChange={(k, v) => setField("compliance", k, v)} />
       <LandingSection title="Legal links" labels={LEGAL_LABELS} group={groupOf("legal")} onChange={(k, v) => setField("legal", k, v)} />
+
+      <div className="border-border border-t pt-5">
+        <p className="text-muted-foreground mb-4 text-sm">
+          Social proof — shown only when real. Every item below is optional and each section stays
+          hidden on the site until you add content. Never enter anything you can&apos;t stand behind.
+        </p>
+        <div className="grid gap-6">
+          <LandingSection title="Overall rating" labels={RATING_LABELS} group={groupOf("rating")} onChange={(k, v) => setField("rating", k, v)} />
+          <LandingListEditor
+            title="Testimonials"
+            description="Real client or officer quotes. Quote and name are required; the rest are optional."
+            addLabel="Add testimonial"
+            items={(draft.testimonials ?? []) as unknown as Array<Record<string, string>>}
+            fields={TESTIMONIAL_FIELDS}
+            emptyItem={{ quote: "", name: "", role: "", company: "", avatarUrl: "", rating: "" }}
+            onChange={(items) => setList("testimonials", items)}
+          />
+          <LandingListEditor
+            title="Client / partner logos"
+            description="Real clients or partners. Enter a name (shown as text) and optionally a logo image URL."
+            addLabel="Add logo"
+            items={(draft.logos ?? []) as unknown as Array<Record<string, string>>}
+            fields={LOGO_FIELDS}
+            emptyItem={{ name: "", imageUrl: "", url: "" }}
+            onChange={(items) => setList("logos", items)}
+          />
+        </div>
+      </div>
+
       <Button className="justify-self-start" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
         Save landing page
       </Button>

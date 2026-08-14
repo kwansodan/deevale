@@ -16,8 +16,10 @@ function StateDot({ state }: { state: StageState }) {
     )
   }
   if (state === "active") {
+    // accent-600 (gold), not the raw fill-only yellow, so the ring + icon keep
+    // contrast on the white card.
     return (
-      <span className="border-accent text-accent flex size-5 shrink-0 items-center justify-center rounded-full border-2">
+      <span className="border-accent-600 text-accent-600 flex size-5 shrink-0 items-center justify-center rounded-full border-2">
         <Loader2 className="size-3 motion-safe:animate-spin" />
       </span>
     )
@@ -46,7 +48,7 @@ export function StageTracker({ audience }: { audience: "local" | "foreign" }) {
   }, [target, audience])
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border shadow-card-lg rounded-2xl">
       <CardContent className="pt-6">
         <div className="flex items-start justify-between gap-3">
           <div>

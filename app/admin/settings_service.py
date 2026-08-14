@@ -60,6 +60,16 @@ LANDING_DEFAULT: dict = {
         "privacyUrl": None,
         "refundUrl": None,
     },
+    # Real social proof, admin-managed. Lists stay empty until populated; the
+    # public page hides each section when its list is empty / the rating unset,
+    # so nothing is ever fabricated (same honesty rule as the figures above).
+    "testimonials": [],  # [{quote, name, role, company, avatarUrl, rating}]
+    "logos": [],  # [{name, imageUrl, url}] -- imageUrl optional, falls back to name
+    "rating": {
+        "score": None,  # e.g. "4.9"
+        "count": None,  # e.g. "120"
+        "source": None,  # e.g. "Google"
+    },
 }
 
 

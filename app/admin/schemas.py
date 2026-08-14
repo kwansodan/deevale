@@ -23,6 +23,12 @@ class LandingConfigSchema(Schema):
     gipc = fields.Dict(load_default=dict)
     compliance = fields.Dict(load_default=dict)
     legal = fields.Dict(load_default=dict)
+    # Real social proof. Lists of loosely-typed dicts (the frontend owns the item
+    # shape); rating is a small flat dict. Declared -- like the sections above --
+    # so they survive dump (a fieldless schema serializes to {}).
+    testimonials = fields.List(fields.Dict(), load_default=list)
+    logos = fields.List(fields.Dict(), load_default=list)
+    rating = fields.Dict(load_default=dict)
 
     class Meta:
         unknown = INCLUDE
