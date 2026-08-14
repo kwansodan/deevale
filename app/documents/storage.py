@@ -35,7 +35,13 @@ def _public_s3_client():
         aws_secret_access_key=cfg["S3_SECRET_KEY"],
         region_name=cfg["S3_REGION"],
         use_ssl=public.startswith("https"),
-        config=Config(s3={"addressing_style": "path"}),
+        # signature_version MUST be pinned to s3v4. Without it boto3 presigns with
+        # the legacy SigV2 scheme (AWSAccessKeyId/Signature/Expires) and puts
+        # content-type in the query string, which MinIO -- validating SigV2 with
+        # Content-Type as a *header* -- rejects with SignatureDoesNotMatch. So the
+        # browser PUT/GET to the presigned URL failed even though CORS, host and
+        # the bucket were all correct. s3v4 signs content-type;host properly.
+        config=Config(signature_version="s3v4", s3={"addressing_style": "path"}),
     )
 
 
