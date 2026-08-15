@@ -40,6 +40,10 @@ NOTIFICATION_COPY = {
         "title": "New mail for {business_name}",
         "body": "Mail from {sender} arrived at your registered address on {received_date}: {subject}. View it in your dashboard.",
     },
+    "message_received": {
+        "title": "New message about {business_name}",
+        "body": "{sender_name} sent you a message about {business_name}: “{preview}” Open the conversation in your dashboard to reply.",
+    },
     "deadline_countdown": {
         "title": "{days_remaining} days left",
         "body": "⏰ Your {entity_label} for {business_name} needs attention in {days_remaining} days.",
@@ -99,6 +103,10 @@ NOTIFICATION_COPY_TW = {
     "case_blocked": {
         "title": "Hwɛ: {business_name} agyina",
         "body": "Wo asɛm agyina seesei: {reason}.",
+    },
+    "message_received": {
+        "title": "Nkra foforɔ fa {business_name} ho",
+        "body": "{sender_name} de nkra kɔmaa wo fa {business_name} ho: “{preview}” Bue nkɔmmɔ no wɔ wo dashboard so na bua.",
     },
 }
 

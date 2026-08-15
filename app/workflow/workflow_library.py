@@ -11,7 +11,11 @@ from app.core.enums import RoleName
 from app.documents.enums import DocumentTypeCode
 from app.workflow.enums import AssigneeType, EntityType
 from app.workflow.models import WorkflowDefinition
-from app.workflow.seed_workflow_company_ltd import build_stages, seed_workflow
+from app.workflow.seed_workflow_company_ltd import (
+    build_stages,
+    insert_bank_account_stage,
+    seed_workflow,
+)
 
 STAFF_TASK_ROLES = [RoleName.CASE_OFFICER.value, RoleName.ADMIN.value]
 
@@ -248,15 +252,25 @@ def build_external_company_stages() -> list[dict]:
 
 
 def seed_partnership_workflow() -> WorkflowDefinition:
-    return seed_workflow(EntityType.PARTNERSHIP.value, "standard", build_partnership_stages())
+    return seed_workflow(
+        EntityType.PARTNERSHIP.value, "standard", insert_bank_account_stage(build_partnership_stages())
+    )
 
 
 def seed_clg_workflow() -> WorkflowDefinition:
-    return seed_workflow(EntityType.COMPANY_LIMITED_BY_GUARANTEE.value, "standard", build_clg_stages())
+    return seed_workflow(
+        EntityType.COMPANY_LIMITED_BY_GUARANTEE.value,
+        "standard",
+        insert_bank_account_stage(build_clg_stages()),
+    )
 
 
 def seed_external_company_workflow() -> WorkflowDefinition:
-    return seed_workflow(EntityType.EXTERNAL_COMPANY.value, "standard", build_external_company_stages())
+    return seed_workflow(
+        EntityType.EXTERNAL_COMPANY.value,
+        "standard",
+        insert_bank_account_stage(build_external_company_stages()),
+    )
 
 
 def seed_all_entity_workflows() -> None:

@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FileDropzone } from "@/components/case/FileDropzone"
+import { formatBytes } from "@/lib/format"
 import { cn } from "@/lib/utils"
+
+function latestSize(doc: CaseDocument): string {
+  return formatBytes(doc.versions[doc.versions.length - 1]?.size_bytes)
+}
 
 const REASON_LABELS: Record<string, string> = {
   illegible: "Illegible",
@@ -71,6 +76,16 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
     onError: () => toast.error("Upload failed. Please try again."),
   })
 
+  const formUploadMutation = useMutation({
+    mutationFn: (file: File) =>
+      uploadDocument({ business_case_id: caseId, document_type_code: "bank_form", file }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
+      toast.success("Form uploaded - your case officer will take it from here.")
+    },
+    onError: () => toast.error("Upload failed. Please try again."),
+  })
+
   async function handleDownload(doc: CaseDocument) {
     try {
       const { download_url } = await getDownloadUrl(doc.id)
@@ -110,7 +125,12 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
                 key={doc.id}
                 className="border-primary/30 bg-primary-50 flex items-center justify-between gap-3 rounded-lg border p-3 dark:bg-primary/10"
               >
-                <span className="text-sm font-medium">{typeLabel(doc.document_type_code)}</span>
+                <span className="flex items-center gap-2 text-sm font-medium">
+                  {typeLabel(doc.document_type_code)}
+                  {latestSize(doc) && (
+                    <span className="text-muted-foreground text-xs font-normal">{latestSize(doc)}</span>
+                  )}
+                </span>
                 <Button variant="outline" size="sm" onClick={() => handleDownload(doc)}>
                   <Download data-icon="inline-start" className="size-3.5" />
                   Download
@@ -134,6 +154,7 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
                 <TableRow>
                   <TableHead>Document</TableHead>
                   <TableHead>Version</TableHead>
+                  <TableHead>Size</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -143,6 +164,7 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
                   <TableRow key={doc.id}>
                     <TableCell className="font-medium">{typeLabel(doc.document_type_code)}</TableCell>
                     <TableCell>v{doc.current_version_number}</TableCell>
+                    <TableCell className="text-muted-foreground tabular-nums">{latestSize(doc)}</TableCell>
                     <TableCell>
                       <ReviewBadge doc={doc} />
                     </TableCell>
@@ -157,6 +179,20 @@ export function DocumentCenter({ caseId }: { caseId: string }) {
             </Table>
           </div>
         )}
+      </section>
+
+      <section>
+        <h3 className="text-sm font-semibold">Upload a form</h3>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Completed a bank form or another document we shared with you? Upload it here.
+        </p>
+        <div className="mt-2">
+          <FileDropzone
+            onFile={(file) => formUploadMutation.mutate(file)}
+            disabled={formUploadMutation.isPending}
+            label={formUploadMutation.isPending ? "Uploading…" : "Upload a completed form"}
+          />
+        </div>
       </section>
 
       {rejectedDocs.map((doc) => (

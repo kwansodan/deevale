@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 import { getCase, listCases, type CaseTask } from "@/api/cases"
+import { getMessagesUnreadCount } from "@/api/messages"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -64,6 +65,13 @@ export default function DashboardPage() {
     queryKey: ["case", caseId],
     queryFn: () => getCase(caseId!),
     enabled: !!caseId,
+  })
+
+  const { data: unreadMessages } = useQuery({
+    queryKey: ["messages-unread", caseId],
+    queryFn: () => getMessagesUnreadCount(caseId!),
+    enabled: !!caseId,
+    refetchInterval: 20_000,
   })
 
   if (casesLoading) {
@@ -145,7 +153,14 @@ export default function DashboardPage() {
             <TabsList>
               <TabsTrigger value="progress">{t("dashboard.progress")}</TabsTrigger>
               <TabsTrigger value="documents">{t("dashboard.documents")}</TabsTrigger>
-              <TabsTrigger value="messages">{t("dashboard.messages")}</TabsTrigger>
+              <TabsTrigger value="messages">
+                {t("dashboard.messages")}
+                {!!unreadMessages && unreadMessages > 0 && (
+                  <span className="bg-primary text-primary-foreground ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-none font-semibold">
+                    {unreadMessages > 9 ? "9+" : unreadMessages}
+                  </span>
+                )}
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="progress" className="pt-4">
               <Card className="border-border">

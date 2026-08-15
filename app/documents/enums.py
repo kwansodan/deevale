@@ -26,6 +26,10 @@ class DocumentTypeCode(str, enum.Enum):
     NOTARIZED_HOME_CONSTITUTION = "notarized_home_constitution"
     POWER_OF_ATTORNEY = "power_of_attorney"
     EXTERNAL_COMPANY_CERTIFICATE = "external_company_certificate"
+    # Bank-account opening: shared both ways - staff upload the blank/prefilled
+    # bank form, the client uploads the completed/signed copy. Not a vault
+    # (certificate) type, so it stays visible to the client in the document list.
+    BANK_FORM = "bank_form"
     OTHER = "other"
 
 

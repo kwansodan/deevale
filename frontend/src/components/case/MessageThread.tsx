@@ -6,6 +6,7 @@ import { toast } from "sonner"
 
 import { listCaseMessages, markCaseMessagesRead, sendCaseMessage } from "@/api/messages"
 import { getDownloadUrl, uploadDocument } from "@/api/documents"
+import { formatBytes } from "@/lib/format"
 import { useAuthStore } from "@/stores/auth"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,7 +27,7 @@ export function MessageThread({ caseId }: { caseId: string }) {
   const user = useAuthStore((s) => s.user)
   const queryClient = useQueryClient()
   const [draft, setDraft] = useState("")
-  const [attached, setAttached] = useState<{ id: string; name: string } | null>(null)
+  const [attached, setAttached] = useState<{ id: string; name: string; size: number } | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -37,8 +38,10 @@ export function MessageThread({ caseId }: { caseId: string }) {
   })
 
   useEffect(() => {
-    markCaseMessagesRead(caseId).catch(() => {})
-  }, [caseId])
+    markCaseMessagesRead(caseId)
+      .then(() => queryClient.invalidateQueries({ queryKey: ["messages-unread", caseId] }))
+      .catch(() => {})
+  }, [caseId, queryClient])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -48,7 +51,7 @@ export function MessageThread({ caseId }: { caseId: string }) {
     mutationFn: (file: File) =>
       uploadDocument({ business_case_id: caseId, document_type_code: "message_attachment", file }),
     onSuccess: (doc, file) => {
-      setAttached({ id: doc.id, name: file.name })
+      setAttached({ id: doc.id, name: file.name, size: file.size })
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
     },
     onError: () => toast.error("Attachment upload failed."),
@@ -121,6 +124,7 @@ export function MessageThread({ caseId }: { caseId: string }) {
           <span className="flex min-w-0 items-center gap-1.5">
             <Paperclip className="size-3.5 shrink-0" />
             <span className="truncate">{attached.name}</span>
+            <span className="text-muted-foreground shrink-0 text-xs">{formatBytes(attached.size)}</span>
           </span>
           <button type="button" aria-label="Remove attachment" onClick={() => setAttached(null)}>
             <X className="size-3.5" />

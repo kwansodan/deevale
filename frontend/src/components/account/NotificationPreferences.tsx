@@ -20,6 +20,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   payment_received: "Payment received",
   gov_processing_update: "Progress updates",
   mail_received: "Mail received",
+  message_received: "New messages",
   deadline_countdown: "Deadline reminders",
   case_blocked: "Case blocked",
 }

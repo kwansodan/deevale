@@ -9,6 +9,7 @@ class NotificationCategory(str, enum.Enum):
     PAYMENT_RECEIVED = "payment_received"
     GOV_PROCESSING_UPDATE = "gov_processing_update"
     MAIL_RECEIVED = "mail_received"
+    MESSAGE_RECEIVED = "message_received"
     DEADLINE_COUNTDOWN = "deadline_countdown"
     CASE_BLOCKED = "case_blocked"
     STAFF_NEW_UPLOAD = "staff_new_upload"
@@ -27,6 +28,7 @@ CLIENT_CATEGORIES = {
     NotificationCategory.PAYMENT_RECEIVED,
     NotificationCategory.GOV_PROCESSING_UPDATE,
     NotificationCategory.MAIL_RECEIVED,
+    NotificationCategory.MESSAGE_RECEIVED,
     NotificationCategory.DEADLINE_COUNTDOWN,
     NotificationCategory.CASE_BLOCKED,
 }

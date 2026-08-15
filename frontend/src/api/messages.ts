@@ -28,3 +28,8 @@ export async function markCaseMessagesRead(caseId: string) {
   const { data } = await apiClient.post<CaseMessage[]>(`/cases/${caseId}/messages/read`)
   return data
 }
+
+export async function getMessagesUnreadCount(caseId: string) {
+  const { data } = await apiClient.get<{ count: number }>(`/cases/${caseId}/messages/unread-count`)
+  return data.count
+}

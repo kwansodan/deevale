@@ -36,6 +36,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { StatusChip } from "@/components/case/StatusChip"
 import { FileDropzone } from "@/components/case/FileDropzone"
+import { formatBytes } from "@/lib/format"
 import { MessageThread } from "@/components/case/MessageThread"
 import { SignaturesPanel } from "@/components/case/SignaturesPanel"
 import { cn } from "@/lib/utils"
@@ -293,6 +294,16 @@ function DocumentReviewPanel({ caseId }: { caseId: string }) {
     onError: () => toast.error("Review failed."),
   })
 
+  const shareFormMutation = useMutation({
+    mutationFn: (file: File) =>
+      uploadDocument({ business_case_id: caseId, document_type_code: "bank_form", file }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
+      toast.success("Form shared - the client can now download it.")
+    },
+    onError: () => toast.error("Upload failed. Please try again."),
+  })
+
   async function openPreview(doc: CaseDocument) {
     try {
       const { download_url } = await getDownloadUrl(doc.id)
@@ -316,6 +327,21 @@ function DocumentReviewPanel({ caseId }: { caseId: string }) {
 
   return (
     <div className="grid gap-5">
+      <section className="border-border rounded-lg border p-3">
+        <h3 className="text-sm font-semibold">Share a form with the client</h3>
+        <p className="text-muted-foreground mt-1 text-xs">
+          Upload a bank account-opening form (or any document) for the client to download, complete
+          and return.
+        </p>
+        <div className="mt-2">
+          <FileDropzone
+            onFile={(file) => shareFormMutation.mutate(file)}
+            disabled={shareFormMutation.isPending}
+            label={shareFormMutation.isPending ? "Uploading…" : "Upload a form to share"}
+          />
+        </div>
+      </section>
+
       <section>
         <h3 className="text-sm font-semibold">Awaiting review ({pending.length})</h3>
         {pending.length === 0 ? (
@@ -332,6 +358,8 @@ function DocumentReviewPanel({ caseId }: { caseId: string }) {
                   <p className="text-muted-foreground text-xs">
                     v{doc.current_version_number} ·{" "}
                     {doc.versions[doc.versions.length - 1].original_filename}
+                    {formatBytes(doc.versions[doc.versions.length - 1].size_bytes) &&
+                      ` · ${formatBytes(doc.versions[doc.versions.length - 1].size_bytes)}`}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -373,6 +401,11 @@ function DocumentReviewPanel({ caseId }: { caseId: string }) {
                     {typeLabel(doc.document_type_code)} (v{doc.current_version_number})
                   </span>
                   <span className="flex items-center gap-2">
+                    {formatBytes(latest?.size_bytes) && (
+                      <span className="text-muted-foreground text-xs tabular-nums">
+                        {formatBytes(latest?.size_bytes)}
+                      </span>
+                    )}
                     <span
                       className={cn(
                         "text-xs",

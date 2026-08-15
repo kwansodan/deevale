@@ -1,5 +1,6 @@
 import uuid
 
+from flask import current_app
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint
 
@@ -11,6 +12,7 @@ from app.core.ownership import ensure_case_access
 from app.extensions import db
 from app.messaging.models import CaseMessage
 from app.messaging.schemas import CaseMessageSchema, CreateCaseMessageSchema
+from app.notifications.schemas import UnreadCountSchema
 from app.workflow.models import BusinessCase
 
 blp = Blueprint("messaging", __name__, url_prefix="/cases", description="Case message thread endpoints")
@@ -55,18 +57,70 @@ def create_case_message_route(payload, case_id):
         except ValueError:
             raise ValidationAppError("Invalid attachment_document_id") from None
 
+    is_client = user.has_role(RoleName.CLIENT)
     message = CaseMessage(
         id=uuid.uuid4(),
         business_case_id=case.id,
         sender_user_id=user.id,
         body=payload["body"],
         attachment_document_id=attachment_id,
-        client_read_at=utcnow() if user.has_role(RoleName.CLIENT) else None,
-        officer_read_at=utcnow() if not user.has_role(RoleName.CLIENT) else None,
+        client_read_at=utcnow() if is_client else None,
+        officer_read_at=utcnow() if not is_client else None,
     )
     db.session.add(message)
     db.session.commit()
+
+    try:
+        _notify_counterparty(case, sender=user, is_client_sender=is_client, message=message)
+    except Exception:  # noqa: BLE001 - a notification failure must not fail the send
+        current_app.logger.exception("Failed to notify counterparty of new message")
     return message
+
+
+def _notify_counterparty(case, sender, is_client_sender, message) -> None:
+    """Email + in-app the other side of the thread that a message landed. The
+    client sender notifies the assigned officer; a staff sender notifies the
+    client. Silently no-ops when there is no counterparty yet (e.g. a message
+    before an officer is assigned)."""
+    from app.auth.models import User
+    from app.notifications.dispatcher import dispatcher
+    from app.notifications.enums import NotificationCategory
+
+    recipient_id = case.client_id if not is_client_sender else case.assigned_officer_id
+    if recipient_id is None:
+        return
+    recipient = User.query.get(recipient_id)
+    if recipient is None:
+        return
+
+    business_name = (case.onboarding_payload or {}).get("business_name") or case.case_number
+    preview = (message.body or "").strip()
+    preview = (preview[:80] + "…") if len(preview) > 80 else (preview or "sent an attachment")
+    dispatcher.notify(
+        recipient,
+        NotificationCategory.MESSAGE_RECEIVED,
+        {"sender_name": sender.full_name, "business_name": business_name, "preview": preview},
+        related_case_id=case.id,
+    )
+
+
+@blp.route("/<string:case_id>/messages/unread-count", methods=["GET"])
+@jwt_required()
+@blp.response(200, UnreadCountSchema)
+def case_messages_unread_count_route(case_id):
+    """Messages from the counterparty this user hasn't opened yet. The client's
+    own sent messages are auto-marked read on send, so an unread count is simply
+    the rows where this side's read timestamp is still null."""
+    user = get_current_user()
+    case = _get_case_or_404(case_id)
+    ensure_case_access(user, case)
+
+    is_client = user.has_role(RoleName.CLIENT)
+    read_column = CaseMessage.client_read_at if is_client else CaseMessage.officer_read_at
+    count = CaseMessage.query.filter(
+        CaseMessage.business_case_id == case.id, read_column.is_(None)
+    ).count()
+    return {"count": count}
 
 
 @blp.route("/<string:case_id>/messages/read", methods=["POST"])

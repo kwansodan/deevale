@@ -5,6 +5,7 @@ import { FileCheck2 } from "lucide-react"
 
 import { completeClientTask, type CaseTask, type TaskField } from "@/api/cases"
 import { uploadDocument } from "@/api/documents"
+import { formatBytes } from "@/lib/format"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -104,7 +105,7 @@ export function TaskSheet({
   onClose: () => void
 }) {
   const queryClient = useQueryClient()
-  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
+  const [uploaded, setUploaded] = useState<{ name: string; size: number } | null>(null)
 
   const uploadMutation = useMutation({
     mutationFn: (file: File) =>
@@ -116,7 +117,7 @@ export function TaskSheet({
         document_id: task?.linked_document_id ?? undefined,
       }),
     onSuccess: (_doc, file) => {
-      setUploadedFileName(file.name)
+      setUploaded({ name: file.name, size: file.size })
       queryClient.invalidateQueries({ queryKey: ["case-documents", caseId] })
       toast.success("Uploaded - now submit it for review.")
     },
@@ -129,7 +130,7 @@ export function TaskSheet({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["case", caseId] })
       toast.success(task?.requires_document ? "Submitted for review." : "Saved.")
-      setUploadedFileName(null)
+      setUploaded(null)
       onClose()
     },
     onError: (err: unknown) => {
@@ -140,7 +141,7 @@ export function TaskSheet({
     },
   })
 
-  const hasUploadForThisAttempt = Boolean(uploadedFileName) || Boolean(task?.linked_document_id)
+  const hasUploadForThisAttempt = Boolean(uploaded) || Boolean(task?.linked_document_id)
   const hasForm = Boolean(task?.input_schema && task.input_schema.length > 0)
 
   return (
@@ -180,10 +181,10 @@ export function TaskSheet({
                           : "Drag & drop your document, or tap to browse"
                     }
                   />
-                  {uploadedFileName && (
+                  {uploaded && (
                     <div className="text-success flex items-center gap-2 text-sm">
                       <FileCheck2 className="size-4" />
-                      {uploadedFileName} uploaded
+                      {uploaded.name} ({formatBytes(uploaded.size)}) uploaded
                     </div>
                   )}
                   <Button

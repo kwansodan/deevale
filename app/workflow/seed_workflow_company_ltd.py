@@ -268,6 +268,95 @@ def build_stages() -> list[dict]:
     ]
 
 
+def bank_account_task(sequence_order: int) -> dict:
+    """The corporate bank-account step, shared by every workflow. The client
+    picks a Ghanaian bank and account details (structured input_schema); staff
+    share any bank forms and the client uploads the completed ones through the
+    document centre (document_type_code 'bank_form')."""
+    from app.workflow.ghana_banks import bank_select_options
+
+    return dict(
+        code="open_corporate_bank_account",
+        name="Open a corporate bank account",
+        description=(
+            "Choose a Ghanaian bank and give us the account details below. We'll share any bank "
+            "forms you need to sign in your Documents, and you can upload the completed forms back "
+            "there. Tell us once the account is open."
+        ),
+        sequence_order=sequence_order,
+        assignee_type=AssigneeType.CLIENT.value,
+        is_required=True,
+        requires_document=False,
+        input_schema=[
+            {
+                "name": "bank",
+                "label": "Bank",
+                "type": "select",
+                "required": True,
+                "placeholder": "Choose a bank",
+                "options": bank_select_options(),
+            },
+            {
+                "name": "account_type",
+                "label": "Account type",
+                "type": "select",
+                "required": True,
+                "placeholder": "Choose an account type",
+                "options": [
+                    {"value": "current", "label": "Current account"},
+                    {"value": "savings", "label": "Savings account"},
+                    {"value": "foreign_currency", "label": "Foreign-currency account"},
+                    {"value": "domiciliary", "label": "Domiciliary account"},
+                ],
+            },
+            {
+                "name": "account_currency",
+                "label": "Account currency",
+                "type": "select",
+                "required": True,
+                "options": [
+                    {"value": "GHS", "label": "GHS"},
+                    {"value": "USD", "label": "USD"},
+                    {"value": "EUR", "label": "EUR"},
+                    {"value": "GBP", "label": "GBP"},
+                ],
+            },
+            {"name": "branch", "label": "Preferred branch", "type": "text", "placeholder": "e.g. Accra Main"},
+            {
+                "name": "num_signatories",
+                "label": "Number of signatories",
+                "type": "text",
+                "placeholder": "e.g. 2",
+            },
+            {"name": "notes", "label": "Anything else we should know", "type": "textarea"},
+        ],
+    )
+
+
+def build_bank_account_stage(sequence_order: int) -> dict:
+    """Standalone banking stage for workflows that don't already carry a bank
+    task (the foreign/GIPC track embeds its own via bank_account_task)."""
+    return dict(
+        code="corporate_bank_account",
+        sla_hours=168,
+        name="Corporate Bank Account",
+        sequence_order=sequence_order,
+        is_gated_by_payment=False,
+        deadline_days=None,
+        tasks=[bank_account_task(1)],
+    )
+
+
+def insert_bank_account_stage(stages: list[dict]) -> list[dict]:
+    """Insert the banking stage just before 'completed' and renumber (same
+    insert-and-renumber approach as build_foreign_stages)."""
+    completed_index = next(i for i, s in enumerate(stages) if s["code"] == "completed")
+    result = stages[:completed_index] + [build_bank_account_stage(0)] + stages[completed_index:]
+    for order, stage in enumerate(result, start=1):
+        stage["sequence_order"] = order
+    return result
+
+
 def build_gipc_stage(sequence_order: int) -> dict:
     """GIPC/GIPA registration stage for foreign-participation cases,
     slotted in right after Incorporation."""
@@ -279,18 +368,7 @@ def build_gipc_stage(sequence_order: int) -> dict:
         is_gated_by_payment=False,
         deadline_days=None,
         tasks=[
-            dict(
-                code="open_corporate_bank_account",
-                name="Open a corporate bank account",
-                description=(
-                    "Open a Ghana corporate bank account for the new company - GIPC needs it to "
-                    "verify your equity transfer. Any commercial bank works; tell us once it's open."
-                ),
-                sequence_order=1,
-                assignee_type=AssigneeType.CLIENT.value,
-                is_required=True,
-                requires_document=False,
-            ),
+            bank_account_task(1),
             dict(
                 code="equity_transfer_evidence",
                 name="Provide equity transfer evidence",
@@ -406,7 +484,11 @@ def seed_workflow(entity_type: str, variant: str, stages: list[dict]) -> Workflo
 
 
 def seed_company_ltd_workflow() -> WorkflowDefinition:
-    return seed_workflow(EntityType.COMPANY_LIMITED_BY_SHARES.value, "standard", build_stages())
+    return seed_workflow(
+        EntityType.COMPANY_LIMITED_BY_SHARES.value,
+        "standard",
+        insert_bank_account_stage(build_stages()),
+    )
 
 
 def seed_company_ltd_foreign_workflow() -> WorkflowDefinition:

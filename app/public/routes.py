@@ -5,8 +5,8 @@ time (landing-page prices, statutory thresholds, company trust signals) so a
 platform admin can change them at runtime without a redeploy.
 """
 
-from marshmallow import Schema, fields
 from flask_smorest import Blueprint
+from marshmallow import Schema, fields
 
 from app.admin import settings_service
 from app.admin.schemas import LandingConfigSchema
