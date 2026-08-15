@@ -51,15 +51,19 @@ function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props) {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
 }
 
+// A standalone label. Base UI only ships Menu.GroupLabel, which throws
+// ("MenuGroupContext is missing") unless it is rendered inside a Menu.Group --
+// so a plain styled div is used instead, matching shadcn/Radix's standalone
+// DropdownMenuLabel behaviour and letting it be used directly in a menu.
 function DropdownMenuLabel({
   className,
   inset,
   ...props
-}: MenuPrimitive.GroupLabel.Props & {
+}: React.ComponentProps<"div"> & {
   inset?: boolean
 }) {
   return (
-    <MenuPrimitive.GroupLabel
+    <div
       data-slot="dropdown-menu-label"
       data-inset={inset}
       className={cn(
