@@ -72,10 +72,9 @@ class Config:
     SMS_QUIET_HOURS_END = 7
 
     # Compliance subscription plans (Paystack plan codes + display prices).
-    # Optional Paystack Plan codes for automatic recurring billing. Leave unset
-    # to charge a one-off transaction per period instead (the webhook still marks
-    # the subscription active and sets its period end); set to real PLN_ codes
-    # from the Paystack dashboard to enable auto-renewal.
+    # Paystack Plan codes for recurring billing. Leave unset -- the plans are
+    # created and cached automatically on first subscribe (see billing/plans.py).
+    # Set these to existing PLN_ codes only to reuse plans you made by hand.
     SUBSCRIPTION_MONTHLY_PLAN_CODE = os.environ.get("SUBSCRIPTION_MONTHLY_PLAN_CODE", "")
     SUBSCRIPTION_ANNUAL_PLAN_CODE = os.environ.get("SUBSCRIPTION_ANNUAL_PLAN_CODE", "")
     SUBSCRIPTION_MONTHLY_PRICE_MINOR = int(os.environ.get("SUBSCRIPTION_MONTHLY_PRICE_MINOR", "9900"))

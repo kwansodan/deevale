@@ -8,6 +8,7 @@ from flask_smorest import Blueprint
 from marshmallow import Schema, fields, validate
 
 from app.billing.models import Subscription, has_active_subscription
+from app.billing.plans import get_plan_code
 from app.core.current_user import get_current_user
 from app.core.enums import RoleName
 from app.core.errors import ValidationAppError
@@ -67,16 +68,9 @@ def subscribe_route(payload):
     if has_active_subscription(user.id):
         raise ValidationAppError("You already have an active subscription")
 
-    plan_code = (
-        current_app.config["SUBSCRIPTION_MONTHLY_PLAN_CODE"]
-        if plan == "monthly"
-        else current_app.config["SUBSCRIPTION_ANNUAL_PLAN_CODE"]
-    )
-    amount = (
-        current_app.config["SUBSCRIPTION_MONTHLY_PRICE_MINOR"]
-        if plan == "monthly"
-        else current_app.config["SUBSCRIPTION_ANNUAL_PRICE_MINOR"]
-    )
+    # Attach a Paystack Plan so billing is recurring -- Paystack auto-charges the
+    # card every interval. The plan is created and cached on first use.
+    plan_code = get_plan_code(plan)
 
     subscription = Subscription(id=uuid.uuid4(), user_id=user.id, plan=plan, status="pending")
     reference = f"SUB-{subscription.id}"
@@ -85,22 +79,18 @@ def subscribe_route(payload):
     db.session.commit()
 
     callback_url = request.args.get("callback_url", "")
-    body = {
-        "email": user.email,
-        "amount": amount,
-        "currency": "GHS",
-        "reference": reference,
-        "callback_url": callback_url,
-    }
-    # Only attach a Paystack Plan (recurring) when a real code is configured;
-    # otherwise this is a one-off charge and we track the period ourselves. An
-    # unset/placeholder plan code is what caused Paystack's "Plan not found".
-    if plan_code:
-        body["plan"] = plan_code
+    # No `amount` -- with a plan attached Paystack charges the plan's amount and
+    # sets up the recurring schedule against the card the customer authorizes.
     response = requests.post(
         f"{current_app.config['PAYSTACK_BASE_URL']}/transaction/initialize",
         headers={"Authorization": f"Bearer {current_app.config['PAYSTACK_SECRET_KEY']}"},
-        json=body,
+        json={
+            "email": user.email,
+            "currency": "GHS",
+            "reference": reference,
+            "callback_url": callback_url,
+            "plan": plan_code,
+        },
         timeout=15,
     )
     if response.status_code >= 400:
@@ -115,13 +105,57 @@ def subscribe_route(payload):
 
 def activate_subscription_by_reference(reference: str) -> bool:
     """Called from the Paystack webhook when a charge.success carries one of
-    our SUB- references."""
+    our SUB- references (the initial subscription checkout)."""
     subscription = Subscription.query.filter_by(provider_reference=reference).first()
     if subscription is None:
         return False
     subscription.status = "active"
     period = timedelta(days=365 if subscription.plan == "annual" else 30)
     subscription.current_period_end = utcnow() + period
+    db.session.flush()
+    return True
+
+
+def _latest_subscription_for_email(email: str) -> "Subscription | None":
+    from app.auth.models import User
+
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return None
+    return (
+        Subscription.query.filter_by(user_id=user.id)
+        .order_by(Subscription.created_at.desc())
+        .first()
+    )
+
+
+def renew_subscription_for_customer(email: str) -> bool:
+    """A recurring Paystack charge succeeded -> extend the subscriber's period.
+    Paystack auto-charges the card each interval; this keeps our period end (and
+    therefore access) in sync. Matched by the customer's email."""
+    subscription = _latest_subscription_for_email(email)
+    if subscription is None:
+        return False
+    period = timedelta(days=365 if subscription.plan == "annual" else 30)
+    now = utcnow()
+    base = (
+        subscription.current_period_end
+        if subscription.current_period_end and subscription.current_period_end > now
+        else now
+    )
+    subscription.current_period_end = base + period
+    subscription.status = "active"
+    db.session.flush()
+    return True
+
+
+def cancel_subscription_for_customer(email: str) -> bool:
+    """Paystack disabled the subscription (customer cancelled or renewals ran
+    out) -> mark cancelled. Access remains until current_period_end."""
+    subscription = _latest_subscription_for_email(email)
+    if subscription is None:
+        return False
+    subscription.status = "cancelled"
     db.session.flush()
     return True
 

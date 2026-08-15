@@ -188,14 +188,39 @@ def paystack_webhook_route():
     db.session.add(payment_event)
     db.session.flush()
 
-    # Subscription charges carry our SUB- reference; route them to billing.
-    if event.provider_reference.startswith("SUB-"):
-        from app.billing.routes import activate_subscription_by_reference, handle_subscription_failure
+    # --- Subscription lifecycle (Paystack Plans, recurring) -----------------
+    from app.billing.routes import (
+        activate_subscription_by_reference,
+        cancel_subscription_for_customer,
+        handle_subscription_failure,
+        renew_subscription_for_customer,
+    )
 
+    raw = event.raw if isinstance(event.raw, dict) else {}
+    event_type = raw.get("event", "")
+    data = raw.get("data") or {}
+    customer_email = (data.get("customer") or {}).get("email")
+
+    # Initial subscription checkout carries our SUB- reference.
+    if event.provider_reference.startswith("SUB-"):
         if event.status == "success":
             activate_subscription_by_reference(event.provider_reference)
         else:
             handle_subscription_failure(event.provider_reference)
+        payment_event.processed_at = utcnow()
+        db.session.commit()
+        return {"message": "processed"}
+
+    # A recurring plan charge (Paystack-generated reference + a plan object) ->
+    # extend the subscriber's period. Cancellation/exhaustion -> mark cancelled.
+    if event_type == "charge.success" and data.get("plan") and customer_email:
+        renew_subscription_for_customer(customer_email)
+        payment_event.processed_at = utcnow()
+        db.session.commit()
+        return {"message": "processed"}
+
+    if event_type in ("subscription.disable", "subscription.not_renew") and customer_email:
+        cancel_subscription_for_customer(customer_email)
         payment_event.processed_at = utcnow()
         db.session.commit()
         return {"message": "processed"}
