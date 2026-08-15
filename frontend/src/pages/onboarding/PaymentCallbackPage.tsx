@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Link, useSearchParams } from "react-router-dom"
 import { PartyPopper, CircleCheck } from "lucide-react"
 
 import { getCase } from "@/api/cases"
+import { verifyPayment } from "@/api/billing"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -10,6 +11,25 @@ import { Skeleton } from "@/components/ui/skeleton"
 export default function PaymentCallbackPage() {
   const [params] = useSearchParams()
   const caseId = params.get("case_id")
+  // Paystack appends the transaction reference on redirect.
+  const reference = params.get("reference") ?? params.get("trxref")
+  const queryClient = useQueryClient()
+
+  // Reconcile the payment immediately on return rather than waiting on the async
+  // webhook (which may be delayed or unconfigured). Idempotent server-side.
+  useQuery({
+    queryKey: ["verify-payment", reference],
+    queryFn: async () => {
+      const res = await verifyPayment(reference!)
+      if (caseId) queryClient.invalidateQueries({ queryKey: ["case", caseId] })
+      queryClient.invalidateQueries({ queryKey: ["subscription"] })
+      queryClient.invalidateQueries({ queryKey: ["my-invoices"] })
+      return res
+    },
+    enabled: !!reference,
+    retry: 2,
+    staleTime: Infinity,
+  })
 
   const { data: businessCase, isLoading } = useQuery({
     queryKey: ["case", caseId],

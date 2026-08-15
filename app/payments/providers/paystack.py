@@ -79,7 +79,12 @@ class PaystackProvider(PaymentProvider):
             headers={"Authorization": f"Bearer {self._secret_key()}"},
             timeout=15,
         )
-        response.raise_for_status()
+        if response.status_code >= 400:
+            detail = _paystack_message(response)
+            current_app.logger.error(
+                "Paystack verify failed for %s (%s): %s", provider_reference, response.status_code, detail
+            )
+            raise PaymentProviderError(f"Couldn't verify the payment. Paystack said: {detail}")
         data = response.json()["data"]
         return VerifyResult(
             status="success" if data["status"] == "success" else "failed",

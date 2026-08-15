@@ -417,7 +417,10 @@ function BillingTab() {
 
   const payMutation = useMutation({
     mutationFn: (invoice: PlatformInvoice) =>
-      initializeTransaction(invoice.id, `${window.location.origin}/app/payment/callback`),
+      initializeTransaction(
+        invoice.id,
+        `${window.location.origin}/app/payment/callback?case_id=${invoice.business_case_id}`
+      ),
     onSuccess: ({ authorization_url }) => {
       window.location.href = authorization_url
     },

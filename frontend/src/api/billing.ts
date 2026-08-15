@@ -45,6 +45,13 @@ export async function listMyInvoices() {
   return data
 }
 
+/** Reconcile a payment on return from Paystack (idempotent with the webhook).
+ *  Returns "paid" | "pending" | "failed". */
+export async function verifyPayment(reference: string) {
+  const { data } = await apiClient.post<{ status: string }>("/payments/verify", { reference })
+  return data
+}
+
 /** Presigned URL to download a paid invoice's receipt PDF. */
 export async function getReceiptUrl(invoiceId: string) {
   const { data } = await apiClient.get<{ download_url: string; expires_in: number }>(

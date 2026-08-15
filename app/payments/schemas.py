@@ -33,6 +33,15 @@ class ReceiptUrlSchema(Schema):
     expires_in = fields.Integer(required=True)
 
 
+class VerifyTransactionRequestSchema(Schema):
+    reference = fields.String(required=True)
+
+
+class VerifyTransactionResponseSchema(Schema):
+    # paid | pending | failed
+    status = fields.String(required=True)
+
+
 class PaymentSchema(Schema):
     id = fields.String(dump_only=True)
     invoice_id = fields.String(dump_only=True)

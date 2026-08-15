@@ -27,6 +27,8 @@ from app.payments.schemas import (
     PaymentSchema,
     ReceiptUrlSchema,
     RefundLogRequestSchema,
+    VerifyTransactionRequestSchema,
+    VerifyTransactionResponseSchema,
     WebhookAckSchema,
 )
 from app.workflow.models import BusinessCase
@@ -50,6 +52,28 @@ def _get_invoice_or_404(invoice_id) -> Invoice:
     if invoice is None:
         raise NotFoundError("Invoice not found")
     return invoice
+
+
+def _settle_successful_payment(payment: Payment, invoice: Invoice, channel: str) -> None:
+    """Shared success reconciliation for BOTH the webhook and the return-verify
+    path: mark the payment + invoice paid, unblock the payment-gated stage via the
+    PaymentReceived event, and queue the receipt PDF. Call only when the payment
+    is not already settled (both callers guard on status) so PaymentReceived fires
+    exactly once per payment."""
+    payment.status = PaymentStatus.SUCCESS.value
+    payment.paid_at = utcnow()
+    payment.channel = channel
+    mark_invoice_paid(invoice)
+    db.session.commit()
+
+    bus.dispatch(
+        PaymentReceived(case_id=invoice.business_case_id, invoice_id=invoice.id, payment_id=payment.id)
+    )
+    db.session.commit()
+
+    from app.payments.tasks import generate_receipt_pdf
+
+    generate_receipt_pdf.delay(str(invoice.id))
 
 
 @blp.route("/cases/<string:case_id>/invoice", methods=["POST"])
@@ -99,6 +123,52 @@ def initialize_transaction_route(invoice_id):
     return {"authorization_url": result.authorization_url, "provider_reference": result.provider_reference}
 
 
+@blp.route("/verify", methods=["POST"])
+@jwt_required()
+@blp.arguments(VerifyTransactionRequestSchema)
+@blp.response(200, VerifyTransactionResponseSchema)
+def verify_transaction_route(payload):
+    """Reconcile a payment when the customer returns from Paystack, so success is
+    reflected immediately instead of depending on the async webhook (which may be
+    delayed or unconfigured). Idempotent: if the webhook already settled it, this
+    just reports 'paid'."""
+    user = get_current_user()
+    reference = payload["reference"]
+    provider = get_payment_provider()
+
+    # Subscription checkouts carry a SUB- reference and have no Payment row.
+    if reference.startswith("SUB-"):
+        from app.billing.routes import activate_subscription_by_reference
+
+        result = provider.verify_transaction(reference)
+        if result.status == "success":
+            activate_subscription_by_reference(reference)
+            db.session.commit()
+            return {"status": "paid"}
+        return {"status": result.status}
+
+    payment = (
+        Payment.query.filter_by(provider_reference=reference)
+        .order_by(Payment.created_at.desc())
+        .first()
+    )
+    if payment is None:
+        raise NotFoundError("Payment not found")
+    invoice = Invoice.query.get(payment.invoice_id)
+    case = _get_case_or_404(invoice.business_case_id)
+    ensure_case_access(user, case)
+
+    # Already settled (the webhook won the race) -> report and stop.
+    if payment.status == PaymentStatus.SUCCESS.value or invoice.status == InvoiceStatus.PAID.value:
+        return {"status": "paid"}
+
+    result = provider.verify_transaction(reference)
+    if result.status == "success":
+        _settle_successful_payment(payment, invoice, result.channel)
+        return {"status": "paid"}
+    return {"status": result.status}
+
+
 @blp.route("/webhook/paystack", methods=["POST"])
 @blp.response(200, WebhookAckSchema)
 def paystack_webhook_route():
@@ -143,21 +213,13 @@ def paystack_webhook_route():
     invoice = Invoice.query.get(payment.invoice_id)
 
     if event.status == "success":
-        payment.status = PaymentStatus.SUCCESS.value
-        payment.paid_at = utcnow()
-        payment.channel = event.channel
-        mark_invoice_paid(invoice)
-        payment_event.processed_at = utcnow()
-        db.session.commit()
-
-        bus.dispatch(
-            PaymentReceived(case_id=invoice.business_case_id, invoice_id=invoice.id, payment_id=payment.id)
-        )
-        db.session.commit()
-
-        from app.payments.tasks import generate_receipt_pdf
-
-        generate_receipt_pdf.delay(str(invoice.id))
+        # Guard against a webhook/verify race settling the same payment twice.
+        if payment.status != PaymentStatus.SUCCESS.value and invoice.status != InvoiceStatus.PAID.value:
+            payment_event.processed_at = utcnow()
+            _settle_successful_payment(payment, invoice, event.channel)
+        else:
+            payment_event.processed_at = utcnow()
+            db.session.commit()
     else:
         payment.status = PaymentStatus.FAILED.value
         invoice.status = InvoiceStatus.FAILED.value
@@ -246,7 +308,12 @@ def manual_credit_route(payload, invoice_id):
     total_paid = sum(
         p.amount_minor for p in invoice.payments if p.status == PaymentStatus.SUCCESS.value
     )
-    if total_paid >= invoice.total_minor:
+    # Only when this credit is what tips the invoice into fully-paid do we settle
+    # it -- and, crucially, unblock the payment-gated stage via PaymentReceived
+    # (previously missing, so a manual credit paid the invoice but left the case
+    # stuck "waiting on payment").
+    newly_paid = total_paid >= invoice.total_minor and invoice.status != InvoiceStatus.PAID.value
+    if newly_paid:
         mark_invoice_paid(invoice)
 
     write_audit_log(
@@ -257,6 +324,12 @@ def manual_credit_route(payload, invoice_id):
         context={"amount_minor": payload["amount_minor"], "note": payload.get("note")},
     )
     db.session.commit()
+
+    if newly_paid:
+        bus.dispatch(
+            PaymentReceived(case_id=invoice.business_case_id, invoice_id=invoice.id, payment_id=payment.id)
+        )
+        db.session.commit()
 
     if invoice.status == InvoiceStatus.PAID.value:
         bus.dispatch(
