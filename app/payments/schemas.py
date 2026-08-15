@@ -28,6 +28,11 @@ class InitializeTransactionResponseSchema(Schema):
     provider_reference = fields.String(required=True)
 
 
+class ReceiptUrlSchema(Schema):
+    download_url = fields.String(required=True)
+    expires_in = fields.Integer(required=True)
+
+
 class PaymentSchema(Schema):
     id = fields.String(dump_only=True)
     invoice_id = fields.String(dump_only=True)

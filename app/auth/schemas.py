@@ -76,6 +76,28 @@ class UserSchema(Schema):
     roles = fields.Method("get_roles", dump_only=True)
     is_email_verified = fields.Boolean(dump_only=True)
     is_phone_verified = fields.Boolean(dump_only=True)
+    locale = fields.String(dump_only=True)
+    created_at = fields.DateTime(dump_only=True)
 
     def get_roles(self, obj):
         return obj.role_names()
+
+
+class ProfileUpdateSchema(Schema):
+    """Self-service profile edits. Deliberately omits email, phone, roles and the
+    verification flags: those can never be set through PATCH /auth/me (email and
+    primary phone are the login/recovery identity and need a verify-new-contact
+    flow that does not exist yet). Every field is optional -- only provided keys
+    are applied."""
+
+    full_name = fields.String(validate=validate.Length(min=2, max=255))
+    secondary_phone = MobileField(allow_none=True)
+    is_whatsapp_reachable = fields.Boolean()
+    locale = fields.String(validate=validate.OneOf(["en", "tw", "fr"]))
+
+
+class ChangePasswordSchema(Schema):
+    current_password = fields.String(required=True, load_only=True)
+    new_password = fields.String(
+        required=True, load_only=True, validate=validate.Length(min=8, max=128)
+    )

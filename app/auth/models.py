@@ -45,6 +45,12 @@ class User(db.Model, UUIDPrimaryKeyMixin, TimestampMixin):
     supervisor_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
     )
+    # Set when the customer requests account closure from the account section. A
+    # flag, not a delete: staff act on it out of band (the FK-heavy schema and
+    # live cases/invoices make self-service hard-delete unsafe).
+    deletion_requested_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     roles: Mapped[list["Role"]] = relationship(
         secondary="user_roles", back_populates="users", lazy="joined"

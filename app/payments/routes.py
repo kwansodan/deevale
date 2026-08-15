@@ -19,11 +19,13 @@ from app.payments.enums import InvoiceStatus, PaymentStatus
 from app.payments.invoice_service import create_invoice_from_case, mark_invoice_paid
 from app.payments.models import Invoice, Payment, PaymentEvent
 from app.payments.providers.factory import get_payment_provider
+from app.documents.storage import presign_get_url
 from app.payments.schemas import (
     InitializeTransactionResponseSchema,
     InvoiceSchema,
     ManualCreditRequestSchema,
     PaymentSchema,
+    ReceiptUrlSchema,
     RefundLogRequestSchema,
     WebhookAckSchema,
 )
@@ -178,6 +180,36 @@ def list_case_invoices_route(case_id):
     case = _get_case_or_404(case_uuid)
     ensure_case_access(user, case)
     return Invoice.query.filter_by(business_case_id=case.id).order_by(Invoice.created_at.desc()).all()
+
+
+@blp.route("/invoices", methods=["GET"])
+@jwt_required()
+@blp.response(200, InvoiceSchema(many=True))
+def list_my_invoices_route():
+    """The signed-in user's invoices across all their own cases -- the billing
+    list in the account section. Scoped by BusinessCase.client_id, so a client
+    only ever sees their own; staff use the /finance endpoints instead."""
+    user = get_current_user()
+    return (
+        Invoice.query.join(BusinessCase, Invoice.business_case_id == BusinessCase.id)
+        .filter(BusinessCase.client_id == user.id)
+        .order_by(Invoice.created_at.desc())
+        .all()
+    )
+
+
+@blp.route("/invoices/<string:invoice_id>/receipt-url", methods=["GET"])
+@jwt_required()
+@blp.response(200, ReceiptUrlSchema)
+def invoice_receipt_url_route(invoice_id):
+    """Presigned download URL for a paid invoice's receipt PDF."""
+    user = get_current_user()
+    invoice = _get_invoice_or_404(invoice_id)
+    case = _get_case_or_404(invoice.business_case_id)
+    ensure_case_access(user, case)
+    if not invoice.receipt_s3_key:
+        raise NotFoundError("No receipt is available for this invoice yet")
+    return {"download_url": presign_get_url(invoice.receipt_s3_key), "expires_in": 300}
 
 
 @blp.route("/finance/payments", methods=["GET"])

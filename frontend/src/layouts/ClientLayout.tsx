@@ -96,6 +96,7 @@ export default function ClientLayout() {
                   <p className="text-muted-foreground text-xs">{user?.email}</p>
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem render={<Link to="/app/account">{t("nav.account")}</Link>} />
                 <DropdownMenuItem render={<Link to="/app/notifications">{t("nav.notifications")}</Link>} />
                 <DropdownMenuItem onClick={handleLogout}>{t("nav.logout")}</DropdownMenuItem>
               </DropdownMenuContent>

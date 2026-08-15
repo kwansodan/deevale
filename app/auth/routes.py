@@ -13,11 +13,13 @@ from flask_smorest import Blueprint
 from app.auth.blocklist import add_to_blocklist
 from app.auth.models import OtpPurpose, User
 from app.auth.schemas import (
+    ChangePasswordSchema,
     LoginSchema,
     MessageResponseSchema,
     OtpVerifySchema,
     PasswordResetConfirmSchema,
     PasswordResetRequestSchema,
+    ProfileUpdateSchema,
     RefreshResponseSchema,
     SignupResponseSchema,
     SignupSchema,
@@ -29,11 +31,14 @@ from app.auth.service import (
     build_tokens,
     complete_signup_verification,
     confirm_password_reset,
+    hash_password,
     request_password_reset,
     signup,
     verify_otp,
+    verify_password,
 )
 from app.core.audit import write_audit_log
+from app.core.model_mixins import utcnow
 from app.core.enums import STAFF_ROLES, RoleName
 from app.core.errors import UnauthorizedError, ValidationAppError
 from app.core.rbac import require_roles
@@ -183,6 +188,75 @@ def set_locale_route():
     user.locale = locale
     db.session.commit()
     return user
+
+
+@blp.route("/me", methods=["PATCH"])
+@jwt_required()
+@blp.arguments(ProfileUpdateSchema)
+@blp.response(200, UserSchema)
+def update_me_route(payload):
+    """Self-service profile edit. Only whitelisted fields in ProfileUpdateSchema
+    are accepted -- email, phone, roles and verification flags can never be set
+    here."""
+    user = User.query.get(uuid.UUID(get_jwt_identity()))
+    if user is None:
+        raise UnauthorizedError("User not found")
+    for field in ("full_name", "secondary_phone", "is_whatsapp_reachable", "locale"):
+        if field in payload:
+            setattr(user, field, payload[field])
+    write_audit_log(
+        action="profile_updated",
+        actor_user_id=user.id,
+        entity_type="user",
+        entity_id=user.id,
+        context={"fields": sorted(payload.keys())},
+    )
+    db.session.commit()
+    return user
+
+
+@blp.route("/me/password", methods=["POST"])
+@jwt_required()
+@blp.arguments(ChangePasswordSchema)
+@blp.response(200, MessageResponseSchema)
+@limiter.limit("5 per minute")
+def change_password_route(payload):
+    """Change password while logged in (current -> new). Does not revoke other
+    sessions -- 'log out everywhere' is a separate, deferred feature."""
+    user = User.query.get(uuid.UUID(get_jwt_identity()))
+    if user is None:
+        raise UnauthorizedError("User not found")
+    if not verify_password(user.password_hash, payload["current_password"]):
+        raise ValidationAppError("Current password is incorrect")
+    user.password_hash = hash_password(payload["new_password"])
+    write_audit_log(
+        action="password_changed", actor_user_id=user.id, entity_type="user", entity_id=user.id
+    )
+    db.session.commit()
+    return {"message": "Password updated."}
+
+
+@blp.route("/me/deletion-request", methods=["POST"])
+@jwt_required()
+@blp.response(200, MessageResponseSchema)
+def request_account_deletion_route():
+    """Flag the account for closure. Not a hard delete: staff act on it out of
+    band (see the account_deletion_requested audit entry). Idempotent."""
+    user = User.query.get(uuid.UUID(get_jwt_identity()))
+    if user is None:
+        raise UnauthorizedError("User not found")
+    if user.deletion_requested_at is None:
+        user.deletion_requested_at = utcnow()
+        write_audit_log(
+            action="account_deletion_requested",
+            actor_user_id=user.id,
+            entity_type="user",
+            entity_id=user.id,
+        )
+        db.session.commit()
+    return {
+        "message": "We've received your request to close your account. Our team will be in touch."
+    }
 
 
 @blp.route("/staff", methods=["GET"])

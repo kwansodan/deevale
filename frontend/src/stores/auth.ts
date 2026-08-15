@@ -6,10 +6,14 @@ export type CurrentUser = {
   id: string
   email: string
   phone: string
+  secondary_phone: string | null
+  is_whatsapp_reachable: boolean
   full_name: string
   roles: string[]
   is_email_verified: boolean
   is_phone_verified: boolean
+  locale: string
+  created_at: string
 }
 
 type AuthState = {

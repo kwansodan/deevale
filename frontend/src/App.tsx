@@ -19,6 +19,7 @@ const MailPage = lazy(() => import("@/pages/app/MailPage"))
 const MoneyPage = lazy(() => import("@/pages/app/MoneyPage"))
 const ReferralsPage = lazy(() => import("@/pages/app/ReferralsPage"))
 const NotificationsPage = lazy(() => import("@/pages/app/NotificationsPage"))
+const AccountPage = lazy(() => import("@/pages/app/AccountPage"))
 const PayInvoicePage = lazy(() => import("@/pages/public/PayInvoicePage"))
 const SignPage = lazy(() => import("@/pages/public/SignPage"))
 const CoFounderAcceptPage = lazy(() => import("@/pages/public/CoFounderAcceptPage"))
@@ -85,6 +86,7 @@ export default function App() {
             <Route path="money" element={<MoneyPage />} />
             <Route path="referrals" element={<ReferralsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="account" element={<AccountPage />} />
           </Route>
         </Route>
 
