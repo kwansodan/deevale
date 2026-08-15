@@ -108,21 +108,21 @@ function ProfileForm({ user }: { user: NonNullable<ReturnType<typeof useAuthStor
           and can't be self-edited yet. */}
       <div className="border-border grid gap-3 rounded-lg border p-4">
         <div className="flex items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs">Email</p>
-            <p className="text-sm font-medium">{user.email}</p>
+            <p className="truncate text-sm font-medium">{user.email}</p>
           </div>
-          <Badge variant={user.is_email_verified ? "default" : "secondary"}>
+          <Badge variant={user.is_email_verified ? "default" : "secondary"} className="shrink-0">
             {user.is_email_verified ? "Verified" : "Unverified"}
           </Badge>
         </div>
         <Separator />
         <div className="flex items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <p className="text-muted-foreground text-xs">Primary phone</p>
-            <p className="text-sm font-medium">{user.phone}</p>
+            <p className="truncate text-sm font-medium">{user.phone}</p>
           </div>
-          <Badge variant={user.is_phone_verified ? "default" : "secondary"}>
+          <Badge variant={user.is_phone_verified ? "default" : "secondary"} className="shrink-0">
             {user.is_phone_verified ? "Verified" : "Unverified"}
           </Badge>
         </div>
@@ -394,6 +394,17 @@ const INVOICE_STATUS_VARIANT: Record<string, "default" | "secondary" | "destruct
   overdue: "destructive",
 }
 
+/** " · paid 3 Aug 2026" / " · sent …", or "" when the invoice has no date yet
+ *  (guards against rendering "Invalid Date" for drafts). */
+function invoiceWhen(inv: PlatformInvoice): string {
+  const raw = inv.paid_at ?? inv.sent_at
+  if (!raw) return ""
+  const d = new Date(raw)
+  if (Number.isNaN(d.getTime())) return ""
+  const label = inv.paid_at ? "paid" : "sent"
+  return ` · ${label} ${d.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" })}`
+}
+
 function BillingTab() {
   const { data: invoices, isLoading: invoicesLoading } = useQuery({
     queryKey: ["my-invoices"],
@@ -450,11 +461,14 @@ function BillingTab() {
                 <div className="min-w-0">
                   <p className="text-sm font-medium">{inv.invoice_number}</p>
                   <p className="text-muted-foreground text-xs">
-                    {formatGhs(inv.total_minor)} · issued {new Date(inv.paid_at ?? inv.sent_at ?? "").toLocaleDateString("en-GH")}
+                    {formatGhs(inv.total_minor)}
+                    {invoiceWhen(inv)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant={INVOICE_STATUS_VARIANT[inv.status] ?? "secondary"}>{inv.status}</Badge>
+                  <Badge variant={INVOICE_STATUS_VARIANT[inv.status] ?? "secondary"} className="capitalize">
+                    {inv.status}
+                  </Badge>
                   {inv.status === "paid" && inv.receipt_s3_key && (
                     <Button variant="ghost" size="sm" onClick={() => openReceipt(inv.id)}>
                       <Download className="size-4" /> Receipt
@@ -546,7 +560,7 @@ export default function AccountPage() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="profile">
-            <TabsList>
+            <TabsList className="max-w-full overflow-x-auto">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="billing">Billing</TabsTrigger>
               <TabsTrigger value="security">Security</TabsTrigger>
