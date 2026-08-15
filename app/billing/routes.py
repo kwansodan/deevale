@@ -98,7 +98,12 @@ def subscribe_route(payload):
         },
         timeout=15,
     )
-    response.raise_for_status()
+    if response.status_code >= 400:
+        from app.payments.providers.paystack import PaymentProviderError, _paystack_message
+
+        detail = _paystack_message(response)
+        current_app.logger.error("Paystack subscribe failed (%s): %s", response.status_code, detail)
+        raise PaymentProviderError(f"Couldn't start the subscription. Paystack said: {detail}")
     data = response.json()["data"]
     return {"authorization_url": data["authorization_url"], "reference": reference}
 
