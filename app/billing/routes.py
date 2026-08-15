@@ -85,17 +85,22 @@ def subscribe_route(payload):
     db.session.commit()
 
     callback_url = request.args.get("callback_url", "")
+    body = {
+        "email": user.email,
+        "amount": amount,
+        "currency": "GHS",
+        "reference": reference,
+        "callback_url": callback_url,
+    }
+    # Only attach a Paystack Plan (recurring) when a real code is configured;
+    # otherwise this is a one-off charge and we track the period ourselves. An
+    # unset/placeholder plan code is what caused Paystack's "Plan not found".
+    if plan_code:
+        body["plan"] = plan_code
     response = requests.post(
         f"{current_app.config['PAYSTACK_BASE_URL']}/transaction/initialize",
         headers={"Authorization": f"Bearer {current_app.config['PAYSTACK_SECRET_KEY']}"},
-        json={
-            "email": user.email,
-            "amount": amount,
-            "currency": "GHS",
-            "reference": reference,
-            "plan": plan_code,
-            "callback_url": callback_url,
-        },
+        json=body,
         timeout=15,
     )
     if response.status_code >= 400:
