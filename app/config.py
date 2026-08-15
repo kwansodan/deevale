@@ -34,6 +34,12 @@ class Config:
     MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024
     ALLOWED_UPLOAD_CONTENT_TYPES = {"application/pdf", "image/jpeg", "image/png"}
 
+    # Exchange rates for the landing page's currency display (indicative only;
+    # real billing stays in GHS). open.er-api.com is free and needs no API key.
+    # Rates are cached in platform_settings and refreshed lazily past the TTL.
+    EXCHANGE_RATES_URL = os.environ.get("EXCHANGE_RATES_URL", "https://open.er-api.com/v6/latest/USD")
+    EXCHANGE_RATES_TTL_SECONDS = int(os.environ.get("EXCHANGE_RATES_TTL_SECONDS", str(12 * 3600)))
+
     # Deevale GH registered-office address, assigned to clients on the
     # registered-address add-on. Editable per deployment.
     REGISTERED_OFFICE_ADDRESS = os.environ.get(

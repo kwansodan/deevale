@@ -19,8 +19,9 @@ export type EntityOffer = {
   key: EntityKey
   name: string
   blurb: string
-  /** All-in indicative price, government fees included. From the API. */
-  price: string | null
+  /** All-in indicative price as a numeric amount in the config base currency
+   *  (converted for display). From the API; null when unset. */
+  price: number | null
   timeline: string | null
   /** Shown on the foreign-investor path rather than the local one. */
   foreignTrack: boolean
@@ -67,6 +68,7 @@ const ENTITY_META: Omit<EntityOffer, "price" | "timeline">[] = [
 ]
 
 const EMPTY_CONFIG: LandingConfig = {
+  pricing: { base_currency: "GHS" },
   company: {
     legalName: null,
     registrationNumber: null,
@@ -115,9 +117,16 @@ export function useLandingConfig() {
   })
   const config = data ?? EMPTY_CONFIG
 
+  // Coerce to a finite number; anything else (unset, or a legacy free-text
+  // value from before prices were numeric) becomes null -> "Request a quote".
+  const num = (v: unknown): number | null => {
+    const n = typeof v === "number" ? v : Number(v)
+    return Number.isFinite(n) && v !== null && v !== "" ? n : null
+  }
+
   const entities: EntityOffer[] = ENTITY_META.map((meta) => ({
     ...meta,
-    price: config.prices[meta.key],
+    price: num(config.prices[meta.key]),
     timeline: config.timelines[meta.key],
   }))
 
@@ -138,8 +147,13 @@ export function useLandingConfig() {
   return {
     company: config.company,
     entities,
+    baseCurrency: config.pricing?.base_currency || "GHS",
     gipc: config.gipc,
-    compliance: config.compliance,
+    compliance: {
+      monthlyPrice: num(config.compliance.monthlyPrice),
+      annualPrice: num(config.compliance.annualPrice),
+      registeredAddressPrice: num(config.compliance.registeredAddressPrice),
+    },
     legal: config.legal,
     hasTrustSignals,
     testimonials,

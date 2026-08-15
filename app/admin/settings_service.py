@@ -28,6 +28,13 @@ LANDING_DEFAULT: dict = {
         "casesCompleted": None,
         "dataProtectionNumber": None,
     },
+    # Base currency the admin enters prices in. The landing page shows them in
+    # GHS (Ghana visitors) or USD (everyone else), converted from this base.
+    "pricing": {
+        "base_currency": "GHS",
+    },
+    # Prices are now numeric amounts in `pricing.base_currency` (major units),
+    # not free-text, so they can be converted for display.
     "prices": {
         "ltd_shares": None,
         "sole_proprietorship": None,

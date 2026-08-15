@@ -499,10 +499,13 @@ function LandingSettingsManager() {
     setDraft((prev) => {
       if (!prev) return prev
       const numericCompany = section === "company" && (key === "yearsOperating" || key === "casesCompleted")
+      // Prices/compliance are numeric amounts (converted for display); everything
+      // else stays a string.
+      const numericField = numericCompany || section === "prices" || section === "compliance"
       let parsed: string | number | null
       if (value.trim() === "") {
         parsed = null
-      } else if (numericCompany) {
+      } else if (numericField) {
         const n = Number(value)
         parsed = Number.isFinite(n) ? n : null // never store NaN
       } else {
@@ -525,7 +528,30 @@ function LandingSettingsManager() {
         "Request a quote" rather than an invented number). Changes apply immediately, no redeploy.
       </p>
       <LandingSection title="Company / trust signals" labels={COMPANY_LABELS} group={groupOf("company")} onChange={(k, v) => setField("company", k, v)} />
-      <LandingSection title="Prices (all-in, government fees included)" labels={ENTITY_LABELS} group={groupOf("prices")} onChange={(k, v) => setField("prices", k, v)} />
+
+      <div className="grid gap-2">
+        <h3 className="text-sm font-semibold">Pricing currency</h3>
+        <label className="grid max-w-xs gap-1 text-xs font-medium">
+          Currency you enter prices in
+          <select
+            className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+            value={(groupOf("pricing").base_currency as string) ?? "GHS"}
+            onChange={(e) => setField("pricing", "base_currency", e.target.value)}
+          >
+            {["GHS", "USD", "EUR", "GBP", "NGN", "ZAR", "CAD", "AUD"].map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p className="text-muted-foreground text-xs">
+          Enter prices below as plain numbers in this currency (e.g. 2000). Visitors see them in GHS
+          (in Ghana) or USD (elsewhere), converted at live rates. Billing is always in GHS.
+        </p>
+      </div>
+
+      <LandingSection title="Prices (amount only, no symbol)" labels={ENTITY_LABELS} group={groupOf("prices")} onChange={(k, v) => setField("prices", k, v)} />
       <LandingSection title="Timelines" labels={ENTITY_LABELS} group={groupOf("timelines")} onChange={(k, v) => setField("timelines", k, v)} />
       <LandingSection title="GIPC thresholds" labels={GIPC_LABELS} group={groupOf("gipc")} onChange={(k, v) => setField("gipc", k, v)} />
       <LandingSection title="Recurring services" labels={COMPLIANCE_LABELS} group={groupOf("compliance")} onChange={(k, v) => setField("compliance", k, v)} />

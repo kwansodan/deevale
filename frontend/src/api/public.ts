@@ -45,7 +45,10 @@ export type LandingConfig = {
     casesCompleted: number | null
     dataProtectionNumber: string | null
   }
-  prices: Record<EntityKey, string | null>
+  // Base currency the admin entered prices in; the page converts to GHS/USD.
+  pricing: { base_currency: string }
+  // Numeric amounts (major units) in `pricing.base_currency`.
+  prices: Record<EntityKey, number | null>
   timelines: Record<EntityKey, string | null>
   gipc: {
     jointVenture: string | null
@@ -54,9 +57,9 @@ export type LandingConfig = {
     registrationFee: string | null
   }
   compliance: {
-    monthlyPrice: string | null
-    annualPrice: string | null
-    registeredAddressPrice: string | null
+    monthlyPrice: number | null
+    annualPrice: number | null
+    registeredAddressPrice: number | null
   }
   legal: {
     termsUrl: string | null
@@ -75,5 +78,14 @@ export type LandingConfig = {
 
 export async function getLandingConfig() {
   const { data } = await apiClient.get<LandingConfig>("/public/landing-config")
+  return data
+}
+
+/** USD-based exchange rates (rates[C] = units of C per 1 USD) for the landing
+ *  page's indicative GHS/USD price display. */
+export type ExchangeRates = { base: string; rates: Record<string, number>; fetched_at: number }
+
+export async function getExchangeRates() {
+  const { data } = await apiClient.get<ExchangeRates>("/public/exchange-rates")
   return data
 }

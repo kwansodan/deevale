@@ -25,6 +25,8 @@ import { StatCounter } from "@/components/landing/StatCounter"
 import { LogoStrip } from "@/components/landing/LogoStrip"
 import { Testimonials } from "@/components/landing/Testimonials"
 import { Faq } from "@/components/landing/Faq"
+import { CurrencyToggle } from "@/components/landing/CurrencyToggle"
+import { useCurrency } from "@/hooks/useCurrency"
 import { useInView } from "@/hooks/useInView"
 import { cn } from "@/lib/utils"
 import { figures, useLandingConfig } from "@/config/landing"
@@ -138,8 +140,15 @@ function Section({
 export default function LandingPage() {
   const [audience, setAudience] = useState<Audience>("local")
   const [scrolled, setScrolled] = useState(false)
-  const { company, compliance, entities, gipc, hasTrustSignals, legal, logos, rating, testimonials } =
+  const { baseCurrency, company, compliance, entities, gipc, hasTrustSignals, legal, logos, rating, testimonials } =
     useLandingConfig()
+  const { currency, setCurrency, convert } = useCurrency()
+  const money = (amount: number | null, fallback: string) =>
+    amount == null ? (
+      <span className="text-muted-foreground font-normal">{fallback}</span>
+    ) : (
+      <span>{convert(amount, baseCurrency)}</span>
+    )
   const isForeign = audience === "foreign"
   const visibleEntities = entities.filter((e) => (isForeign ? true : !e.foreignTrack))
 
@@ -320,8 +329,12 @@ export default function LandingPage() {
       )}
 
       <Section id="pricing" eyebrow="Pricing" title="What it costs, all in" surface="tinted">
-        {/* The fee-split point now sits under the grid: it is reassurance, and
-            it was standing between the reader and the actual prices. */}
+        {/* Prices are entered in one base currency and shown to the visitor in
+            GHS (Ghana) or USD (elsewhere), auto-detected with a manual toggle. */}
+        <div className="-mt-4 mb-6 flex items-center gap-3">
+          <span className="text-muted-foreground text-sm">Show prices in</span>
+          <CurrencyToggle currency={currency} onChange={setCurrency} />
+        </div>
         <div className="grid gap-4 md:grid-cols-2">
           {visibleEntities.map((entity) => (
             <Card
@@ -343,7 +356,7 @@ export default function LandingPage() {
                   <div>
                     <dt className="text-muted-foreground text-xs">From</dt>
                     <dd className="font-heading text-lg font-semibold">
-                      <Figure value={entity.price} fallback="Request a quote" />
+                      {money(entity.price, "Request a quote")}
                     </dd>
                   </div>
                   <div>
@@ -359,6 +372,7 @@ export default function LandingPage() {
         </div>
         <p className="text-muted-foreground mt-4 text-sm">
           Every quote itemises the government fee separately from ours.
+          {currency !== "GHS" && " Prices in USD are indicative; you're billed in Ghana cedis (GHS)."}
         </p>
       </Section>
 
@@ -441,21 +455,15 @@ export default function LandingPage() {
             <CardContent className="space-y-4 pt-6">
               <div className="flex items-baseline justify-between gap-4">
                 <span className="text-sm">Compliance plan, monthly</span>
-                <span className="font-semibold">
-                  <Figure value={compliance.monthlyPrice} fallback="Request a quote" />
-                </span>
+                <span className="font-semibold">{money(compliance.monthlyPrice, "Request a quote")}</span>
               </div>
               <div className="flex items-baseline justify-between gap-4">
                 <span className="text-sm">Compliance plan, annual</span>
-                <span className="font-semibold">
-                  <Figure value={compliance.annualPrice} fallback="Request a quote" />
-                </span>
+                <span className="font-semibold">{money(compliance.annualPrice, "Request a quote")}</span>
               </div>
               <div className="flex items-baseline justify-between gap-4">
                 <span className="text-sm">Registered office address</span>
-                <span className="font-semibold">
-                  <Figure value={compliance.registeredAddressPrice} fallback="Request a quote" />
-                </span>
+                <span className="font-semibold">{money(compliance.registeredAddressPrice, "Request a quote")}</span>
               </div>
               <Separator />
               <ul className="space-y-2">

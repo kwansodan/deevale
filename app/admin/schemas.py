@@ -18,6 +18,7 @@ class LandingConfigSchema(Schema):
     # admin form and the public landing config. `unknown = INCLUDE` keeps any
     # future section the service adds without a schema change.
     company = fields.Dict(load_default=dict)
+    pricing = fields.Dict(load_default=dict)
     prices = fields.Dict(load_default=dict)
     timelines = fields.Dict(load_default=dict)
     gipc = fields.Dict(load_default=dict)
