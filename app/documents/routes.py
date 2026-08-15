@@ -11,7 +11,12 @@ from app.core.events.bus import bus
 from app.core.events.events import DocumentApproved, DocumentRejected, DocumentUploaded
 from app.core.model_mixins import utcnow
 from app.core.ownership import ensure_case_access
-from app.documents.enums import VAULT_DOCUMENT_TYPES, ReviewStatus, UploadStatus
+from app.documents.enums import (
+    VAULT_DOCUMENT_TYPES,
+    DocumentTypeCode,
+    ReviewStatus,
+    UploadStatus,
+)
 from app.documents.models import Document, DocumentVersion
 from app.documents.schemas import (
     DocumentSchema,
@@ -26,6 +31,12 @@ from app.extensions import db
 from app.workflow.models import BusinessCase
 
 blp = Blueprint("documents", __name__, url_prefix="/documents", description="Document center endpoints")
+
+# Document types that are shared/exchanged rather than reviewed. A bank form the
+# staff share for the client to sign (or the completed copy the client returns)
+# is not a compliance document to approve, so it skips the review queue instead
+# of cluttering it and showing the client a confusing "Pending review" badge.
+_NO_REVIEW_DOCUMENT_TYPES = {DocumentTypeCode.BANK_FORM.value}
 
 
 def _get_case_or_404(case_id) -> BusinessCase:
@@ -99,6 +110,11 @@ def request_upload_slot_route(payload):
         version_number = 1
 
     s3_key = build_s3_key(case.id, document.id, version_number, payload["original_filename"])
+    review_status = (
+        ReviewStatus.APPROVED.value
+        if payload["document_type_code"] in _NO_REVIEW_DOCUMENT_TYPES
+        else ReviewStatus.PENDING_REVIEW.value
+    )
     version = DocumentVersion(
         id=uuid.uuid4(),
         document_id=document.id,
@@ -108,7 +124,7 @@ def request_upload_slot_route(payload):
         content_type=payload["content_type"],
         size_bytes=payload["size_bytes"],
         upload_status=UploadStatus.PENDING.value,
-        review_status=ReviewStatus.PENDING_REVIEW.value,
+        review_status=review_status,
     )
     db.session.add(version)
     document.current_version_number = version_number
