@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 
 from flask import current_app
 from flask_jwt_extended import jwt_required
@@ -77,31 +78,55 @@ def create_case_message_route(payload, case_id):
     return message
 
 
+# A message alert repeats at most once per this window per recipient+case, so a
+# rapid back-and-forth doesn't email someone on every single line.
+_MESSAGE_ALERT_WINDOW = timedelta(minutes=15)
+
+
 def _notify_counterparty(case, sender, is_client_sender, message) -> None:
-    """Email + in-app the other side of the thread that a message landed. The
-    client sender notifies the assigned officer; a staff sender notifies the
-    client. Silently no-ops when there is no counterparty yet (e.g. a message
-    before an officer is assigned)."""
-    from app.auth.models import User
+    """Email + in-app the other side of the thread that a message landed. A
+    staff sender notifies the client; a client notifies the assigned officer, or
+    -- if none is assigned yet -- the officer/admin pool who would pick the case
+    up. Each recipient is alerted at most once per _MESSAGE_ALERT_WINDOW."""
+    from app.auth.models import Role, User
     from app.notifications.dispatcher import dispatcher
     from app.notifications.enums import NotificationCategory
+    from app.notifications.models import Notification
 
-    recipient_id = case.client_id if not is_client_sender else case.assigned_officer_id
-    if recipient_id is None:
-        return
-    recipient = User.query.get(recipient_id)
-    if recipient is None:
-        return
+    if not is_client_sender:
+        client = User.query.get(case.client_id)
+        recipients = [client] if client is not None else []
+    elif case.assigned_officer_id is not None:
+        officer = User.query.get(case.assigned_officer_id)
+        recipients = [officer] if officer is not None else []
+    else:
+        recipients = (
+            User.query.join(User.roles)
+            .filter(Role.name.in_([RoleName.CASE_OFFICER.value, RoleName.ADMIN.value]))
+            .distinct()
+            .all()
+        )
 
     business_name = (case.onboarding_payload or {}).get("business_name") or case.case_number
     preview = (message.body or "").strip()
     preview = (preview[:80] + "…") if len(preview) > 80 else (preview or "sent an attachment")
-    dispatcher.notify(
-        recipient,
-        NotificationCategory.MESSAGE_RECEIVED,
-        {"sender_name": sender.full_name, "business_name": business_name, "preview": preview},
-        related_case_id=case.id,
-    )
+    context = {"sender_name": sender.full_name, "business_name": business_name, "preview": preview}
+
+    cutoff = utcnow() - _MESSAGE_ALERT_WINDOW
+    for recipient in recipients:
+        if recipient.id == sender.id:
+            continue
+        recent = Notification.query.filter(
+            Notification.user_id == recipient.id,
+            Notification.category == NotificationCategory.MESSAGE_RECEIVED.value,
+            Notification.related_case_id == case.id,
+            Notification.created_at >= cutoff,
+        ).first()
+        if recent is not None:
+            continue
+        dispatcher.notify(
+            recipient, NotificationCategory.MESSAGE_RECEIVED, context, related_case_id=case.id
+        )
 
 
 @blp.route("/<string:case_id>/messages/unread-count", methods=["GET"])

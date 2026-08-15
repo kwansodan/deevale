@@ -34,6 +34,9 @@ function typeLabel(code: string): string {
 }
 
 function ReviewBadge({ doc }: { doc: CaseDocument }) {
+  // Bank forms are shared/exchanged, not reviewed, so they carry no review
+  // status - they read as a plain shared file rather than something "Approved".
+  if (doc.document_type_code === "bank_form") return null
   const version = doc.versions[doc.versions.length - 1]
   if (!version) return null
   const status = version.review_status
