@@ -5,6 +5,7 @@ import { useAuthBootstrap } from "@/hooks/useAuthBootstrap"
 import { useAuthStore } from "@/stores/auth"
 import { RequireAuth, RequireStaff } from "@/routes/AuthGuard"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { WhatsAppFab } from "@/components/WhatsAppFab"
 import ClientLayout from "@/layouts/ClientLayout"
 import OpsLayout from "@/layouts/OpsLayout"
 
@@ -108,6 +109,8 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+      {/* Floating WhatsApp contact, on every customer page (hidden on /ops). */}
+      <WhatsAppFab />
     </ErrorBoundary>
   )
 }
