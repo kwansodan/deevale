@@ -409,7 +409,7 @@ function LandingListEditor({
       </div>
       {items.length === 0 && (
         <p className="text-muted-foreground text-xs italic">
-          None yet — this section stays hidden on the site until you add one.
+          None yet - this section stays hidden on the site until you add one.
         </p>
       )}
       {items.map((item, i) => (
@@ -559,7 +559,7 @@ function LandingSettingsManager() {
 
       <div className="border-border border-t pt-5">
         <p className="text-muted-foreground mb-4 text-sm">
-          Social proof — shown only when real. Every item below is optional and each section stays
+          Social proof - shown only when real. Every item below is optional and each section stays
           hidden on the site until you add content. Never enter anything you can&apos;t stand behind.
         </p>
         <div className="grid gap-6">

@@ -205,7 +205,7 @@ function WebhookManager({
     <div className="grid gap-4">
       {freshSecret && (
         <div className="border-accent/40 bg-accent/5 grid gap-1 rounded-md border p-3 text-sm">
-          <p className="font-medium">Copy this signing secret now — it won't be shown again.</p>
+          <p className="font-medium">Copy this signing secret now - it won't be shown again.</p>
           <div className="flex items-center gap-2">
             <code className="bg-muted flex-1 truncate rounded px-2 py-1 text-xs">{freshSecret}</code>
             <Button

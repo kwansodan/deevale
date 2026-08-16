@@ -31,7 +31,7 @@ function buildDocs(company: {
         {
           heading: "1. Who we are and what we do",
           paras: [
-            `${name} helps individuals and businesses register companies and stay compliant in Ghana — including incorporation, tax and SSNIT registration, permits, and ongoing statutory filings.`,
+            `${name} helps individuals and businesses register companies and stay compliant in Ghana - including incorporation, tax and SSNIT registration, permits, and ongoing statutory filings.`,
             `${name} is a business-registration and compliance service. We are not a law firm and do not provide legal, tax, or accounting advice. Where you need such advice, consult a qualified professional.`,
           ],
         },
@@ -127,7 +127,7 @@ function buildDocs(company: {
         {
           heading: "2. How we use your data",
           paras: [
-            "We use your data to provide the Services — preparing and submitting registrations and filings to the relevant authorities, processing payments, communicating with you, meeting our legal obligations, and improving and securing the platform.",
+            "We use your data to provide the Services - preparing and submitting registrations and filings to the relevant authorities, processing payments, communicating with you, meeting our legal obligations, and improving and securing the platform.",
           ],
         },
         {
@@ -213,7 +213,7 @@ function buildDocs(company: {
           heading: "2. Our service fees",
           paras: [
             "Before we begin work on your case, our service fee is refundable, less any costs we have already incurred on your behalf.",
-            "Once we have started work or lodged filings, our service fee is generally non-refundable — except where we fail to deliver a service you paid for and the failure is our fault, in which case we will refund the affected service fee.",
+            "Once we have started work or lodged filings, our service fee is generally non-refundable - except where we fail to deliver a service you paid for and the failure is our fault, in which case we will refund the affected service fee.",
           ],
         },
         {

@@ -13,11 +13,11 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Can I register from outside Ghana?",
-    a: "Yes. Every party signs electronically in the right order, IDs upload to an encrypted vault, and we provide a Ghanaian office address to receive your official mail — so you never have to travel or be in the room.",
+    a: "Yes. Every party signs electronically in the right order, IDs upload to an encrypted vault, and we provide a Ghanaian office address to receive your official mail - so you never have to travel or be in the room.",
   },
   {
     q: "What happens after I'm registered?",
-    a: "Your certificates land in your document vault and we begin tracking your compliance deadlines — annual returns, tax filings, SSNIT and permit renewals — with reminders by email and SMS and a “file it for me” option on each obligation.",
+    a: "Your certificates land in your document vault and we begin tracking your compliance deadlines - annual returns, tax filings, SSNIT and permit renewals - with reminders by email and SMS and a “file it for me” option on each obligation.",
   },
   {
     q: "Do you handle refunds?",

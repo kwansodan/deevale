@@ -362,7 +362,7 @@ function SecurityTab() {
           <DialogHeader>
             <DialogTitle>Request account deletion?</DialogTitle>
             <DialogDescription>
-              This flags your account for closure and notifies our team. It is not immediate — we&apos;ll
+              This flags your account for closure and notifies our team. It is not immediate - we&apos;ll
               contact you to confirm and to settle anything outstanding on your cases.
             </DialogDescription>
           </DialogHeader>
@@ -510,7 +510,7 @@ function BillingTab() {
         ) : (
           <div className="border-border grid gap-3 rounded-lg border p-4">
             <p className="text-muted-foreground text-sm">
-              Stay compliant automatically — we track your filing deadlines and remind you.
+              Stay compliant automatically - we track your filing deadlines and remind you.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button
@@ -518,13 +518,13 @@ function BillingTab() {
                 disabled={subscribeMutation.isPending}
                 onClick={() => subscribeMutation.mutate("monthly")}
               >
-                Monthly — {formatGhs(sub.monthly_price_minor)}
+                Monthly - {formatGhs(sub.monthly_price_minor)}
               </Button>
               <Button
                 disabled={subscribeMutation.isPending}
                 onClick={() => subscribeMutation.mutate("annual")}
               >
-                Annual — {formatGhs(sub.annual_price_minor)}
+                Annual - {formatGhs(sub.annual_price_minor)}
               </Button>
             </div>
           </div>
