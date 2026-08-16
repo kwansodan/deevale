@@ -442,7 +442,7 @@ export default function LandingPage() {
         </Section>
       )}
 
-      <Section eyebrow="After you're registered" title="The part that catches people out" surface="ink">
+      <Section eyebrow="After you're registered" title="Staying compliant, year after year" surface="ink">
         <div className="grid gap-8 md:grid-cols-2">
           <div>
             <p className="text-sm leading-relaxed">
