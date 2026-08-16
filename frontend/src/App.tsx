@@ -10,6 +10,7 @@ import ClientLayout from "@/layouts/ClientLayout"
 import OpsLayout from "@/layouts/OpsLayout"
 
 const LandingPage = lazy(() => import("@/pages/public/LandingPage"))
+const LegalPage = lazy(() => import("@/pages/public/LegalPage"))
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"))
 const SignupPage = lazy(() => import("@/pages/auth/SignupPage"))
 const VerifyOtpPage = lazy(() => import("@/pages/auth/VerifyOtpPage"))
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="/pay/:token" element={<PayInvoicePage />} />
         <Route path="/sign/:token" element={<SignPage />} />
         <Route path="/cofounder/:token" element={<CoFounderAcceptPage />} />
+        <Route path="/legal/:doc" element={<LegalPage />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/app" element={<ClientLayout />}>

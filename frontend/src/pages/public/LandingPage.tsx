@@ -575,20 +575,34 @@ export default function LandingPage() {
           </nav>
           <nav className="flex flex-col gap-2">
             <p className="text-foreground font-semibold">Company</p>
-            {legal.termsUrl && (
+            {/* An admin-configured external URL wins; otherwise link to the
+                in-app legal page so these are always live. */}
+            {legal.termsUrl ? (
               <a href={legal.termsUrl} className="hover:underline">
                 Terms of service
               </a>
+            ) : (
+              <Link to="/legal/terms" className="hover:underline">
+                Terms of service
+              </Link>
             )}
-            {legal.privacyUrl && (
+            {legal.privacyUrl ? (
               <a href={legal.privacyUrl} className="hover:underline">
                 Privacy policy
               </a>
+            ) : (
+              <Link to="/legal/privacy" className="hover:underline">
+                Privacy policy
+              </Link>
             )}
-            {legal.refundUrl && (
+            {legal.refundUrl ? (
               <a href={legal.refundUrl} className="hover:underline">
                 Refund policy
               </a>
+            ) : (
+              <Link to="/legal/refund" className="hover:underline">
+                Refund policy
+              </Link>
             )}
             <Link to="/login" className="hover:underline">
               Log in
