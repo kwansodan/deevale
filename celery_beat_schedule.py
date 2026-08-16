@@ -11,6 +11,10 @@ celery_app.conf.beat_schedule = {
         "task": "app.deadlines.sla_scanner.scan_sla_breaches",
         "schedule": crontab(minute=0),
     },
+    "check-uptime": {
+        "task": "app.monitoring.tasks.check_uptime",
+        "schedule": crontab(minute="*/5"),
+    },
     "flush-queued-sms": {
         "task": "app.notifications.tasks.flush_queued_sms",
         "schedule": crontab(minute="*/15"),

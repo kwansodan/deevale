@@ -34,6 +34,19 @@ class Config:
     MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024
     ALLOWED_UPLOAD_CONTENT_TYPES = {"application/pdf", "image/jpeg", "image/png"}
 
+    # Uptime monitor (app/monitoring/tasks.py). Inert until UPTIME_ALERT_EMAIL is
+    # set. Probes these URLs every 5 min and emails on DOWN/RECOVERED.
+    UPTIME_ALERT_EMAIL = os.environ.get("UPTIME_ALERT_EMAIL", "")
+    UPTIME_CHECK_URLS = [
+        u.strip()
+        for u in os.environ.get(
+            "UPTIME_CHECK_URLS",
+            "https://api.deevalegh.com/health,https://www.deevalegh.com",
+        ).split(",")
+        if u.strip()
+    ]
+    UPTIME_FAIL_THRESHOLD = int(os.environ.get("UPTIME_FAIL_THRESHOLD", "2"))
+
     # Exchange rates for the landing page's currency display (indicative only;
     # real billing stays in GHS). open.er-api.com is free and needs no API key.
     # Rates are cached in platform_settings and refreshed lazily past the TTL.

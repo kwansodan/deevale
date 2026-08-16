@@ -29,6 +29,7 @@ import app.deadlines.scanner  # noqa: E402,F401
 import app.deadlines.sla_scanner  # noqa: E402,F401
 import app.documents.tasks  # noqa: E402,F401
 import app.mailroom.tasks  # noqa: E402,F401
+import app.monitoring.tasks  # noqa: E402,F401
 import app.notifications.tasks  # noqa: E402,F401
 import app.partners.tasks  # noqa: E402,F401
 import app.payments.tasks  # noqa: E402,F401
