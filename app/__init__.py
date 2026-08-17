@@ -53,7 +53,6 @@ def create_app(env_name: str | None = None) -> Flask:
 
 
 def _register_blueprints(api) -> None:
-    from app.admin.live_chat_ops_routes import blp as ops_live_chat_blp
     from app.admin.routes import blp as admin_blp
     from app.auth.routes import blp as auth_blp
     from app.billing.routes import blp as billing_blp
@@ -66,7 +65,6 @@ def _register_blueprints(api) -> None:
     from app.partners.admin_routes import blp as partner_admin_blp
     from app.partners.api_v1 import blp as partner_v1_blp
     from app.payments.routes import blp as payments_blp
-    from app.public.live_chat_routes import blp as public_live_chat_blp
     from app.public.routes import blp as public_blp
     from app.referrals.routes import blp as referrals_blp
     from app.reports.routes import blp as reports_blp
@@ -90,8 +88,6 @@ def _register_blueprints(api) -> None:
     api.register_blueprint(partner_v1_blp)
     api.register_blueprint(referrals_blp)
     api.register_blueprint(public_blp)
-    api.register_blueprint(public_live_chat_blp)
-    api.register_blueprint(ops_live_chat_blp)
 
 
 def _apply_security_headers(app: Flask) -> None:

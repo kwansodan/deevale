@@ -44,6 +44,8 @@ export type LandingConfig = {
     yearsOperating: number | null
     casesCompleted: number | null
     dataProtectionNumber: string | null
+    chatwootWebsiteToken: string | null
+    chatwootBaseUrl: string | null
   }
   // Base currency the admin entered prices in; the page converts to GHS/USD.
   pricing: { base_currency: string }

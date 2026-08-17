@@ -79,6 +79,8 @@ const EMPTY_CONFIG: LandingConfig = {
     yearsOperating: null,
     casesCompleted: null,
     dataProtectionNumber: null,
+    chatwootWebsiteToken: null,
+    chatwootBaseUrl: null,
   },
   prices: {
     ltd_shares: null,

@@ -331,6 +331,8 @@ const COMPANY_LABELS: Record<string, string> = {
   email: "Email",
   phone: "Phone",
   whatsapp: "WhatsApp (digits, intl, no +)",
+  chatwootWebsiteToken: "Chatwoot Website Token",
+  chatwootBaseUrl: "Chatwoot Base URL (optional, defaults to https://app.chatwoot.com)",
   yearsOperating: "Years operating (number)",
   casesCompleted: "Registrations completed (number)",
   dataProtectionNumber: "Data Protection reg. number",

@@ -6,7 +6,6 @@ import {
   BarChart3,
   Building2,
   Mailbox,
-  MessageCircle,
   Settings,
   LogOut,
   Wallet,
@@ -22,7 +21,6 @@ import { Wordmark } from "@/components/Wordmark"
 // payments (+ fee schedule settings), admin sees everything.
 const NAV_ITEMS = [
   { to: "/ops/queue", label: "Queue", icon: ClipboardList, roles: ["case_officer", "reviewer", "admin"] },
-  { to: "/ops/live-chat", label: "Live Chat", icon: MessageCircle, roles: ["case_officer", "reviewer", "admin", "finance"] },
   { to: "/ops/cases", label: "Cases", icon: FolderKanban, roles: ["case_officer", "admin"] },
   {
     to: "/ops/service-requests",

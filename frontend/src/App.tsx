@@ -29,7 +29,6 @@ const StartPage = lazy(() => import("@/pages/onboarding/StartPage"))
 const PaymentCallbackPage = lazy(() => import("@/pages/onboarding/PaymentCallbackPage"))
 
 const QueuePage = lazy(() => import("@/pages/ops/QueuePage"))
-const LiveChatPage = lazy(() => import("@/pages/ops/LiveChatPage"))
 const ServiceRequestsPage = lazy(() => import("@/pages/ops/ServiceRequestsPage"))
 const MailRoomPage = lazy(() => import("@/pages/ops/MailRoomPage"))
 const CasesPage = lazy(() => import("@/pages/ops/CasesPage"))
@@ -38,7 +37,7 @@ const PaymentsPage = lazy(() => import("@/pages/ops/PaymentsPage"))
 const ReportsPage = lazy(() => import("@/pages/ops/ReportsPage"))
 const PartnersPage = lazy(() => import("@/pages/ops/PartnersPage"))
 const SettingsPage = lazy(() => import("@/pages/ops/SettingsPage"))
-import { LiveChatWidget } from "@/components/livechat/LiveChatWidget"
+import { ChatwootWidget } from "@/components/chatwoot/ChatwootWidget"
 
 /**
  * "/" is the public marketing page for logged-out visitors, but people who are
@@ -99,7 +98,6 @@ export default function App() {
           <Route path="/ops" element={<OpsLayout />}>
             <Route index element={<Navigate to="/ops/queue" replace />} />
             <Route path="queue" element={<QueuePage />} />
-            <Route path="live-chat" element={<LiveChatPage />} />
             <Route path="cases" element={<CasesPage />} />
             <Route path="cases/:caseId" element={<CaseDetailPage />} />
             <Route path="service-requests" element={<ServiceRequestsPage />} />
@@ -114,8 +112,8 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
-      {/* Floating Live Chat & WhatsApp contact on customer pages */}
-      <LiveChatWidget />
+      {/* Official Chatwoot Live Support & WhatsApp contact on customer pages */}
+      <ChatwootWidget />
       <WhatsAppFab />
     </ErrorBoundary>
   )

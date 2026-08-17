@@ -27,6 +27,8 @@ LANDING_DEFAULT: dict = {
         "yearsOperating": None,
         "casesCompleted": None,
         "dataProtectionNumber": None,
+        "chatwootWebsiteToken": None,
+        "chatwootBaseUrl": None,
     },
     # Base currency the admin enters prices in. The landing page shows them in
     # GHS (Ghana visitors) or USD (everyone else), converted from this base.
