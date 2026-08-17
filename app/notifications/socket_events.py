@@ -63,6 +63,7 @@ def register_socket_events() -> None:
                     user_agent=user_agent,
                     ip_address=ip,
                 )
+                join_room(f"session:{session.id}")
                 _SOCKET_SESSIONS[sid] = {
                     "type": "visitor",
                     "visitor_id": visitor_id,
@@ -78,6 +79,18 @@ def register_socket_events() -> None:
         # Allow unauthenticated guest connections
         _SOCKET_SESSIONS[sid] = {"type": "guest"}
         return True
+
+    @socketio.on("chat:join")
+    def handle_chat_join(data):
+        """Allows visitor or staff to join a specific session room explicitly."""
+        if not isinstance(data, dict):
+            return
+        visitor_id = data.get("visitor_id")
+        session_id = data.get("session_id")
+        if visitor_id:
+            join_room(f"visitor:{visitor_id}")
+        if session_id:
+            join_room(f"session:{session_id}")
 
     @socketio.on("visitor:page_view")
     def handle_visitor_page_view(data):
@@ -138,10 +151,11 @@ def register_socket_events() -> None:
             )
             msg_dict = msg.to_dict()
 
-            # Look up visitor_id for targeted delivery
+            # Target both visitor_id room and session_id room
             chat_session = LiveChatSession.query.get(session_uuid)
             if chat_session:
                 socketio.emit("chat:incoming_message", msg_dict, room=f"visitor:{chat_session.visitor_id}")
+                socketio.emit("chat:incoming_message", msg_dict, room=f"session:{chat_session.id}")
 
             # Also deliver to ops staff room
             socketio.emit("chat:incoming_message", msg_dict, room="ops:live_chat")
@@ -153,10 +167,10 @@ def register_socket_events() -> None:
         if not isinstance(data, dict):
             return
         visitor_id = data.get("visitor_id")
+        session_id = data.get("session_id")
         is_typing = data.get("is_typing", False)
         sender_type = data.get("sender_type", "visitor")
         sender_name = data.get("sender_name", "")
-        session_id = data.get("session_id")
 
         payload = {
             "session_id": session_id,
@@ -168,8 +182,11 @@ def register_socket_events() -> None:
 
         if sender_type == "visitor":
             socketio.emit("chat:typing", payload, room="ops:live_chat")
-        elif visitor_id:
-            socketio.emit("chat:typing", payload, room=f"visitor:{visitor_id}")
+        else:
+            if visitor_id:
+                socketio.emit("chat:typing", payload, room=f"visitor:{visitor_id}")
+            if session_id:
+                socketio.emit("chat:typing", payload, room=f"session:{session_id}")
 
     @socketio.on("disconnect")
     def handle_disconnect():

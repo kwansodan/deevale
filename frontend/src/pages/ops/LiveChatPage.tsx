@@ -112,7 +112,7 @@ export default function LiveChatPage() {
         })
         .catch(() => {})
     }
-  }, [searchParams])
+  }, [searchParams, selectedSession])
 
   // Setup staff Socket.IO connection
   useEffect(() => {
@@ -224,7 +224,7 @@ export default function LiveChatPage() {
     setMessages((prev) => [...prev, tempMsg])
     setInput("")
 
-    // Socket emit
+    // 1. Emit via socket for instant local broadcast
     if (socketRef.current?.connected) {
       socketRef.current.emit("chat:message", {
         session_id: selectedSession.id,
@@ -234,13 +234,18 @@ export default function LiveChatPage() {
         sender_name: user?.full_name,
         token: accessToken,
       })
-    } else {
-      try {
-        const saved = await sendStaffMessage(selectedSession.id, text)
-        setMessages((prev) => prev.map((m) => (m.id === tempMsg.id ? saved : m)))
-      } catch (e) {
-        console.error("Failed to send staff message:", e)
-      }
+    }
+
+    // 2. Persist reliably through REST endpoint
+    try {
+      const saved = await sendStaffMessage(selectedSession.id, text)
+      setMessages((prev) => prev.map((m) => (m.id === tempMsg.id ? saved : m)))
+      // Update session last message in left pane
+      setSessions((prev) =>
+        prev.map((s) => (s.id === selectedSession.id ? { ...s, last_message: saved } : s))
+      )
+    } catch (e) {
+      console.error("Failed to send staff message via REST:", e)
     }
   }
 
@@ -342,7 +347,7 @@ export default function LiveChatPage() {
               {onlineVisitors.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground space-y-2">
                   <Globe className="size-8 mx-auto stroke-1 opacity-50" />
-                  <p className="text-xs">No visitors currently on the website.</p>
+                  <p className="text-xs font-medium">No visitors currently on the website.</p>
                   <p className="text-[11px]">When someone lands on the page, they will appear here live.</p>
                 </div>
               ) : (
@@ -480,7 +485,7 @@ export default function LiveChatPage() {
               <div className="flex items-center justify-between border-b border-border bg-muted/20 px-4 py-3">
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm">
+                    <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-sm shadow-xs">
                       {selectedSession.visitor_name?.slice(0, 2).toUpperCase() || (
                         <User className="size-5" />
                       )}
@@ -538,7 +543,7 @@ export default function LiveChatPage() {
               </div>
 
               {/* Message Transcript */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background/50">
+              <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-background/50">
                 {messages.length === 0 && (
                   <div className="text-center py-8 space-y-3">
                     <Sparkles className="size-7 mx-auto text-primary opacity-80" />
@@ -558,12 +563,12 @@ export default function LiveChatPage() {
                       key={msg.id}
                       className={cn("flex flex-col", isStaff ? "items-end" : "items-start")}
                     >
-                      <span className="text-[10px] text-muted-foreground px-1 pb-1">
+                      <span className="text-[10px] font-medium text-muted-foreground px-1 pb-1">
                         {isStaff ? msg.sender_name || "Staff" : selectedSession.visitor_name || "Visitor"}
                       </span>
                       <div
                         className={cn(
-                          "max-w-[75%] rounded-2xl px-4 py-2.5 text-xs shadow-xs break-words",
+                          "max-w-[75%] rounded-2xl px-4 py-2.5 text-xs shadow-xs break-words leading-relaxed",
                           isStaff
                             ? "bg-primary text-primary-foreground rounded-br-xs"
                             : "bg-muted text-foreground rounded-bl-xs border border-border"

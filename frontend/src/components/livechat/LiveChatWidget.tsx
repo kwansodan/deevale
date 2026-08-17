@@ -33,6 +33,7 @@ export function LiveChatWidget() {
     proactiveMessage,
     openChat,
     closeChat,
+    dismissProactive,
     toggleChat,
     sendMessage,
     sendTyping,
@@ -91,46 +92,65 @@ export function LiveChatWidget() {
   if (pathname.startsWith("/ops")) return null
 
   return (
-    <div className="fixed bottom-5 right-24 z-40 flex flex-col items-end print:hidden">
+    <div className="fixed bottom-5 right-20 sm:right-24 z-50 flex flex-col items-end print:hidden">
       {/* Proactive Greeting Toast Bubble */}
       {!isOpen && proactiveMessage && (
-        <div
-          onClick={openChat}
-          className="mb-3 flex max-w-xs cursor-pointer items-start gap-3 rounded-2xl border border-border bg-card p-4 shadow-xl transition-all duration-300 hover:scale-102 animate-in fade-in slide-in-from-bottom-3"
-        >
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-xs">
-            {proactiveMessage.sender_name?.slice(0, 2).toUpperCase() || "GH"}
-          </div>
-          <div className="flex-1 space-y-1">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold text-foreground">
-                {proactiveMessage.sender_name || "Deevale Support"}
-              </p>
-              <span className="text-[10px] text-muted-foreground">Just now</span>
+        <div className="relative mb-3 w-[290px] sm:w-[320px] rounded-2xl border border-primary/20 bg-card p-3.5 shadow-2xl transition-all duration-300 hover:scale-102 animate-in fade-in slide-in-from-bottom-4">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              dismissProactive()
+            }}
+            title="Dismiss"
+            className="absolute top-2.5 right-2.5 rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <X className="size-3.5" />
+          </button>
+
+          <div onClick={openChat} className="flex cursor-pointer items-start gap-3">
+            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-xs shadow-xs">
+              {proactiveMessage.sender_name?.slice(0, 2).toUpperCase() || "GH"}
+              <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-card bg-emerald-500" />
             </div>
-            <p className="text-xs text-foreground/90 line-clamp-3">{proactiveMessage.body}</p>
-            <p className="text-[11px] font-medium text-primary pt-1">Click to reply &rarr;</p>
+
+            <div className="flex-1 space-y-1 pr-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold text-foreground">
+                  {proactiveMessage.sender_name || "Deevale Officer"}
+                </p>
+                <span className="text-[10px] text-muted-foreground">Just now</span>
+              </div>
+              <p className="text-xs text-foreground/90 leading-relaxed line-clamp-3">
+                {proactiveMessage.body}
+              </p>
+              <p className="text-[11px] font-semibold text-primary pt-0.5">
+                Click to reply &rarr;
+              </p>
+            </div>
           </div>
         </div>
       )}
 
       {/* Main Chat Dialog Window */}
       {isOpen && (
-        <div className="mb-3 flex h-[520px] w-[360px] sm:w-[400px] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl transition-all animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-x-3 bottom-20 top-auto sm:static sm:inset-auto sm:mb-3 flex h-[500px] max-h-[82vh] w-auto sm:w-[380px] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl transition-all animate-in fade-in zoom-in-95 duration-200">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-3">
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <div className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-semibold">
+                <div className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-semibold shadow-xs">
                   <Zap className="size-4 text-amber-300" />
                 </div>
                 <span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-card bg-emerald-500" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                <h3 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1.5">
                   Deevale GH Live Chat
                 </h3>
-                <p className="text-[11px] text-muted-foreground">Case Officers are online</p>
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground flex items-center gap-1">
+                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Case Officers online
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -153,23 +173,23 @@ export function LiveChatWidget() {
 
           {/* Contact Details Dropdown Drawer */}
           {showContactForm && (
-            <div className="border-b border-border bg-muted/20 p-3.5 text-xs animate-in fade-in slide-in-from-top-2">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-foreground">Your Contact Info (Optional)</span>
+            <div className="border-b border-border bg-muted/30 p-3.5 text-xs animate-in fade-in slide-in-from-top-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="font-semibold text-foreground">Your Contact Info</span>
                 <button
                   onClick={() => setShowContactForm(false)}
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground p-0.5"
                 >
                   <X className="size-3.5" />
                 </button>
               </div>
               <p className="text-muted-foreground text-[11px] mb-2.5">
-                Leave your email or WhatsApp so our team can follow up if you step away.
+                Leave your email or WhatsApp number so we can reach you if you navigate away.
               </p>
               <form onSubmit={handleContactSubmit} className="space-y-2">
                 <input
                   type="text"
-                  placeholder="Your Name"
+                  placeholder="Your Name (e.g. Ama Mensah)"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
                   className="w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
@@ -202,7 +222,7 @@ export function LiveChatWidget() {
           )}
 
           {/* Message Stream */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-background/50">
             {/* Welcome banner if conversation is fresh */}
             {messages.length === 0 && (
               <div className="space-y-3 text-center py-4">
@@ -210,20 +230,20 @@ export function LiveChatWidget() {
                   <Sparkles className="size-5" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs font-semibold text-foreground">Welcome to Deevale GH!</p>
-                  <p className="text-[11px] text-muted-foreground max-w-[260px] mx-auto">
+                  <p className="text-xs font-bold text-foreground">Welcome to Deevale GH!</p>
+                  <p className="text-[11px] text-muted-foreground max-w-[260px] mx-auto leading-normal">
                     Ask us anything about registering a Ghanaian company, compliance, or fees.
                   </p>
                 </div>
                 <div className="pt-2 flex flex-col gap-1.5 text-left">
-                  <p className="text-[10px] uppercase font-semibold text-muted-foreground px-1 tracking-wider">
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground px-1 tracking-wider">
                     Quick questions:
                   </p>
                   {STARTER_PROMPTS.map((prompt) => (
                     <button
                       key={prompt}
                       onClick={() => sendMessage(prompt)}
-                      className="rounded-lg border border-border/70 bg-muted/30 px-3 py-2 text-xs text-foreground hover:bg-muted/80 hover:border-border transition-colors text-left"
+                      className="rounded-xl border border-border/80 bg-card px-3 py-2 text-xs text-foreground hover:bg-muted hover:border-primary/40 transition-all text-left shadow-xs"
                     >
                       {prompt}
                     </button>
@@ -240,15 +260,18 @@ export function LiveChatWidget() {
                   key={msg.id}
                   className={cn("flex flex-col", isVisitor ? "items-end" : "items-start")}
                 >
-                  <span className="text-[10px] text-muted-foreground px-1 pb-1">
+                  <span className="text-[10px] font-medium text-muted-foreground px-1 pb-1 flex items-center gap-1">
+                    {!isVisitor && (
+                      <span className="size-1.5 rounded-full bg-emerald-500 shrink-0" />
+                    )}
                     {isVisitor ? "You" : msg.sender_name || "Deevale Support"}
                   </span>
                   <div
                     className={cn(
-                      "max-w-[80%] rounded-2xl px-3.5 py-2.5 text-xs shadow-sm break-words",
+                      "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs shadow-xs break-words leading-relaxed",
                       isVisitor
                         ? "bg-primary text-primary-foreground rounded-br-xs"
-                        : "bg-muted text-foreground rounded-bl-xs border border-border/50"
+                        : "bg-muted text-foreground rounded-bl-xs border border-border/80 font-normal"
                     )}
                   >
                     {msg.body}
@@ -287,7 +310,7 @@ export function LiveChatWidget() {
                 value={input}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                className="flex-1 rounded-full border border-input bg-muted/30 px-3.5 py-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:bg-background transition-colors"
+                className="flex-1 rounded-full border border-input bg-muted/40 px-3.5 py-2 text-xs placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:bg-background transition-colors"
               />
               <Button
                 size="icon"
@@ -306,7 +329,7 @@ export function LiveChatWidget() {
       <button
         onClick={toggleChat}
         aria-label="Open live chat"
-        className="group relative flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="group relative flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         {isOpen ? (
           <X className="size-6 transition-transform group-hover:rotate-90" />

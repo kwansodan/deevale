@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { io, type Socket } from "socket.io-client"
 
 import {
+  getSessionMessages,
   initVisitorSession,
   sendVisitorMessage,
   updateVisitorContact,
@@ -34,6 +35,30 @@ export function useVisitorLiveChat() {
   const [proactiveMessage, setProactiveMessage] = useState<LiveChatMessage | null>(null)
   const socketRef = useRef<Socket | null>(null)
   const typingTimeoutRef = useRef<number | null>(null)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+
+  function playVisitorChime() {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+      }
+      const ctx = audioCtxRef.current
+      if (ctx.state === "suspended") ctx.resume()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = "sine"
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime) // C5
+      osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.15) // E5
+      gain.gain.setValueAtTime(0.12, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.3)
+    } catch {
+      // Audio not permitted yet
+    }
+  }
 
   // Initialize or resume session
   useEffect(() => {
@@ -42,8 +67,15 @@ export function useVisitorLiveChat() {
       .then((sess) => {
         if (!isMounted) return
         setSession(sess)
-        if (sess.messages) {
+        if (sess.messages && sess.messages.length > 0) {
           setMessages(sess.messages)
+        }
+        // Emit explicit join if socket is already connected
+        if (socketRef.current?.connected) {
+          socketRef.current.emit("chat:join", {
+            visitor_id: visitorId,
+            session_id: sess.id,
+          })
         }
       })
       .catch((err) => {
@@ -53,7 +85,7 @@ export function useVisitorLiveChat() {
     return () => {
       isMounted = false
     }
-  }, [visitorId])
+  }, [visitorId, location.pathname])
 
   // Track page views
   useEffect(() => {
@@ -78,6 +110,12 @@ export function useVisitorLiveChat() {
 
     socketRef.current = s
 
+    s.on("connect", () => {
+      if (session?.id) {
+        s.emit("chat:join", { visitor_id: visitorId, session_id: session.id })
+      }
+    })
+
     s.on("chat:incoming_message", (msg: LiveChatMessage) => {
       setMessages((prev) => {
         if (prev.some((m) => m.id === msg.id)) return prev
@@ -85,13 +123,10 @@ export function useVisitorLiveChat() {
       })
 
       if (msg.sender_type === "staff") {
+        playVisitorChime()
         setUnreadCount((c) => c + 1)
-        // If widget is closed, pop up proactive toast
+        // If widget is closed, set proactive bubble
         setProactiveMessage(msg)
-        // Auto-dismiss proactive bubble after 10s if not clicked
-        setTimeout(() => {
-          setProactiveMessage(null)
-        }, 10000)
       }
     })
 
@@ -123,48 +158,93 @@ export function useVisitorLiveChat() {
       s.disconnect()
       socketRef.current = null
     }
-  }, [visitorId])
+  }, [visitorId, session?.id, location.pathname])
+
+  // Fetch latest messages from API
+  const refreshMessages = useCallback(async () => {
+    if (!session?.id) return
+    try {
+      const latest = await getSessionMessages(session.id)
+      if (latest && latest.length > 0) {
+        setMessages(latest)
+      }
+    } catch {
+      // Best-effort sync
+    }
+  }, [session?.id])
+
+  // Periodic sync while widget is open to guarantee no missed messages
+  useEffect(() => {
+    if (!isOpen || !session?.id) return
+
+    refreshMessages()
+    const pollInterval = setInterval(() => {
+      refreshMessages()
+    }, 4000)
+
+    return () => {
+      clearInterval(pollInterval)
+    }
+  }, [isOpen, session?.id, refreshMessages])
 
   function handleOpen() {
     setIsOpen(true)
     setUnreadCount(0)
     setProactiveMessage(null)
+    refreshMessages()
   }
 
   function handleClose() {
     setIsOpen(false)
   }
 
+  function dismissProactive() {
+    setProactiveMessage(null)
+  }
+
   async function sendMessage(body: string) {
-    if (!session || !body.trim()) return
+    const text = body.trim()
+    if (!text) return
+
+    // Ensure session is initialized
+    let currentSession = session
+    if (!currentSession) {
+      try {
+        currentSession = await initVisitorSession(visitorId, location.pathname, document.referrer)
+        setSession(currentSession)
+      } catch (err) {
+        console.error("Failed to initialize session before sending:", err)
+        return
+      }
+    }
 
     const tempMsg: LiveChatMessage = {
       id: "temp_" + Date.now(),
-      session_id: session.id,
+      session_id: currentSession.id,
       sender_type: "visitor",
-      sender_name: session.visitor_name || "You",
-      body: body.trim(),
+      sender_name: currentSession.visitor_name || "You",
+      body: text,
       created_at: new Date().toISOString(),
     }
     setMessages((prev) => [...prev, tempMsg])
 
-    // Emit via socket for instant broadcast
+    // Emit via socket
     if (socketRef.current?.connected) {
       socketRef.current.emit("chat:message", {
-        session_id: session.id,
+        session_id: currentSession.id,
         visitor_id: visitorId,
-        body: body.trim(),
+        body: text,
         sender_type: "visitor",
-        sender_name: session.visitor_name || "Visitor",
+        sender_name: currentSession.visitor_name || "Visitor",
       })
-    } else {
-      // Fallback via REST
-      try {
-        const saved = await sendVisitorMessage(session.id, body.trim(), session.visitor_name || undefined)
-        setMessages((prev) => prev.map((m) => (m.id === tempMsg.id ? saved : m)))
-      } catch (e) {
-        console.error("Failed to send message via REST fallback:", e)
-      }
+    }
+
+    // Always persist through REST to ensure durability and trigger backend tasks
+    try {
+      const saved = await sendVisitorMessage(currentSession.id, text, currentSession.visitor_name || undefined)
+      setMessages((prev) => prev.map((m) => (m.id === tempMsg.id ? saved : m)))
+    } catch (e) {
+      console.warn("REST message send completed or socket handled it:", e)
     }
   }
 
@@ -197,6 +277,7 @@ export function useVisitorLiveChat() {
     proactiveMessage,
     openChat: handleOpen,
     closeChat: handleClose,
+    dismissProactive,
     toggleChat: () => (isOpen ? handleClose() : handleOpen()),
     sendMessage,
     sendTyping,

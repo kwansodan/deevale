@@ -94,6 +94,7 @@ def create_session_message_route(payload, session_id):
     try:
         socketio.emit("chat:incoming_message", msg_dict, room="ops:live_chat")
         socketio.emit("chat:incoming_message", msg_dict, room=f"visitor:{session.visitor_id}")
+        socketio.emit("chat:incoming_message", msg_dict, room=f"session:{session.id}")
     except Exception:
         pass
 

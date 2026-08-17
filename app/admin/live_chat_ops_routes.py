@@ -95,9 +95,10 @@ def staff_send_message_route(payload, session_id):
     )
 
     msg_dict = msg.to_dict()
-    # Real-time broadcast to visitor room & staff room
+    # Real-time broadcast to visitor room, session room & staff room
     try:
         socketio.emit("chat:incoming_message", msg_dict, room=f"visitor:{session.visitor_id}")
+        socketio.emit("chat:incoming_message", msg_dict, room=f"session:{session.id}")
         socketio.emit("chat:incoming_message", msg_dict, room="ops:live_chat")
     except Exception:
         pass
