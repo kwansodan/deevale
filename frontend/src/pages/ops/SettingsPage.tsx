@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { Pencil, Plus, RotateCcw, Trash2 } from "lucide-react"
+import { MessageCircle, Pencil, Plus, RotateCcw, Trash2 } from "lucide-react"
 
 import { formatGhs } from "@/api/cases"
 import {
@@ -594,6 +594,129 @@ function LandingSettingsManager() {
   )
 }
 
+function LiveChatSettingsManager() {
+  const queryClient = useQueryClient()
+  const { data: config, isLoading } = useQuery({
+    queryKey: ["landing-settings"],
+    queryFn: getLandingSettings,
+  })
+
+  const [token, setToken] = useState("")
+  const [baseUrl, setBaseUrl] = useState("https://app.chatwoot.com")
+  const [initialized, setInitialized] = useState(false)
+
+  useEffect(() => {
+    if (config && !initialized) {
+      setToken((config.company?.chatwootWebsiteToken as string) || "")
+      setBaseUrl((config.company?.chatwootBaseUrl as string) || "https://app.chatwoot.com")
+      setInitialized(true)
+    }
+  }, [config, initialized])
+
+  const mutation = useMutation({
+    mutationFn: () => {
+      const currentCompany = (config?.company || {}) as Record<string, unknown>
+      return updateLandingSettings({
+        ...config,
+        company: {
+          ...currentCompany,
+          chatwootWebsiteToken: token.trim() || null,
+          chatwootBaseUrl: baseUrl.trim() || "https://app.chatwoot.com",
+        },
+      } as LandingConfig)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["landing-settings"] })
+      queryClient.invalidateQueries({ queryKey: ["landing-config"] })
+      toast.success("Live chat settings saved! The chat widget is now live.")
+    },
+    onError: () => toast.error("Failed to save live chat settings."),
+  })
+
+  if (isLoading) return <Skeleton className="h-40 w-full" />
+
+  const isConfigured = Boolean(token.trim())
+
+  return (
+    <div className="grid max-w-xl gap-5">
+      <div className="space-y-1">
+        <h3 className="text-base font-semibold flex items-center gap-2 text-foreground">
+          <MessageCircle className="size-5 text-primary" />
+          Chatwoot Live Chat Integration
+        </h3>
+        <p className="text-muted-foreground text-xs leading-relaxed">
+          Chatwoot connects your website visitors to your staff in real-time. Once your website token is saved below, a live chat bubble appears immediately on your landing page. Staff can answer chats on PC or from their mobile phones.
+        </p>
+      </div>
+
+      <div className="rounded-lg border border-border bg-card p-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-foreground">Integration Status</span>
+          <span
+            className={cn(
+              "rounded-full px-2.5 py-0.5 text-xs font-medium",
+              isConfigured
+                ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                : "bg-muted text-muted-foreground"
+            )}
+          >
+            {isConfigured ? "Connected & Active" : "Not configured"}
+          </span>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-foreground">
+            Chatwoot Website Token <span className="text-destructive">*</span>
+          </label>
+          <Input
+            placeholder="e.g. jKvB8x9Y2mP..."
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            className="text-xs"
+          />
+          <p className="text-[11px] text-muted-foreground">
+            Copy the <strong>Website Token</strong> from your Chatwoot account under <strong>Settings &rarr; Inboxes &rarr; Add Inbox &rarr; Website Channel</strong>.
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-foreground">
+            Chatwoot Base URL
+          </label>
+          <Input
+            placeholder="https://app.chatwoot.com"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+            className="text-xs"
+          />
+          <p className="text-[11px] text-muted-foreground">
+            Defaults to <code className="text-[10px] bg-muted px-1 py-0.5 rounded">https://app.chatwoot.com</code> for Chatwoot Cloud. Change only if self-hosting.
+          </p>
+        </div>
+
+        <Button
+          disabled={mutation.isPending}
+          onClick={() => mutation.mutate()}
+          className="w-full sm:w-auto text-xs"
+        >
+          {mutation.isPending ? "Saving…" : "Save Live Chat Settings"}
+        </Button>
+      </div>
+
+      <div className="rounded-lg border border-border/80 bg-muted/20 p-3.5 space-y-2 text-xs">
+        <p className="font-semibold text-foreground">Quick 2-Minute Setup:</p>
+        <ol className="list-decimal list-inside space-y-1 text-muted-foreground text-[11px] leading-relaxed">
+          <li>Sign up or log in for free at <a href="https://app.chatwoot.com" target="_blank" rel="noreferrer" className="text-primary underline font-medium">app.chatwoot.com</a>.</li>
+          <li>Go to <strong>Settings &rarr; Inboxes &rarr; Add Inbox</strong> and select <strong>Website</strong>.</li>
+          <li>Enter your website domain, copy your <strong>Website Token</strong>, and paste it in the box above.</li>
+          <li>Click <strong>Save Live Chat Settings</strong>.</li>
+          <li>Install the <strong>Chatwoot app on your iPhone or Android</strong> to get sound and push notifications for chats!</li>
+        </ol>
+      </div>
+    </div>
+  )
+}
+
 export default function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const isAdmin = hasRole(user?.roles, "admin")
@@ -613,17 +736,23 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Settings</CardTitle>
           <CardDescription>
-            Fee schedule, notification templates, referral rewards and public landing-page figures.
+            Live chat, fee schedule, notification templates, referral rewards and public landing-page figures.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="fees">
+          <Tabs defaultValue={isAdmin ? "livechat" : "fees"}>
             <TabsList>
+              {isAdmin && <TabsTrigger value="livechat">Live Chat</TabsTrigger>}
               <TabsTrigger value="fees">Fee schedule</TabsTrigger>
               {isAdmin && <TabsTrigger value="templates">Notification templates</TabsTrigger>}
               {isAdmin && <TabsTrigger value="referral">Referral rewards</TabsTrigger>}
               {isAdmin && <TabsTrigger value="landing">Landing page</TabsTrigger>}
             </TabsList>
+            {isAdmin && (
+              <TabsContent value="livechat" className="pt-4">
+                <LiveChatSettingsManager />
+              </TabsContent>
+            )}
             <TabsContent value="fees" className="pt-4">
               <FeeScheduleManager />
             </TabsContent>
