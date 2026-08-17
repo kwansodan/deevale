@@ -13,7 +13,7 @@ because it probes the external URLs.
 """
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import requests
 from flask import current_app
@@ -50,7 +50,7 @@ def _set_state(r, url: str, status: str, fails: int) -> None:
 
 
 def _send_alert(to_email: str, url: str, is_down: bool, detail: str) -> None:
-    ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    ts = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     if is_down:
         subject = f"🔴 DOWN: {url}"
         lines = [f"{url} is DOWN.", f"Reason: {detail}", f"At: {ts}"]
