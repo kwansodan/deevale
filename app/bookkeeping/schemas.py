@@ -6,7 +6,7 @@ from app.bookkeeping.constants import EXPENSE_CATEGORY_CODES, SUPPORTED_CURRENCI
 class BusinessProfileSchema(Schema):
     id = fields.String(dump_only=True)
     business_case_id = fields.String(dump_only=True)
-    display_name = fields.String(required=True, validate=validate.Length(min=1, max=255))
+    display_name = fields.String(load_default=None, allow_none=True)
     address = fields.String(load_default=None, allow_none=True)
     logo_s3_key = fields.String(dump_only=True, allow_none=True)
     default_currency = fields.String(load_default="GHS", validate=validate.OneOf(SUPPORTED_CURRENCIES))

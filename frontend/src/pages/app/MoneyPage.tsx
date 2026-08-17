@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
-import { Download, Info, Plus, Trash2 } from "lucide-react"
+import { Check, Download, Info, Percent, Plus, Receipt, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { listCases } from "@/api/cases"
@@ -20,6 +20,7 @@ import {
   formatMoney,
   type LineItem,
 } from "@/api/bookkeeping"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -65,11 +66,20 @@ function InvoiceBuilder({ caseId, onClose }: { caseId: string; onClose: () => vo
   const [lines, setLines] = useState<LineItem[]>([
     { description: "", quantity_milli: 1000, unit_price_minor: 0 },
   ])
-  const applyVat = profile?.is_vat_registered ?? false
-  const currency = profile?.default_currency ?? "GHS"
+  const [applyVat, setApplyVat] = useState(false)
+  const [vatRatePercent, setVatRatePercent] = useState("15.0")
 
+  useEffect(() => {
+    if (profile) {
+      setApplyVat(profile.is_vat_registered ?? false)
+      setVatRatePercent(((profile.vat_rate_bps || 1500) / 100).toFixed(1))
+    }
+  }, [profile])
+
+  const parsedVatRateBps = Math.max(0, Math.round(Number(vatRatePercent || 0) * 100))
+  const currency = profile?.default_currency ?? "GHS"
   const subtotal = lines.reduce((sum, l) => sum + Math.round((l.quantity_milli * l.unit_price_minor) / 1000), 0)
-  const vat = applyVat ? Math.round((subtotal * (profile?.vat_rate_bps ?? 0)) / 10000) : 0
+  const vat = applyVat ? Math.round((subtotal * parsedVatRateBps) / 10000) : 0
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -78,7 +88,7 @@ function InvoiceBuilder({ caseId, onClose }: { caseId: string; onClose: () => vo
         customer_email: customerEmail || undefined,
         currency,
         due_date: dueDate || undefined,
-        vat_rate_bps: applyVat ? profile?.vat_rate_bps : 0,
+        vat_rate_bps: applyVat ? parsedVatRateBps : 0,
         line_items: lines.filter((l) => l.description.trim()),
       }),
     onSuccess: () => {
@@ -160,12 +170,48 @@ function InvoiceBuilder({ caseId, onClose }: { caseId: string; onClose: () => vo
             </Button>
           </div>
 
-          <div className="text-sm">
+          {/* VAT Toggle & Editable Rate for this Invoice */}
+          <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-xs font-medium text-foreground cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={applyVat}
+                  onChange={(e) => setApplyVat(e.target.checked)}
+                  className="size-4 rounded border-input text-primary focus:ring-primary"
+                />
+                <span className="flex items-center gap-1">
+                  <Percent className="size-3.5 text-primary" />
+                  Apply VAT to this invoice
+                </span>
+              </label>
+
+              {applyVat && (
+                <div className="flex items-center gap-1.5 text-xs">
+                  <span className="text-muted-foreground">Rate:</span>
+                  <div className="flex items-center gap-1">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="100"
+                      value={vatRatePercent}
+                      onChange={(e) => setVatRatePercent(e.target.value)}
+                      className="h-7 w-16 text-xs text-right px-1.5 py-0.5 bg-background"
+                    />
+                    <span className="font-semibold">%</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="text-sm space-y-1 pt-1">
             <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>{formatMoney(currency, subtotal)}</span></div>
             {applyVat && (
-              <div className="flex justify-between"><span className="text-muted-foreground">VAT</span><span>{formatMoney(currency, vat)}</span></div>
+              <div className="flex justify-between text-primary"><span className="text-muted-foreground">VAT ({Number(vatRatePercent || 0).toFixed(1)}%)</span><span>{formatMoney(currency, vat)}</span></div>
             )}
-            <div className="flex justify-between font-semibold"><span>Total</span><span>{formatMoney(currency, subtotal + vat)}</span></div>
+            <div className="flex justify-between font-bold text-base border-t pt-1.5"><span>Total</span><span>{formatMoney(currency, subtotal + vat)}</span></div>
           </div>
 
           <Button
@@ -221,6 +267,8 @@ function InvoicesTab({ caseId }: { caseId: string }) {
               <TableRow>
                 <TableHead>Number</TableHead>
                 <TableHead>Customer</TableHead>
+                <TableHead className="text-right">Subtotal</TableHead>
+                <TableHead className="text-right">VAT</TableHead>
                 <TableHead className="text-right">Total</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -231,7 +279,15 @@ function InvoicesTab({ caseId }: { caseId: string }) {
                 <TableRow key={inv.id}>
                   <TableCell className="font-medium">{inv.invoice_number}</TableCell>
                   <TableCell>{inv.customer_name}</TableCell>
-                  <TableCell className="text-right tabular-nums">{formatMoney(inv.currency, inv.total_minor)}</TableCell>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">{formatMoney(inv.currency, inv.subtotal_minor)}</TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {inv.vat_minor > 0 ? (
+                      <span className="text-primary font-medium">{formatMoney(inv.currency, inv.vat_minor)}</span>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums font-semibold">{formatMoney(inv.currency, inv.total_minor)}</TableCell>
                   <TableCell>
                     <span className={cn("rounded-full px-2 py-0.5 text-xs font-medium capitalize", STATUS_STYLE[inv.status])}>
                       {inv.status}
@@ -251,8 +307,9 @@ function InvoicesTab({ caseId }: { caseId: string }) {
                               variant="outline"
                               size="sm"
                               onClick={() => {
-                                navigator.clipboard.writeText(`${window.location.origin}/pay/${inv.share_token}`)
-                                toast.success("Share link copied.")
+                                const url = `${window.location.origin}/i/${inv.share_token}`
+                                navigator.clipboard.writeText(url)
+                                toast.success("Invoice link copied.")
                               }}
                             >
                               Copy link
@@ -271,6 +328,7 @@ function InvoicesTab({ caseId }: { caseId: string }) {
           </Table>
         </div>
       )}
+
       {building && <InvoiceBuilder caseId={caseId} onClose={() => setBuilding(false)} />}
     </div>
   )
@@ -278,75 +336,83 @@ function InvoicesTab({ caseId }: { caseId: string }) {
 
 function ExpensesTab({ caseId }: { caseId: string }) {
   const queryClient = useQueryClient()
-  const { data: categories } = useQuery({ queryKey: ["bk-categories"], queryFn: getCategories })
   const { data: expenses, isLoading } = useQuery({
     queryKey: ["bk-expenses", caseId],
     queryFn: () => listExpenses(caseId),
   })
-  const [description, setDescription] = useState("")
-  const [category, setCategory] = useState<string | null>(null)
-  const [amount, setAmount] = useState("")
-  const [expenseDate, setExpenseDate] = useState(format(new Date(), "yyyy-MM-dd"))
+  const { data: categories } = useQuery({ queryKey: ["bk-categories"], queryFn: getCategories })
+  const { data: profile } = useQuery({ queryKey: ["bk-profile", caseId], queryFn: () => getProfile(caseId) })
 
-  const mutation = useMutation({
+  const [description, setDescription] = useState("")
+  const [amount, setAmount] = useState("")
+  const [category, setCategory] = useState("other")
+  const [expenseDate, setExpenseDate] = useState(format(new Date(), "yyyy-MM-dd"))
+  const currency = profile?.default_currency ?? "GHS"
+
+  const createMutation = useMutation({
     mutationFn: () =>
       createExpense(caseId, {
         description,
-        category: category!,
+        category,
+        currency,
         amount_minor: Math.round(Number(amount) * 100),
         expense_date: expenseDate,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bk-expenses", caseId] })
-      toast.success("Expense saved.")
       setDescription("")
       setAmount("")
+      toast.success("Expense recorded.")
     },
     onError: () => toast.error("Couldn't save the expense."),
   })
 
-  const catLabel = (code: string) => categories?.find((c) => c.code === code)?.label ?? code
+  if (isLoading) return <Skeleton className="h-40 w-full" />
 
   return (
     <div className="grid gap-4">
       <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-base">Log an expense</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
-          <Input placeholder="What was it for?" value={description} onChange={(e) => setDescription(e.target.value)} />
-          <Select
-            items={(categories ?? []).map((c) => ({ value: c.code, label: c.label }))}
-            value={category}
-            onValueChange={(v) => setCategory(v as string)}
+        <CardHeader className="pb-3"><CardTitle className="text-base">Record expense</CardTitle></CardHeader>
+        <CardContent>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              createMutation.mutate()
+            }}
+            className="grid gap-3 sm:grid-cols-4"
           >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              {(categories ?? []).map((c) => (
-                <SelectItem key={c.code} value={c.code}>
-                  {c.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input type="number" min={0} step="0.01" placeholder="Amount (GHS)" value={amount} onChange={(e) => setAmount(e.target.value)} />
-          <Input type="date" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} />
-          <Button
-            className="justify-self-start"
-            disabled={!description.trim() || !category || !amount || mutation.isPending}
-            onClick={() => mutation.mutate()}
-          >
-            Save expense
-          </Button>
+            <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <Input
+              type="number"
+              min={0}
+              step="0.01"
+              placeholder={`Amount (${currency})`}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <Select value={category} onValueChange={(val) => val && setCategory(val)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(categories ?? []).map((c) => (
+                  <SelectItem key={c.code} value={c.code}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input type="date" value={expenseDate} onChange={(e) => setExpenseDate(e.target.value)} />
+            <Button
+              type="submit"
+              className="sm:col-span-4 justify-self-start"
+              disabled={!description.trim() || Number.isNaN(Number(amount)) || Number(amount) <= 0 || createMutation.isPending}
+            >
+              <Plus data-icon="inline-start" className="size-4" />
+              {createMutation.isPending ? "Recording…" : "Record expense"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
-      {isLoading ? (
-        <Skeleton className="h-32 w-full" />
-      ) : (expenses ?? []).length === 0 ? (
-        <p className="text-muted-foreground text-sm">No expenses logged yet.</p>
+      {(expenses ?? []).length === 0 ? (
+        <p className="text-muted-foreground text-sm">No expenses recorded yet.</p>
       ) : (
         <div className="overflow-x-auto rounded-lg border">
           <Table>
@@ -361,9 +427,9 @@ function ExpensesTab({ caseId }: { caseId: string }) {
             <TableBody>
               {(expenses ?? []).map((exp) => (
                 <TableRow key={exp.id}>
-                  <TableCell>{format(new Date(exp.expense_date), "d MMM yyyy")}</TableCell>
-                  <TableCell>{exp.description}</TableCell>
-                  <TableCell>{catLabel(exp.category)}</TableCell>
+                  <TableCell>{exp.expense_date}</TableCell>
+                  <TableCell className="font-medium">{exp.description}</TableCell>
+                  <TableCell className="capitalize">{exp.category.replaceAll("_", " ")}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatMoney(exp.currency, exp.amount_minor)}</TableCell>
                 </TableRow>
               ))}
@@ -431,23 +497,205 @@ function ReportsTab({ caseId }: { caseId: string }) {
 function VatSettings({ caseId }: { caseId: string }) {
   const queryClient = useQueryClient()
   const { data: profile } = useQuery({ queryKey: ["bk-profile", caseId], queryFn: () => getProfile(caseId) })
+  const [isVatRegistered, setIsVatRegistered] = useState(false)
+  const [vatRatePercent, setVatRatePercent] = useState("15.0")
+  const [vatNumber, setVatNumber] = useState("")
+
+  useEffect(() => {
+    if (profile) {
+      setIsVatRegistered(profile.is_vat_registered ?? false)
+      setVatRatePercent(((profile.vat_rate_bps || 1500) / 100).toFixed(1))
+      setVatNumber(profile.vat_number || "")
+    }
+  }, [profile])
+
   const mutation = useMutation({
-    mutationFn: (vals: { is_vat_registered: boolean }) => saveProfile(caseId, { ...profile, ...vals }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bk-profile", caseId] })
-      toast.success("Saved.")
+    mutationFn: (vals: { is_vat_registered?: boolean; vat_rate_bps?: number; vat_number?: string }) => {
+      const parsedRate =
+        vals.vat_rate_bps !== undefined
+          ? vals.vat_rate_bps
+          : Math.max(0, Math.round(Number(vatRatePercent || 0) * 100))
+
+      return saveProfile(caseId, {
+        display_name: profile?.display_name || "My Business",
+        address: profile?.address || null,
+        default_currency: profile?.default_currency || "GHS",
+        is_vat_registered: vals.is_vat_registered ?? isVatRegistered,
+        vat_rate_bps: parsedRate,
+        vat_number: vals.vat_number !== undefined ? vals.vat_number : vatNumber,
+      })
     },
+    onSuccess: (saved) => {
+      queryClient.invalidateQueries({ queryKey: ["bk-profile", caseId] })
+      setIsVatRegistered(saved.is_vat_registered)
+      setVatRatePercent(((saved.vat_rate_bps || 1500) / 100).toFixed(1))
+      setVatNumber(saved.vat_number || "")
+      toast.success("VAT settings saved.")
+    },
+    onError: () => toast.error("Couldn't save VAT settings."),
   })
+
   if (!profile) return null
+
+  function handleToggle(checked: boolean) {
+    setIsVatRegistered(checked)
+    mutation.mutate({ is_vat_registered: checked })
+  }
+
+  function handleRatePreset(rate: number) {
+    const formatted = rate.toFixed(1)
+    setVatRatePercent(formatted)
+    mutation.mutate({ vat_rate_bps: Math.round(rate * 100) })
+  }
+
+  function handleSaveAll() {
+    const rateBps = Math.max(0, Math.round(Number(vatRatePercent || 0) * 100))
+    mutation.mutate({
+      is_vat_registered: isVatRegistered,
+      vat_rate_bps: rateBps,
+      vat_number: vatNumber.trim() || undefined,
+    })
+  }
+
   return (
-    <label className="flex items-center gap-2 text-sm">
-      <input
-        type="checkbox"
-        checked={profile.is_vat_registered}
-        onChange={(e) => mutation.mutate({ is_vat_registered: e.target.checked })}
-      />
-      My business is VAT-registered (adds a VAT line to invoices)
-    </label>
+    <Card className="border-border bg-card">
+      <CardContent className="p-4 space-y-3.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <label className="flex items-center gap-2.5 text-sm font-semibold text-foreground cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isVatRegistered}
+              onChange={(e) => handleToggle(e.target.checked)}
+              className="size-4.5 rounded border-input text-primary focus:ring-primary"
+            />
+            <span>My business is VAT-registered (adds a VAT line to invoices)</span>
+          </label>
+
+          <Badge
+            variant="secondary"
+            className={cn(
+              "text-xs px-2.5 py-0.5 w-fit",
+              isVatRegistered
+                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                : "bg-muted text-muted-foreground"
+            )}
+          >
+            {isVatRegistered ? `VAT Active (${Number(vatRatePercent || 0).toFixed(1)}%)` : "VAT Inactive"}
+          </Badge>
+        </div>
+
+        {isVatRegistered && (
+          <div className="space-y-3 pt-2.5 border-t border-border/60 animate-in fade-in slide-in-from-top-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {/* Editable VAT Rate */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-foreground flex items-center gap-1">
+                    <Percent className="size-3 text-primary" /> VAT Rate (%)
+                  </label>
+                  <span className="text-[11px] text-muted-foreground">Type any custom % or click a preset:</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="100"
+                      placeholder="15.0"
+                      value={vatRatePercent}
+                      onChange={(e) => setVatRatePercent(e.target.value)}
+                      className="h-8.5 text-xs pr-7 bg-background"
+                    />
+                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground">
+                      %
+                    </span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8.5 px-3 text-xs shrink-0"
+                    onClick={handleSaveAll}
+                    disabled={mutation.isPending}
+                  >
+                    <Check className="size-3.5 mr-1" /> Save
+                  </Button>
+                </div>
+
+                {/* Quick Presets for convenience */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => handleRatePreset(15.0)}
+                    className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full border transition-colors",
+                      Number(vatRatePercent) === 15.0
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-muted/40 text-muted-foreground border-border hover:bg-muted"
+                    )}
+                  >
+                    15.0% Standard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRatePreset(21.9)}
+                    className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full border transition-colors",
+                      Number(vatRatePercent) === 21.9
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-muted/40 text-muted-foreground border-border hover:bg-muted"
+                    )}
+                  >
+                    21.9% With Levies
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRatePreset(3.0)}
+                    className={cn(
+                      "text-[10px] px-2 py-0.5 rounded-full border transition-colors",
+                      Number(vatRatePercent) === 3.0
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-muted/40 text-muted-foreground border-border hover:bg-muted"
+                    )}
+                  >
+                    3.0% Flat Rate
+                  </button>
+                </div>
+              </div>
+
+              {/* GRA VAT / TIN Number */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-foreground flex items-center gap-1">
+                  <Receipt className="size-3 text-primary" /> GRA VAT / TIN Registration Number
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="e.g. C0012345678"
+                    value={vatNumber}
+                    onChange={(e) => setVatNumber(e.target.value)}
+                    className="h-8.5 text-xs bg-background"
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8.5 px-3 text-xs shrink-0"
+                    onClick={handleSaveAll}
+                    disabled={mutation.isPending}
+                  >
+                    <Check className="size-3.5 mr-1" /> Save
+                  </Button>
+                </div>
+                <p className="text-[10px] text-muted-foreground">
+                  Your tax ID is printed directly on your customer invoices and PDF receipts.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 

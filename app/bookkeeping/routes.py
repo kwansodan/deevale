@@ -71,11 +71,27 @@ def get_profile_route(case_id):
     profile = BusinessProfile.query.filter_by(business_case_id=case.id).first()
     if profile is None:
         payload = case.onboarding_payload or {}
-        return BusinessProfile(
+        display_name = (
+            payload.get("business_name")
+            or payload.get("company_name")
+            or payload.get("proposed_name_1")
+            or case.case_number
+        )
+        profile = BusinessProfile(
+            id=uuid.uuid4(),
             business_case_id=case.id,
             client_id=case.client_id,
-            display_name=payload.get("business_name", case.case_number),
+            display_name=display_name,
+            default_currency="GHS",
+            is_vat_registered=False,
+            vat_rate_bps=1500,
+            vat_number=None,
         )
+        db.session.add(profile)
+        db.session.commit()
+    elif not profile.vat_rate_bps:
+        profile.vat_rate_bps = 1500
+        db.session.commit()
     return profile
 
 
@@ -87,11 +103,28 @@ def put_profile_route(payload, case_id):
     case = _authed_case(case_id)
     profile = BusinessProfile.query.filter_by(business_case_id=case.id).first()
     if profile is None:
-        profile = BusinessProfile(business_case_id=case.id, client_id=case.client_id)
+        case_payload = case.onboarding_payload or {}
+        display_name = (
+            payload.get("display_name")
+            or case_payload.get("business_name")
+            or case_payload.get("company_name")
+            or case_payload.get("proposed_name_1")
+            or case.case_number
+        )
+        profile = BusinessProfile(
+            id=uuid.uuid4(),
+            business_case_id=case.id,
+            client_id=case.client_id,
+            display_name=display_name,
+            default_currency="GHS",
+            vat_rate_bps=1500,
+        )
         db.session.add(profile)
     for field in ("display_name", "address", "default_currency", "is_vat_registered", "vat_rate_bps", "vat_number"):
-        if field in payload:
+        if field in payload and payload[field] is not None:
             setattr(profile, field, payload[field])
+    if profile.is_vat_registered and (not profile.vat_rate_bps or profile.vat_rate_bps <= 0):
+        profile.vat_rate_bps = 1500
     db.session.commit()
     return profile
 
@@ -116,6 +149,15 @@ def _invoice_or_404(invoice_id) -> ClientInvoice:
 @blp.response(201, ClientInvoiceSchema)
 def create_invoice_route(payload, case_id):
     case = _authed_case(case_id)
+    profile = BusinessProfile.query.filter_by(business_case_id=case.id).first()
+
+    vat_rate = payload.get("vat_rate_bps")
+    if vat_rate is None:
+        if profile and profile.is_vat_registered:
+            vat_rate = profile.vat_rate_bps or 1500
+        else:
+            vat_rate = 0
+
     invoice = ClientInvoice(
         id=uuid.uuid4(),
         business_case_id=case.id,
@@ -123,12 +165,12 @@ def create_invoice_route(payload, case_id):
         invoice_number=next_invoice_number(case.id),
         customer_name=payload["customer_name"],
         customer_email=payload.get("customer_email"),
-        currency=payload.get("currency", "GHS"),
+        currency=payload.get("currency", profile.default_currency if profile else "GHS"),
         status="draft",
         issue_date=payload.get("issue_date") or date.today(),
         due_date=payload.get("due_date"),
         notes=payload.get("notes"),
-        vat_rate_bps=payload.get("vat_rate_bps", 0),
+        vat_rate_bps=vat_rate,
     )
     db.session.add(invoice)
     db.session.flush()
