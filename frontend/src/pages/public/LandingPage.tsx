@@ -165,25 +165,45 @@ export default function LandingPage() {
   return (
     <div className="bg-background min-h-svh">
       <SEO
-        title="Deevale GH — Register and run your business in Ghana"
-        description="Incorporation at ORC, tax & SSNIT registration, GIPC foreign investment handling, and ongoing corporate compliance with live tracking."
+        title="Business Registration in Ghana | ORC, GIPC & Tax Setup — Deevale GH"
+        description="Register and run your business in Ghana without the guesswork. Company Limited by Shares, GIPC foreign investor registration, GRA TIN, SSNIT, and statutory corporate compliance in Accra."
         canonicalUrl="https://deevalegh.com/"
-        keywords="register company in ghana, orc business registration, company limited by shares ghana, gipc registration ghana, foreign company registration ghana, virtual office accra"
+        keywords="business registration in ghana, register company in ghana, orc business registration, company limited by shares ghana, gipc registration ghana, foreign company registration ghana, ssnit employer registration, gra tin registration ghana, virtual office accra, corporate secretarial ghana"
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "LegalService",
+          "@id": "https://deevalegh.com/#organization",
           "name": "Deevale GH",
+          "legalName": "Deevale GH",
+          "alternateName": ["Deevale", "Deevale GH", "Deevale Corporate Services"],
           "url": "https://deevalegh.com/",
           "logo": "https://deevalegh.com/deevalegh-icon.svg",
-          "description": "Company registration, GIPC foreign investment compliance, and corporate secretarial platform in Ghana.",
+          "image": "https://deevalegh.com/deevalegh-icon.svg",
+          "description": "Statutory company registration, GIPC foreign investor compliance, and corporate secretarial platform in Accra, Ghana.",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": company.address ?? "3rd Floor, Atlantic Tower, Airport City",
             "addressLocality": "Accra",
+            "addressRegion": "Greater Accra",
             "addressCountry": "GH",
           },
           "telephone": company.phone ?? undefined,
-          "email": company.email ?? undefined,
+          "email": company.email ?? "support@deevalegh.com",
+          "sameAs": [
+            "https://www.linkedin.com/company/deevalegh",
+            "https://x.com/deevalegh",
+            "https://facebook.com/deevalegh",
+            "https://github.com/kwansodan/deevale",
+          ],
+          "knowsAbout": [
+            "Ghana Companies Act 2019 (Act 992)",
+            "Ghana Investment Promotion Centre Act 2013 (Act 865)",
+            "Office of the Registrar of Companies (ORC) Ghana",
+            "Ghana Revenue Authority (GRA) Tax Identification Number",
+            "Social Security and National Insurance Trust (SSNIT)",
+            "Foreign Direct Investment in Ghana",
+            "Corporate Secretarial Services",
+          ],
           "priceRange": "$$",
         }}
       />
@@ -198,6 +218,12 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Wordmark size="md" />
           <nav className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to="/services"
+              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
+            >
+              Services
+            </Link>
             <Link
               to="/calculator"
               className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
@@ -583,7 +609,7 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-border text-muted-foreground border-t px-4 py-12 text-sm">
-        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-[1.3fr_1fr_1fr_1fr]">
+        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-5">
           <div className="space-y-2">
             <Wordmark size="md" />
             <p className="text-foreground font-semibold">{company.legalName ?? "Deevale GH"}</p>
@@ -594,6 +620,24 @@ export default function LandingPage() {
               </p>
             )}
           </div>
+          <nav className="flex flex-col gap-2">
+            <p className="text-foreground font-semibold">Services</p>
+            <Link to="/services" className="hover:underline">
+              All Services
+            </Link>
+            <Link to="/services/company-limited-by-shares" className="hover:underline">
+              Company (LTD)
+            </Link>
+            <Link to="/services/sole-proprietorship" className="hover:underline">
+              Sole Proprietorship
+            </Link>
+            <Link to="/services/gipc-registration" className="hover:underline">
+              GIPC Registration
+            </Link>
+            <Link to="/services/gra-tax-tin-registration" className="hover:underline">
+              GRA Tax &amp; TIN
+            </Link>
+          </nav>
           <nav className="flex flex-col gap-2">
             <p className="text-foreground font-semibold">Resources</p>
             <Link to="/calculator" className="hover:underline">

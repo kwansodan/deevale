@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight, BookOpen, Calculator, Clock } from "lucide-react"
+import { ArrowRight, Calculator, Clock, ShieldCheck } from "lucide-react"
 
-import { GUIDES } from "@/data/guidesData"
+import { SERVICES } from "@/data/servicesData"
 import { Wordmark } from "@/components/Wordmark"
 import { SEO } from "@/components/SEO"
 import { Button } from "@/components/ui/button"
@@ -10,37 +10,37 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
-export default function GuidesPage() {
+export default function ServicesHubPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All")
+  const categories = ["All", "Entity Incorporation", "Regulatory & Compliance"]
 
-  const categories = ["All", "Incorporation", "Foreign Investment", "Compliance & Tax"]
-
-  const filteredGuides = selectedCategory === "All"
-    ? GUIDES
-    : GUIDES.filter((g) => g.category === selectedCategory)
+  const filteredServices =
+    selectedCategory === "All"
+      ? SERVICES
+      : SERVICES.filter((s) => s.category === selectedCategory)
 
   const jsonLdData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Ghana Business & Company Registration Statutory Guides",
-    "url": "https://deevalegh.com/guides",
+    "name": "Ghana Business Registration & Statutory Secretarial Services",
+    "url": "https://deevalegh.com/services",
     "description":
-      "Legal-grade statutory guides on business registration, GIPC foreign direct investment requirements, and annual compliance in Ghana under Companies Act 2019.",
-    "hasPart": GUIDES.map((g) => ({
-      "@type": "Article",
-      "headline": g.title,
-      "url": `https://deevalegh.com/guides/${g.slug}`,
-      "description": g.metaDescription,
+      "Official statutory business formation and corporate compliance services in Ghana. Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Setup, GRA Tax TIN, and SSNIT filing.",
+    "hasPart": SERVICES.map((s) => ({
+      "@type": "Service",
+      "name": s.title,
+      "url": `https://deevalegh.com/services/${s.slug}`,
+      "description": s.metaDescription,
     })),
   }
 
   return (
     <div className="bg-background min-h-svh text-foreground">
       <SEO
-        title="Ghana Business Registration & Statutory Compliance Guides (2026)"
-        description="Comprehensive, statutory guides to company incorporation, ORC procedures, GIPC foreign investor requirements, and GRA tax compliance in Ghana."
-        canonicalUrl="https://deevalegh.com/guides"
-        keywords="ghana company registration guides, how to register a business in ghana, orc company formation, gipc foreign investment guide, ghana compliance calendar"
+        title="Business Registration & Statutory Services in Ghana | Deevale GH"
+        description="Comprehensive statutory services in Ghana: Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Registration, GRA Tax, SSNIT, and Business Operating Permits."
+        canonicalUrl="https://deevalegh.com/services"
+        keywords="ghana business services, register company in ghana, orc company formation, gipc registration, gra corporate tin, ssnit employer registration, business permit accra"
         jsonLd={jsonLdData}
       />
 
@@ -49,11 +49,11 @@ export default function GuidesPage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Wordmark size="md" />
           <nav className="flex items-center gap-3">
-            <Link to="/services" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
-              Services
-            </Link>
             <Link to="/calculator" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
               Fee Calculator
+            </Link>
+            <Link to="/guides" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
+              Statutory Guides
             </Link>
             <Button render={<Link to="/signup">Get Started</Link>} nativeButton={false} size="sm" />
           </nav>
@@ -65,14 +65,13 @@ export default function GuidesPage() {
         <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto max-w-5xl px-4 text-center">
           <Badge variant="outline" className="border-accent/40 bg-accent/10 text-accent-700 mb-3 inline-flex items-center gap-1.5 px-3 py-1 text-xs">
-            <BookOpen className="size-3.5" /> Ghana Corporate Statutory Knowledge Hub
+            <ShieldCheck className="size-3.5" /> Corporate Secretarial &amp; Statutory Setup
           </Badge>
           <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-            Doing Business in Ghana: <span className="highlight-accent">The Statutory Guides</span>
+            Ghana Company Registration &amp; <span className="highlight-accent">Statutory Services</span>
           </h1>
           <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-base md:text-lg">
-            Straightforward legal insights on the Companies Act 2019 (Act 992), GIPC foreign investment rules,
-            and corporate statutory obligations in Ghana — without the confusing legal jargon.
+            Complete company formation and ongoing regulatory filings across the ORC, GIPC, GRA, and SSNIT — executed with speed, compliance, and transparent pricing.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -95,35 +94,49 @@ export default function GuidesPage() {
         </div>
       </section>
 
-      {/* Guides Grid */}
+      {/* Services Grid */}
       <main className="mx-auto max-w-5xl px-4 py-12">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredGuides.map((guide) => (
-            <Card key={guide.slug} className="border-border shadow-card hover:shadow-card-lg flex flex-col justify-between transition-all rounded-2xl overflow-hidden group">
+        <div className="grid gap-6 md:grid-cols-2">
+          {filteredServices.map((service) => (
+            <Card
+              key={service.slug}
+              className="border-border shadow-card hover:shadow-card-lg flex flex-col justify-between transition-all rounded-2xl overflow-hidden group"
+            >
               <CardHeader className="space-y-2 pb-3">
                 <div className="flex items-center justify-between text-xs">
                   <Badge variant="secondary" className="font-medium text-[11px]">
-                    {guide.category}
+                    {service.category}
                   </Badge>
                   <span className="text-muted-foreground flex items-center gap-1">
-                    <Clock className="size-3" /> {guide.readTime}
+                    <Clock className="size-3" /> {service.timeline}
                   </span>
                 </div>
                 <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors leading-snug">
-                  <Link to={`/guides/${guide.slug}`}>{guide.title}</Link>
+                  <Link to={`/services/${service.slug}`}>{service.title}</Link>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 pt-0">
                 <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3">
-                  {guide.summary}
+                  {service.snippet}
                 </p>
-                <div className="border-t border-border/60 pt-4 flex items-center justify-between">
-                  <span className="text-muted-foreground text-[11px]">Updated {guide.lastUpdated}</span>
+
+                <div className="rounded-lg bg-secondary/50 p-2.5 text-xs flex items-center justify-between">
+                  <span className="text-muted-foreground">{service.agency}</span>
+                  <span className="font-semibold text-primary">From GHS {(service.indicativeFeeMinor / 100).toLocaleString()}</span>
+                </div>
+
+                <div className="border-t border-border/60 pt-3 flex items-center justify-between">
                   <Link
-                    to={`/guides/${guide.slug}`}
+                    to={service.entityCode ? `/calculator?entity=${service.entityCode}` : `/calculator`}
+                    className="text-muted-foreground hover:text-foreground text-xs inline-flex items-center gap-1"
+                  >
+                    <Calculator className="size-3" /> Estimate Fee
+                  </Link>
+                  <Link
+                    to={`/services/${service.slug}`}
                     className="text-primary hover:text-primary/80 font-semibold text-xs inline-flex items-center gap-1"
                   >
-                    Read Guide <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                    View Details <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </CardContent>
@@ -137,9 +150,9 @@ export default function GuidesPage() {
             <Badge variant="outline" className="text-xs border-primary/40 text-primary">
               Interactive Tool
             </Badge>
-            <h3 className="text-xl font-bold">Need an instant fee breakdown for your company?</h3>
+            <h3 className="text-xl font-bold">Calculate exact ORC statutory filing fees</h3>
             <p className="text-muted-foreground text-sm">
-              Use our official Ghana Incorporation Fee Calculator to see itemized government statutory fees and professional package costs in GHS or USD.
+              Use our live fee calculator to see itemized government statutory charges, stamp duties, and professional service fees.
             </p>
           </div>
           <div className="mt-4 md:mt-0 shrink-0">
@@ -162,9 +175,9 @@ export default function GuidesPage() {
           <Wordmark size="sm" />
           <div className="flex gap-4">
             <Link to="/calculator" className="hover:underline">Fee Calculator</Link>
+            <Link to="/guides" className="hover:underline">Statutory Guides</Link>
             <Link to="/legal/terms" className="hover:underline">Terms of Service</Link>
             <Link to="/legal/privacy" className="hover:underline">Privacy Policy</Link>
-            <Link to="/login" className="hover:underline">Log in</Link>
           </div>
           <p>&copy; {new Date().getFullYear()} Deevale GH. All rights reserved.</p>
         </div>

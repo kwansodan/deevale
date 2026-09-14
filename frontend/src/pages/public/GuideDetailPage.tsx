@@ -9,7 +9,6 @@ import {
   Info,
   Lightbulb,
   ShieldAlert,
-  ShieldCheck,
 } from "lucide-react"
 
 import { GUIDES } from "@/data/guidesData"
@@ -30,9 +29,9 @@ export default function GuideDetailPage() {
     return <Navigate to="/guides" replace />
   }
 
-  // JSON-LD structured data: Article + FAQPage
-  const jsonLdData = useMemo(
-    () => [
+  // JSON-LD structured data: Article + FAQPage + HowTo (if steps present) + BreadcrumbList
+  const jsonLdData = useMemo(() => {
+    const schemas: Record<string, unknown>[] = [
       {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -67,9 +66,50 @@ export default function GuideDetailPage() {
           },
         })),
       },
-    ],
-    [guide]
-  )
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://deevalegh.com",
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Statutory Guides",
+            "item": "https://deevalegh.com/guides",
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": guide.shortTitle,
+            "item": `https://deevalegh.com/guides/${guide.slug}`,
+          },
+        ],
+      },
+    ]
+
+    if (guide.howToSteps && guide.howToSteps.length > 0) {
+      schemas.push({
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": guide.title,
+        "description": guide.metaDescription,
+        "step": guide.howToSteps.map((step, idx) => ({
+          "@type": "HowToStep",
+          "position": idx + 1,
+          "name": step.name,
+          "text": step.text,
+          "url": `https://deevalegh.com/guides/${guide.slug}#${step.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+        })),
+      })
+    }
+
+    return schemas
+  }, [guide])
 
   return (
     <div className="bg-background min-h-svh text-foreground">
@@ -201,9 +241,48 @@ export default function GuideDetailPage() {
                   {section.title}
                 </h2>
 
+                {section.snippet && (
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs md:text-sm leading-relaxed text-foreground font-medium">
+                    <span className="font-semibold text-primary block mb-1">Key Takeaway:</span>
+                    {section.snippet}
+                  </div>
+                )}
+
                 <div className="space-y-3 text-sm md:text-base leading-relaxed text-muted-foreground whitespace-pre-line font-sans">
                   {section.content}
                 </div>
+
+                {section.table && (
+                  <div className="my-6 overflow-x-auto rounded-xl border border-border shadow-xs">
+                    <table className="w-full text-left text-xs md:text-sm">
+                      {section.table.caption && (
+                        <caption className="p-3 text-left font-semibold text-muted-foreground text-xs bg-muted/40 border-b border-border">
+                          {section.table.caption}
+                        </caption>
+                      )}
+                      <thead className="bg-muted/60 text-foreground font-semibold border-b border-border">
+                        <tr>
+                          {section.table.headers.map((h, i) => (
+                            <th key={i} className="p-3">
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {section.table.rows.map((row, rIdx) => (
+                          <tr key={rIdx} className="hover:bg-muted/20 transition-colors">
+                            {row.map((cell, cIdx) => (
+                              <td key={cIdx} className="p-3 align-top leading-relaxed">
+                                {cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
 
                 {section.callout && (
                   <div

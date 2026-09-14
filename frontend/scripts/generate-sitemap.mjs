@@ -1,4 +1,4 @@
-﻿import fs from 'node:fs'
+import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -20,9 +20,27 @@ try {
   console.warn('[sitemap-generator] Could not read guidesData.ts:', err.message)
 }
 
+// Extract service slugs from src/data/servicesData.ts
+const servicesFilePath = path.join(rootDir, 'src', 'data', 'servicesData.ts')
+let serviceSlugs = []
+
+try {
+  const content = fs.readFileSync(servicesFilePath, 'utf-8')
+  const matches = [...content.matchAll(/slug:\s*["']([^"']+)["']/g)]
+  serviceSlugs = matches.map(m => m[1])
+} catch (err) {
+  console.warn('[sitemap-generator] Could not read servicesData.ts:', err.message)
+}
+
 const routes = [
   { path: '', changefreq: 'daily', priority: '1.0' },
   { path: 'calculator', changefreq: 'weekly', priority: '0.95' },
+  { path: 'services', changefreq: 'weekly', priority: '0.90' },
+  ...serviceSlugs.map(slug => ({
+    path: `services/${slug}`,
+    changefreq: 'monthly',
+    priority: '0.88',
+  })),
   { path: 'guides', changefreq: 'weekly', priority: '0.90' },
   ...guideSlugs.map(slug => ({
     path: `guides/${slug}`,

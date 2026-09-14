@@ -4,9 +4,13 @@ Allow: /
 Allow: /calculator
 Allow: /guides
 Allow: /guides/*
+Allow: /services
+Allow: /services/*
 Allow: /legal/*
 Allow: /login
 Allow: /signup
+Allow: /llms.txt
+Allow: /llms-full.txt
 
 # Disallow authenticated application state & sensitive paths
 Disallow: /app/
@@ -16,5 +20,28 @@ Disallow: /sign/
 Disallow: /cofounder/
 Disallow: /verify-otp
 
-# Host & Sitemap declaration
+# AI and LLM Search Crawlers
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+# Host, Sitemap & LLMs declaration
 Sitemap: https://deevalegh.com/sitemap.xml
+# LLMs: https://deevalegh.com/llms.txt
+

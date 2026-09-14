@@ -18,8 +18,8 @@ function buildDocs(company: {
   address: string | null
 }): Record<string, LegalDoc> {
   const name = company.legalName ?? "Deevale GH"
-  const email = company.email ?? "[support email]"
-  const address = company.address ?? "[registered office address]"
+  const email = company.email ?? "support@deevalegh.com"
+  const address = company.address ?? "3rd Floor, Atlantic Tower, Airport City, Accra, Ghana"
 
   return {
     terms: {

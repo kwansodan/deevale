@@ -189,6 +189,9 @@ export default function FeeCalculatorPage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Wordmark size="md" />
           <nav className="flex items-center gap-3">
+            <Link to="/services" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
+              Services
+            </Link>
             <Link to="/guides" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
               Statutory Guides
             </Link>

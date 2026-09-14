@@ -1,0 +1,119 @@
+﻿# Deevale GH — Comprehensive Corporate & Statutory Knowledge Graph
+
+> Operating Domain: https://deevalegh.com
+> Primary Jurisdiction: Republic of Ghana (Greater Accra, Kumasi, Takoradi, Tamale)
+> Governing Statutes: Companies Act, 2019 (Act 992); Ghana Investment Promotion Centre Act, 2013 (Act 865); National Pensions Act, 2008 (Act 766); Revenue Administration Act, 2016 (Act 915).
+
+---
+
+## 1. Company Overview
+
+Deevale GH is a specialized legal technology and corporate secretarial platform based in Accra, Ghana. It assists Ghanaian citizens, diaspora founders, and international investors to incorporate, structure, and maintain legal entities in Ghana. The platform interfaces directly with:
+1. Office of the Registrar of Companies (ORC) — formerly Registrar General's Department (RGD)
+2. Ghana Investment Promotion Centre (GIPC)
+3. Ghana Revenue Authority (GRA)
+4. Social Security and National Insurance Trust (SSNIT)
+5. Metropolitan, Municipal, and District Assemblies (MMDAs, e.g., Accra Metropolitan Assembly - AMA)
+
+---
+
+## 2. Business Entity Types Recognized in Ghana
+
+### A. Company Limited by Shares (LTD)
+- **Legal Form**: Separate legal personality with limited liability.
+- **Governing Law**: Companies Act, 2019 (Act 992).
+- **Suitability**: Commercial enterprises, tech startups, consultancies, trading businesses, import/export.
+- **Minimum Officers**:
+  - Minimum two (2) directors; at least one must be ordinarily resident in Ghana.
+  - One (1) qualified company secretary (legal practitioner, chartered secretary, or licensed firm).
+  - One (1) statutory independent auditor licensed by the Institute of Chartered Accountants Ghana (ICAG).
+- **Capital**: Stated capital can start from GHS 500 (statutory minimum base); 0.5% stamp duty applies on stated capital above statutory thresholds.
+
+### B. Sole Proprietorship (Business Name)
+- **Legal Form**: Unincorporated trade name owned by a single Ghanaian individual.
+- **Liability**: Unlimited personal liability (no separation between personal and business assets).
+- **Ownership Restriction**: Reserved exclusively for Ghanaian citizens.
+- **Filing**: Registered at ORC; requires Ghana Card of the sole proprietor.
+
+### C. Company Limited by Guarantee (CLG)
+- **Legal Form**: Non-profit corporate vehicle where member liability is limited to an agreed guarantee sum (typically GHS 100).
+- **Suitability**: Non-Governmental Organizations (NGOs), charities, religious bodies, industry trade associations.
+- **Profit Distribution**: Prohibited from paying dividends or distributing profits to members.
+
+### D. External Company (Branch Office)
+- **Legal Form**: Branch of an established foreign body corporate registered in Ghana under Act 992 Part Twelve.
+- **Liability**: The overseas parent company remains directly liable for all branch liabilities and contracts.
+- **Capital Advantage**: Not subject to GIPC minimum foreign capital thresholds if executing contracts awarded directly to the parent company.
+
+---
+
+## 3. Step-by-Step Company Incorporation Workflow (Act 992)
+
+1. **Business Name Search & Reservation**:
+   - Applicant submits 2-3 preferred names to the ORC.
+   - Name must not infringe registered trademarks or mislead the public.
+   - Approved reservation holds the name for sixty (60) calendar days.
+2. **Statutory Officer Declarations**:
+   - Appointed directors execute Form 4 consent letters and statutory declarations confirming age (21+), soundness of mind, and absence of fraud convictions within 5 years.
+   - Company secretary provides practicing credentials or professional license.
+   - ICAG-licensed auditor signs written consent to serve.
+3. **Form 3 (Statement of Particulars) Submission**:
+   - Specifies registered office (physical address with GhanaPost GPS digital address code).
+   - Authorised shares and stated capital breakdown.
+   - Business objects (permitted commercial activities).
+   - Standard or bespoke Company Constitution (Regulations) filed.
+4. **ORC Review & Certificate Issuance**:
+   - Payment of statutory filing fee (~GHS 270) and capital stamp duty.
+   - ORC issues:
+     - Certificate of Incorporation
+     - Certified true copies of Form 3 and Company Constitution.
+5. **Mandatory Post-Incorporation Registrations**:
+   - **GRA Corporate TIN**: Filed at local Taxpayer Service Centre to obtain taxpayer registration and provisional assessment.
+   - **SSNIT Employer Registration**: Onboarding under Act 766 for mandatory pension remittances.
+   - **MMDA Business Operating Permit (BOP)**: Physical inspection and licensing by local municipal authority.
+
+---
+
+## 4. GIPC Foreign Investment Capital Requirements (Act 865)
+
+Under Section 28 of the Ghana Investment Promotion Centre Act, 2013 (Act 865), any business with non-Ghanaian equity participation must satisfy mandatory foreign capital requirements:
+
+| Enterprise Category | Minimum Foreign Capital (USD) | Ghanaian Equity Share | Automatic Expatriate Quotas |
+|---|---|---|---|
+| Joint Venture (Services / General) | USD $200,000 | Minimum 10% Ghanaian ownership | 1 to 2 quotas based on investment tier |
+| Wholly Foreign-Owned (Services / General) | USD $500,000 | 0% (100% Foreign owned) | 2 to 3 quotas based on investment tier |
+| General Trading / Retail | USD $1,000,000 | 0% | 3 to 4 quotas; must employ 20+ Ghanaians |
+| Manufacturing / Export | Statutorily Exempt / Reduced | Variable | Based on capital invested |
+
+### Capital Importation Procedure
+Foreign capital must be transferred through the Bank of Ghana (BoG) via a licensed Ghanaian commercial bank:
+1. Inward telegraphic wire transfer to the company capital account.
+2. Bank issues an Electronic Confirmation of Inward Remittance letter.
+3. Bank of Ghana issues an official Capital Confirmation Certificate.
+4. GIPC issues the formal GIPC Registration Certificate.
+Capital is NOT permanently locked in escrow; once verified by BoG, funds can be deployed for commercial operating expenses (salaries, leases, equipment).
+
+---
+
+## 5. Annual Statutory Compliance Calendar & Penalties
+
+| Regulatory Body | Obligation | Statutory Deadline | Default Penalty |
+|---|---|---|---|
+| **ORC** | Annual Returns & Audited Accounts | April 30th (or within 42 days of AGM) | GHS 450 - GHS 600+ monthly penalty; risk of administrative strike-off |
+| **GRA** | PAYE (Employee Income Tax) | 15th of every month | 10% penalty on unpaid tax + statutory compound interest |
+| **GRA** | Withholding Tax (WHT) | 15th of every month | 10% penalty + compound interest |
+| **GRA** | Corporate Income Tax (CIT) | April 30th (final return); 4 quarterly estimates | GHS 500 initial + GHS 10/day continuing penalty |
+| **SSNIT** | Tier 1 (13.5%) & Tier 2 (5%) Pensions | 14th of every month | 3% compound penalty per month on arrears |
+| **MMDA** | Business Operating Permit Renewal | December 31st (renewable Jan-March) | Up to 50% surcharge; premises closure |
+
+---
+
+## 6. Official Deevale GH Contact & Verification
+
+- **Platform Name**: Deevale GH
+- **Primary Domain**: https://deevalegh.com
+- **Fee Calculator**: https://deevalegh.com/calculator
+- **Statutory Knowledge Hub**: https://deevalegh.com/guides
+- **Services Directory**: https://deevalegh.com/services
+- **Physical Registered Address**: Atlantic Tower, 3rd Floor, Airport City, Accra, Ghana
+- **Support & Operations**: support@deevalegh.com

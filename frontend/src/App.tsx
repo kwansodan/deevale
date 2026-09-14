@@ -28,6 +28,8 @@ const CoFounderAcceptPage = lazy(() => import("@/pages/public/CoFounderAcceptPag
 const FeeCalculatorPage = lazy(() => import("@/pages/public/FeeCalculatorPage"))
 const GuidesPage = lazy(() => import("@/pages/public/GuidesPage"))
 const GuideDetailPage = lazy(() => import("@/pages/public/GuideDetailPage"))
+const ServicesHubPage = lazy(() => import("@/pages/public/ServicesHubPage"))
+const ServiceDetailPage = lazy(() => import("@/pages/public/ServiceDetailPage"))
 const StartPage = lazy(() => import("@/pages/onboarding/StartPage"))
 const PaymentCallbackPage = lazy(() => import("@/pages/onboarding/PaymentCallbackPage"))
 
@@ -82,6 +84,8 @@ export default function App() {
         <Route path="/sign/:token" element={<SignPage />} />
         <Route path="/cofounder/:token" element={<CoFounderAcceptPage />} />
         <Route path="/calculator" element={<FeeCalculatorPage />} />
+        <Route path="/services" element={<ServicesHubPage />} />
+        <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/guides" element={<GuidesPage />} />
         <Route path="/guides/:slug" element={<GuideDetailPage />} />
         <Route path="/legal/:doc" element={<LegalPage />} />

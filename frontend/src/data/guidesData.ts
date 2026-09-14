@@ -1,7 +1,21 @@
+export interface GuideTable {
+  caption?: string
+  headers: string[]
+  rows: string[][]
+}
+
+export interface HowToStep {
+  name: string
+  text: string
+  url?: string
+}
+
 export interface GuideSection {
   id: string
   title: string
+  snippet?: string
   content: string
+  table?: GuideTable
   callout?: {
     type: "info" | "warning" | "tip"
     text: string
@@ -28,6 +42,7 @@ export interface StatutoryGuide {
   tableOfContents: Array<{ id: string; title: string }>
   sections: GuideSection[]
   faqs: GuideFaq[]
+  howToSteps?: HowToStep[]
 }
 
 export const GUIDES: StatutoryGuide[] = [
@@ -57,10 +72,42 @@ export const GUIDES: StatutoryGuide[] = [
       { id: "fees-timeline", title: "7. Statutory Fees & Realistic Timelines" },
       { id: "faqs", title: "8. Frequently Asked Questions" },
     ],
+    howToSteps: [
+      {
+        name: "Business Name Search & Reservation",
+        text: "Conduct an official availability search at the ORC and submit 2-3 alternative business names. Upon clearance, the ORC reserves the name for 60 calendar days.",
+      },
+      {
+        name: "Appoint Statutory Officers (Act 992)",
+        text: "Appoint at least two directors (with minimum one ordinarily resident in Ghana), one professionally certified company secretary, and an ICAG-licensed statutory auditor.",
+      },
+      {
+        name: "Collect Ghana Cards and Personal TINs",
+        text: "Provide valid Ghana Card details for local directors/shareholders or passport biodata copies for foreign nationals to secure non-resident GRA TINs.",
+      },
+      {
+        name: "Draft and File Form 3, Form 4 and Regulations",
+        text: "Complete ORC Form 3 (Statement of Particulars), Form 4 (Consent Declarations), and the Company Constitution (Regulations) detailing stated capital and share allocations.",
+      },
+      {
+        name: "Pay Stamp Duty and Obtain Certificate of Incorporation",
+        text: "Remit statutory ORC filing fees and 0.5% stated capital stamp duty. The Registrar issues the official Certificate of Incorporation and certified profile.",
+      },
+      {
+        name: "Register for Corporate Tax & TIN with GRA",
+        text: "Register the newly incorporated company at the relevant local Taxpayer Service Centre to obtain the corporate TIN, provisional assessment, and VAT/WHT portal filing status.",
+      },
+      {
+        name: "Complete SSNIT Employer Onboarding & Obtain MMDA Permit",
+        text: "Enroll as an employer under Act 766 with SSNIT for mandatory pension remittances and acquire a local Municipal (MMDA / AMA) Business Operating Permit for your premises.",
+      },
+    ],
     sections: [
       {
         id: "entities",
         title: "1. Selecting Your Business Entity in Ghana",
+        snippet:
+          "Under the Companies Act, 2019 (Act 992), businesses in Ghana incorporate primarily as a Company Limited by Shares (LTD) for commercial ventures, a Sole Proprietorship for single Ghanaian traders, an Incorporated Partnership for 2 to 20 partners, or a Company Limited by Guarantee for non-profits.",
         content: `Ghanaian corporate law recognizes several forms of business enterprise under the Companies Act, 2019 (Act 992) and the Incorporated Private Partnerships Act, 1962 (Act 152):
 
 • **Company Limited by Shares (LTD):** The most common commercial vehicle. Liability of shareholders is limited to any unpaid amount on their shares. Requires at least two directors, one qualified company secretary, and one statutory auditor.
@@ -68,6 +115,17 @@ export const GUIDES: StatutoryGuide[] = [
 • **Incorporated Partnership:** Formed by two or more individuals (maximum 20). Partners share profits and liabilities under a registered partnership agreement.
 • **Company Limited by Guarantee (CLG):** Designed for non-profit entities, NGOs, foundations, and religious associations where profits are not distributed as dividends.
 • **External Company (Branch):** An existing overseas corporate body registered in Ghana to operate as a local branch without forming a separate legal subsidiary.`,
+        table: {
+          caption: "Comparison of Ghanaian Corporate Business Entities (Act 992 & Act 152)",
+          headers: ["Entity Structure", "Liability Protection", "Minimum Officers", "Secretary & Auditor", "Foreign Ownership"],
+          rows: [
+            ["Company Limited by Shares (LTD)", "Limited to unpaid shares", "Minimum 2 Directors (1 resident)", "Mandatory qualified Secretary & ICAG Auditor", "Permitted (Subject to GIPC Act 865)"],
+            ["Sole Proprietorship", "Unlimited personal liability", "Single owner / proprietor", "Not required", "Strictly Ghanaian citizens only"],
+            ["Incorporated Partnership", "Joint & several liability", "2 to 20 partners", "Optional / Not statutorily required", "Permitted"],
+            ["Company Limited by Guarantee", "Limited to guaranteed sum", "Minimum 2 Directors (1 resident)", "Mandatory qualified Secretary & Auditor", "Permitted (Non-profit objects only)"],
+            ["External Company (Branch)", "Parent company bears full liability", "1 Local Manager (resident)", "Local Representative required", "100% Foreign Parent entity"],
+          ],
+        },
         callout: {
           type: "tip",
           text: "Over 90% of commercial startups, tech ventures, and investment vehicles in Ghana should incorporate as a Company Limited by Shares to shield founders from personal liability and facilitate future outside capital.",
@@ -76,6 +134,8 @@ export const GUIDES: StatutoryGuide[] = [
       {
         id: "name-reservation",
         title: "2. Business Name Search & Reservation at the ORC",
+        snippet:
+          "Before incorporation in Ghana, your proposed business name must be searched and reserved at the ORC. An approved reservation secures the name exclusively for sixty (60) days while incorporation documents are prepared.",
         content: `Before drafting incorporation forms, your proposed corporate name must be officially searched and reserved at the Office of the Registrar of Companies (ORC).
 
 1. **Uniqueness:** The name must not be identical or misleadingly similar to an existing registered entity or reserved trademark.
@@ -87,6 +147,8 @@ At Deevale GH, we recommend submitting at least two alternative names during you
       {
         id: "statutory-officers",
         title: "3. Mandatory Statutory Appointments (Act 992)",
+        snippet:
+          "Under Act 992, every Ghanaian company limited by shares must appoint at least two directors (minimum one ordinarily resident in Ghana), one professionally qualified company secretary, and an independent chartered auditor licensed by ICAG. A sole director cannot serve as secretary.",
         content: `The Companies Act 2019 introduced stringent corporate governance requirements. To incorporate a Company Limited by Shares, you must appoint:
 
 • **Directors (Minimum of 2):** At least one director must be ordinarily resident in Ghana at all times. Directors must be of sound mind, at least 21 years old, and have not been declared bankrupt or convicted of fraud within the last 5 years.
@@ -101,6 +163,8 @@ At Deevale GH, we recommend submitting at least two alternative names during you
       {
         id: "tin-ghana-card",
         title: "4. Ghana Card & Tax Identification Requirements",
+        snippet:
+          "For Ghanaian citizens, the Ghana Card PIN serves as the personal Tax Identification Number (TIN). Foreign investors without a Ghana Card submit certified passport biodata and receive an official non-resident TIN from the GRA.",
         content: `For Ghanaian citizens and permanent residents, the Ghana Card (National Identification Authority PIN) functions as the personal Tax Identification Number (TIN). 
 
 All local directors, shareholders, and secretaries must provide a valid Ghana Card. Foreign nationals without a Ghana Card must submit a clear copy of their international passport photo page along with residential proof and will be issued a non-resident TIN by the Ghana Revenue Authority (GRA).`,
@@ -108,6 +172,8 @@ All local directors, shareholders, and secretaries must provide a valid Ghana Ca
       {
         id: "orc-filing",
         title: "5. Filing at the Registrar of Companies (ORC)",
+        snippet:
+          "Filing at the Office of the Registrar of Companies (ORC) requires Form 3 (Statement of Particulars), Form 4 (Director and Secretary Consents), and the Company Constitution. Following statutory stamp duty payment, the ORC issues the official Certificate of Incorporation.",
         content: `Once your company officers, share allocation, and standard or bespoke constitution (Regulations) are finalized, official filing forms are submitted to the ORC:
 
 • **Form 3 (Statement of Particulars):** Discloses company name, business objects, registered address, authorized and stated capital.
@@ -119,6 +185,8 @@ Upon successful review and payment of stamp duty and filing fees, the ORC issues
       {
         id: "post-incorporation",
         title: "6. Mandatory Post-Incorporation Registrations",
+        snippet:
+          "Mandatory post-incorporation registrations in Ghana include: 1) GRA Corporate Taxpayer registration for corporate TIN and VAT, 2) SSNIT employer enrollment for monthly pension contributions (Tier 1 & 2), and 3) MMDA Business Operating Permit from the local municipal assembly.",
         content: `Incorporation at ORC is only milestone one. Under Ghanaian statute, operating without the following three registrations incurs severe fines:
 
 1. **GRA Corporate Taxpayer Registration:** Your company must register with the Ghana Revenue Authority (GRA) Taxpayer Service Centre corresponding to your registered office. This yields your corporate TIN, provisional corporate income tax assessment, and VAT/WHT portal access.
@@ -132,6 +200,8 @@ Upon successful review and payment of stamp duty and filing fees, the ORC issues
       {
         id: "fees-timeline",
         title: "7. Statutory Fees & Realistic Timelines",
+        snippet:
+          "Official company incorporation in Ghana takes approximately 7 to 15 business days end-to-end. Government fees include ~GHS 25 for name reservation, ~GHS 270 for ORC incorporation, and 0.5% stamp duty on stated capital above statutory thresholds.",
         content: `Realistic timelines and official government fees in Ghana:
 
 • **Name Reservation:** 1 to 2 business days.
@@ -199,6 +269,8 @@ Upon successful review and payment of stamp duty and filing fees, the ORC issues
       {
         id: "gipc-overview",
         title: "1. The GIPC Legal Framework (Act 865)",
+        snippet:
+          "Foreign enterprises in Ghana are regulated under the GIPC Act, 2013 (Act 865). Any enterprise with non-Ghanaian equity participation must register with the GIPC after incorporating at the ORC to secure investment protection, full profit repatriation, and automatic expatriate work quotas.",
         content: `Foreign enterprises in Ghana are regulated under the Ghana Investment Promotion Centre Act, 2013 (Act 865). Any enterprise with non-Ghanaian equity participation must register with the GIPC after incorporating at the ORC.
 
 The GIPC registration provides crucial investor protections, guarantees unconditional repatriation of dividends and net profits, and grants automatic quotas for hiring expatriate staff.`,
@@ -210,6 +282,8 @@ The GIPC registration provides crucial investor protections, guarantees uncondit
       {
         id: "capital-thresholds",
         title: "2. Minimum Foreign Capital Thresholds (USD)",
+        snippet:
+          "Under Section 28 of the GIPC Act (Act 865), the statutory minimum foreign capital is USD $200,000 for a joint venture with at least 10% Ghanaian equity, USD $500,000 for a wholly foreign-owned enterprise, and USD $1,000,000 for general trading businesses employing at least 20 Ghanaians.",
         content: `Under GIPC Act Section 28, the statutory minimum foreign capital thresholds are:
 
 1. **Joint Venture with a Ghanaian Citizen (Services / General Business):**
@@ -224,6 +298,17 @@ The GIPC registration provides crucial investor protections, guarantees uncondit
    • Must additionally employ at least twenty (20) skilled Ghanaian nationals.
 
 *Note: For manufacturing, agriculture, and export enterprises, specific statutory exemptions and lower thresholds apply.*`,
+        table: {
+          caption: "GIPC Statutory Capital Requirements & Entitlements by Entity Structure",
+          headers: ["Enterprise Structure", "Minimum Foreign Capital", "Ghanaian Equity Share", "Bank of Ghana Confirmation", "Automatic Expat Quotas", "ORC & GIPC Timeline"],
+          rows: [
+            ["Wholly Foreign-Owned LTD", "USD $500,000", "0% (100% foreign equity)", "Electronic Inward Remittance Letter", "2 to 3 Automatic Quotas", "15 to 25 Business Days"],
+            ["Joint Venture with Ghanaian", "USD $200,000", "Minimum 10% Ghanaian equity", "Electronic Inward Remittance Letter", "1 to 2 Automatic Quotas", "12 to 20 Business Days"],
+            ["General Trading Enterprise", "USD $1,000,000", "0% (Must hire 20+ Ghanaians)", "Electronic Inward Remittance Letter", "3 to 4 Automatic Quotas", "20 to 30 Business Days"],
+            ["External Company (Branch)", "Statutorily Exempt (Nil)", "0% (Foreign parent branch)", "Not required for parent contracts", "Standard Immigration Quota", "10 to 15 Business Days"],
+            ["Manufacturing / Export Firm", "Exempt / Reduced Thresholds", "Variable", "Export / Free Zone clearance", "Variable quotas", "15 to 25 Business Days"],
+          ],
+        },
         callout: {
           type: "warning",
           text: "Capital thresholds are denominated in US Dollars (USD) or its equivalent in convertible foreign currency, not Ghanaian Cedis.",
@@ -232,6 +317,8 @@ The GIPC registration provides crucial investor protections, guarantees uncondit
       {
         id: "capital-importation",
         title: "3. Capital Importation & Bank of Ghana (BoG) Certification",
+        snippet:
+          "Foreign capital must be transferred through the Bank of Ghana (BoG) via a licensed Ghanaian commercial bank. Once the bank verifies the inward telegraphic wire, the Bank of Ghana issues an equity confirmation letter, allowing GIPC certificate issuance and immediate operational expenditure.",
         content: `To satisfy GIPC requirements, equity capital must be transferred through the Bank of Ghana (BoG) via a licensed commercial bank in Ghana:
 
 1. **Inward Telegraphic Transfer:** The foreign shareholder wires capital from their overseas corporate or personal account directly to the company's capital account in Accra.
@@ -241,6 +328,8 @@ The GIPC registration provides crucial investor protections, guarantees uncondit
       {
         id: "joint-venture",
         title: "4. Wholly Foreign vs. 10% Joint Venture",
+        snippet:
+          "Partnering with a local Ghanaian co-founder holding at least 10% equity reduces the GIPC statutory capital requirement from USD $500,000 to USD $200,000, making it the most cost-effective structure for international startups entering Ghana.",
         content: `Many foreign technology startups and consultancies partner with a local Ghanaian co-founder holding at least 10% equity. This significantly lowers the capital requirement from **$500,000 down to $200,000**.
 
 If you do not have a local partner, you can either:
@@ -250,6 +339,8 @@ If you do not have a local partner, you can either:
       {
         id: "subsidiary-vs-branch",
         title: "5. Ghanaian Subsidiary vs. External Branch",
+        snippet:
+          "A Ghanaian subsidiary (LTD) provides complete liability separation from the foreign parent company and local banking status, whereas an External Branch requires no GIPC minimum capital but leaves the foreign parent directly liable for all branch obligations.",
         content: `Choosing the right corporate structure is critical:
 
 • **Subsidiary (Company Limited by Shares):** A distinct Ghanaian legal entity. Shields the parent company from liability incurred in Ghana. Subject to GIPC minimum capital, but possesses full local commercial standing and local banking capability.
@@ -258,6 +349,8 @@ If you do not have a local partner, you can either:
       {
         id: "expatriate-quotas",
         title: "6. Automatic Expatriate Quotas & Work Permits",
+        snippet:
+          "Under Act 865, registering with the GIPC grants automatic expatriate quotas: 1 quota for $50,000-$250,000 capital; 2 quotas for $250,000-$500,000; 3 quotas for $500,000-$700,000; and 4 quotas above $700,000, allowing key foreign executives to work without individual immigration permits.",
         content: `Registering with GIPC earns your company statutory **Automatic Expatriate Quotas** (work and residence permits for foreign management and technical personnel):
 
 • $50,000 to $250,000 paid capital: 1 automatic quota
@@ -270,6 +363,8 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "remote-process",
         title: "7. Incorporating Remotely with Deevale GH",
+        snippet:
+          "Deevale GH manages the complete cross-border incorporation workflow remotely: online KYC verification, Act 992 constitution drafting, registered office address in Accra, resident secretary representation, and BoG/GIPC filing.",
         content: `Deevale GH handles the entire cross-border incorporation and GIPC onboarding pipeline:
 1. Online onboarding and passport KYC verification.
 2. Drafting Act 992 compliant Regulations and Form 3.
@@ -327,6 +422,8 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "overview",
         title: "1. The Statutory Compliance Landscape in Ghana",
+        snippet:
+          "Ghanaian corporate compliance requires coordinating across four regulatory bodies: ORC annual returns due by April 30th, GRA monthly employee PAYE and withholding taxes due by the 15th, SSNIT pension contributions due by the 14th, and annual MMDA municipal operating permit renewals.",
         content: `Every active business registered in Ghana must coordinate recurring compliance filings across four separate government institutions:
 1. **Office of the Registrar of Companies (ORC)** for corporate governance and annual returns.
 2. **Ghana Revenue Authority (GRA)** for indirect, direct, and employment taxes.
@@ -336,6 +433,8 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "orc-returns",
         title: "2. ORC Annual Returns & Financial Statements",
+        snippet:
+          "Under Section 126 of the Companies Act 2019, every company in Ghana must file an Annual Return accompanied by audited financial statements signed by a certified ICAG auditor by April 30th. Delay triggers administrative penalties of GHS 450 to GHS 600+ per month.",
         content: `Under Section 126 of the Companies Act, 2019 (Act 992):
 • Every company must file an **Annual Return** at least once in every calendar year.
 • **Deadline:** Must be filed within forty-two (42) days after the Annual General Meeting (AGM), or by **April 30th** of the following calendar year.
@@ -349,6 +448,8 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "gra-monthly",
         title: "3. GRA Monthly Returns (PAYE, WHT, VAT)",
+        snippet:
+          "Under Ghanaian tax law, PAYE employee income taxes and supplier Withholding Taxes (WHT) must be remitted to the GRA by the 15th of every month. VAT returns are due by the last working day of the following month, with 10% penalties plus compound interest on defaults.",
         content: `Ghanaian tax law mandates strict monthly tax declarations by the **15th day** of the following month:
 
 • **PAYE (Pay-As-You-Earn):** Due by the **15th of each month**. Employers must deduct income tax from employee salaries and remit it to the GRA with the monthly employee deduction schedule.
@@ -358,12 +459,16 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "gra-annual",
         title: "4. GRA Corporate Income Tax (CIT) Filing",
+        snippet:
+          "Ghanaian companies must file their final Corporate Income Tax return within 4 months of financial year-end (April 30th for calendar year entities), accompanied by 4 quarterly estimated tax installment payments throughout the year.",
         content: `• **Quarterly Estimated Tax:** Companies must pay four quarterly installments of estimated corporate income tax (typically March 31, June 30, September 30, and December 31).
 • **Final Annual Return:** Must be submitted within **four (4) months** after the end of the company's financial year (usually **April 30th** for companies whose financial year ends on December 31st). Includes the final audited tax computation.`,
       },
       {
         id: "ssnit-schedule",
         title: "5. SSNIT Pension Contributions (14th of Every Month)",
+        snippet:
+          "Under the National Pensions Act (Act 766), mandatory SSNIT pension contributions (13.5% Tier 1 and 5% Tier 2) must be remitted by the 14th of the following month. Late payments incur a compound monthly penalty of 3%.",
         content: `Under the National Pensions Act, 2008 (Act 766):
 • Employer contributions (13% Tier 1, 5% Tier 2) + Employee deduction (5.5%) must be remitted by the **14th of the ensuing month**.
 • Late remittances attract a compound penalty of **3% per month** on the outstanding balance.`,
@@ -375,6 +480,8 @@ These quotas bypass standard immigration quota applications, allowing key execut
       {
         id: "mmda-permit",
         title: "6. MMDA Business Operating Permit Renewal",
+        snippet:
+          "Municipal trade licenses and Business Operating Permits expire annually on December 31st. Renewals are processed between January and March to prevent premises closure, physical padlocking, and court summons.",
         content: `Local municipal operating permits expire on **December 31st** of each year. 
 
 Renewal bills are served between January and March. Paying on time ensures physical sticker issuance, avoiding municipal court summons and premises padlocking.`,
@@ -382,13 +489,21 @@ Renewal bills are served between January and March. Paying on time ensures physi
       {
         id: "penalties",
         title: "7. Summary of Statutory Default Penalties",
-        content: `| Agency | Obligation | Penalty for Default |
-|---|---|---|
-| **ORC** | Annual Returns | GHS 450+ per month of default; risk of striking off |
-| **GRA** | PAYE / WHT Default | 10% penalty on tax unpaid + statutory compound interest |
-| **GRA** | Late CIT Return | GHS 500 initial + GHS 10 per additional day of default |
-| **SSNIT** | Monthly Contributions | 3% compound monthly penalty |
-| **MMDA** | Operating Permit | Up to 50% surcharge; temporary premises closure |`,
+        snippet:
+          "Statutory defaults in Ghana lead to compounding financial sanctions: ORC levies GHS 450+ per month with risk of striking off; GRA imposes a 10% penalty plus compound interest on late taxes; and SSNIT charges a 3% monthly compound penalty on outstanding pension contributions.",
+        content: `A consolidated summary of statutory default penalties across major Ghanaian regulatory authorities:`,
+        table: {
+          caption: "Summary of Ghanaian Statutory Agencies, Compliance Deadlines, and Sanctions",
+          headers: ["Regulator", "Statutory Obligation", "Filing Frequency & Deadline", "Default Penalty"],
+          rows: [
+            ["ORC (Companies Registry)", "Annual Return & Audited Financials", "Annually by April 30th (or 42 days post-AGM)", "GHS 450+ per month; risk of dissolution / strike-off"],
+            ["GRA (Revenue Authority)", "PAYE (Employee Income Tax)", "Monthly by the 15th of the ensuing month", "10% penalty on tax unpaid + statutory compound interest"],
+            ["GRA (Revenue Authority)", "Withholding Tax (WHT)", "Monthly by the 15th of the ensuing month", "10% penalty + compound statutory interest"],
+            ["GRA (Revenue Authority)", "Corporate Income Tax (CIT) Final Return", "Annually by April 30th (plus 4 quarterly estimates)", "GHS 500 initial penalty + GHS 10 per additional day"],
+            ["SSNIT (Pensions Trust)", "Tier 1 (13.5%) & Tier 2 (5%) Remittances", "Monthly by the 14th of the ensuing month", "3% compound monthly penalty on unpaid balance"],
+            ["MMDA (Local Assembly)", "Business Operating Permit (BOP) Renewal", "Annually by December 31st (renewable Q1)", "Up to 50% surcharge; premises closure and court summons"],
+          ],
+        },
       },
     ],
     faqs: [
