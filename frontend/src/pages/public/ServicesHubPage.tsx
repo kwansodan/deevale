@@ -71,7 +71,7 @@ export default function ServicesHubPage() {
             Ghana Company Registration &amp; <span className="highlight-accent">Statutory Services</span>
           </h1>
           <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-base md:text-lg">
-            Complete company formation and ongoing regulatory filings across the ORC, GIPC, GRA, and SSNIT — executed with speed, compliance, and transparent pricing.
+            Complete company formation and ongoing regulatory filings across the ORC, GIPC, GRA, and SSNIT - executed with speed, compliance, and transparent pricing.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-2">

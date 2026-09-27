@@ -72,7 +72,7 @@ export default function GuidesPage() {
           </h1>
           <p className="text-muted-foreground mx-auto mt-4 max-w-2xl text-base md:text-lg">
             Straightforward legal insights on the Companies Act 2019 (Act 992), GIPC foreign investment rules,
-            and corporate statutory obligations in Ghana — without the confusing legal jargon.
+            and corporate statutory obligations in Ghana - without the confusing legal jargon.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-2">

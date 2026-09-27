@@ -111,7 +111,7 @@ export const GUIDES: StatutoryGuide[] = [
         content: `Ghanaian corporate law recognizes several forms of business enterprise under the Companies Act, 2019 (Act 992) and the Incorporated Private Partnerships Act, 1962 (Act 152):
 
 • **Company Limited by Shares (LTD):** The most common commercial vehicle. Liability of shareholders is limited to any unpaid amount on their shares. Requires at least two directors, one qualified company secretary, and one statutory auditor.
-• **Sole Proprietorship (Business Name):** Suitable for informal or micro-businesses owned by a single Ghanaian individual. Quickest and cheapest to register, but offers zero personal asset protection — the owner bears unlimited personal liability.
+• **Sole Proprietorship (Business Name):** Suitable for informal or micro-businesses owned by a single Ghanaian individual. Quickest and cheapest to register, but offers zero personal asset protection - the owner bears unlimited personal liability.
 • **Incorporated Partnership:** Formed by two or more individuals (maximum 20). Partners share profits and liabilities under a registered partnership agreement.
 • **Company Limited by Guarantee (CLG):** Designed for non-profit entities, NGOs, foundations, and religious associations where profits are not distributed as dividends.
 • **External Company (Branch):** An existing overseas corporate body registered in Ghana to operate as a local branch without forming a separate legal subsidiary.`,

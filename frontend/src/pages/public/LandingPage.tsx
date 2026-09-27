@@ -165,7 +165,7 @@ export default function LandingPage() {
   return (
     <div className="bg-background min-h-svh">
       <SEO
-        title="Business Registration in Ghana | ORC, GIPC & Tax Setup — Deevale GH"
+        title="Business Registration in Ghana | ORC, GIPC & Tax Setup - Deevale GH"
         description="Register and run your business in Ghana without the guesswork. Company Limited by Shares, GIPC foreign investor registration, GRA TIN, SSNIT, and statutory corporate compliance in Accra."
         canonicalUrl="https://deevalegh.com/"
         keywords="business registration in ghana, register company in ghana, orc business registration, company limited by shares ghana, gipc registration ghana, foreign company registration ghana, ssnit employer registration, gra tin registration ghana, virtual office accra, corporate secretarial ghana"

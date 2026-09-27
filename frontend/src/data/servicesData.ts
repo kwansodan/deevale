@@ -45,7 +45,7 @@ export const SERVICES: ServiceItem[] = [
     title: "Company Limited by Shares (LTD) Registration in Ghana",
     shortTitle: "Company Limited by Shares (LTD)",
     heroBadge: "Companies Act 2019 (Act 992) • ORC Incorporation",
-    metaTitle: "Company Limited by Shares Registration Ghana | ORC Incorporation — Deevale GH",
+    metaTitle: "Company Limited by Shares Registration Ghana | ORC Incorporation - Deevale GH",
     metaDescription:
       "Statutory incorporation for a Company Limited by Shares (LTD) in Ghana under Act 992. Includes ORC name reservation, Form 3, Form 4, Constitution, and Certificate of Incorporation.",
     keywords:
@@ -137,7 +137,7 @@ export const SERVICES: ServiceItem[] = [
     title: "Sole Proprietorship (Business Name) Registration in Ghana",
     shortTitle: "Sole Proprietorship",
     heroBadge: "Registration of Business Names Act 1962 (Act 151) • ORC Setup",
-    metaTitle: "Sole Proprietorship Registration Ghana | Register Business Name — Deevale GH",
+    metaTitle: "Sole Proprietorship Registration Ghana | Register Business Name - Deevale GH",
     metaDescription:
       "Fast sole proprietorship and business name registration in Ghana for Ghanaian entrepreneurs. Lowest cost, streamlined ORC filing, and instant corporate bankability.",
     keywords:
@@ -212,7 +212,7 @@ export const SERVICES: ServiceItem[] = [
     title: "Company Limited by Guarantee (NGO & Non-Profit) Registration in Ghana",
     shortTitle: "Company Limited by Guarantee (NGO)",
     heroBadge: "Companies Act 2019 (Act 992) • Non-Profit Entity",
-    metaTitle: "Register NGO in Ghana | Company Limited by Guarantee — Deevale GH",
+    metaTitle: "Register NGO in Ghana | Company Limited by Guarantee - Deevale GH",
     metaDescription:
       "Statutory incorporation of non-profit foundations, charities, associations, and NGOs in Ghana. Act 992 compliant constitution, ORC approval, and tax-exempt structuring.",
     keywords:
@@ -295,7 +295,7 @@ export const SERVICES: ServiceItem[] = [
     title: "External Company (Foreign Branch Office) Registration in Ghana",
     shortTitle: "External Company (Branch)",
     heroBadge: "Companies Act 2019 (Act 992 Part Twelve) • Foreign Branch",
-    metaTitle: "External Company Registration Ghana | Foreign Branch Office — Deevale GH",
+    metaTitle: "External Company Registration Ghana | Foreign Branch Office - Deevale GH",
     metaDescription:
       "Register a branch office of your overseas corporation in Ghana under Act 992 Part Twelve. No GIPC minimum foreign capital requirement for parent company contracts.",
     keywords:
@@ -371,7 +371,7 @@ export const SERVICES: ServiceItem[] = [
     title: "GIPC Registration & Foreign Investor Compliance in Ghana",
     shortTitle: "GIPC Foreign Investor Registration",
     heroBadge: "GIPC Act 2013 (Act 865) • Foreign Direct Investment",
-    metaTitle: "GIPC Registration Ghana | Foreign Capital & Expat Quotas — Deevale GH",
+    metaTitle: "GIPC Registration Ghana | Foreign Capital & Expat Quotas - Deevale GH",
     metaDescription:
       "Statutory GIPC registration for foreign-owned companies in Ghana under Act 865. Bank of Ghana capital importation verification and automatic expatriate work quotas.",
     keywords:
@@ -445,7 +445,7 @@ export const SERVICES: ServiceItem[] = [
     title: "GRA Corporate Tax Registration & TIN Setup in Ghana",
     shortTitle: "GRA Tax & Corporate TIN",
     heroBadge: "Revenue Administration Act 2016 (Act 915) • Tax Onboarding",
-    metaTitle: "GRA Corporate TIN & Tax Registration Ghana — Deevale GH",
+    metaTitle: "GRA Corporate TIN & Tax Registration Ghana - Deevale GH",
     metaDescription:
       "Get your official corporate Tax Identification Number (TIN) and taxpayer registration with the Ghana Revenue Authority (GRA). CIT, VAT, WHT, and provisional assessments.",
     keywords:
@@ -514,7 +514,7 @@ export const SERVICES: ServiceItem[] = [
     title: "SSNIT Employer Registration & Pension Clearance in Ghana",
     shortTitle: "SSNIT Employer Registration",
     heroBadge: "National Pensions Act 2008 (Act 766) • Mandatory Pension Setup",
-    metaTitle: "SSNIT Employer Registration Ghana | Pension Clearance — Deevale GH",
+    metaTitle: "SSNIT Employer Registration Ghana | Pension Clearance - Deevale GH",
     metaDescription:
       "Mandatory SSNIT employer registration and pension clearance certificate processing in Ghana under Act 766. Tier 1 & Tier 2 employee onboarding and compliance management.",
     keywords:
@@ -582,7 +582,7 @@ export const SERVICES: ServiceItem[] = [
     title: "MMDA Business Operating Permit (BOP) in Accra, Ghana",
     shortTitle: "Business Operating Permit (BOP)",
     heroBadge: "Local Governance Act 2016 (Act 936) • Municipal Licensing",
-    metaTitle: "Business Operating Permit Ghana | AMA & MMDA License — Deevale GH",
+    metaTitle: "Business Operating Permit Ghana | AMA & MMDA License - Deevale GH",
     metaDescription:
       "Obtain your official Business Operating Permit (BOP) from local district assemblies in Accra (AMA, Ayawaso, Tema). Premises inspection, fee computation, and annual sticker.",
     keywords:

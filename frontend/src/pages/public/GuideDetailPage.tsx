@@ -115,7 +115,7 @@ export default function GuideDetailPage() {
   return (
     <div className="bg-background min-h-svh text-foreground">
       <SEO
-        title={`${guide.shortTitle} — 2026 Statutory Guide`}
+        title={`${guide.shortTitle} - 2026 Statutory Guide`}
         description={guide.metaDescription}
         canonicalUrl={`https://deevalegh.com/guides/${guide.slug}`}
         keywords={guide.keywords}

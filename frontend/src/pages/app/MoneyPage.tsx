@@ -284,7 +284,7 @@ function InvoicesTab({ caseId }: { caseId: string }) {
                     {inv.vat_minor > 0 ? (
                       <span className="text-primary font-medium">{formatMoney(inv.currency, inv.vat_minor)}</span>
                     ) : (
-                      <span className="text-muted-foreground">—</span>
+                      <span className="text-muted-foreground">-</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right tabular-nums font-semibold">{formatMoney(inv.currency, inv.total_minor)}</TableCell>
