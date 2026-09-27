@@ -147,7 +147,7 @@ export default function FeeCalculatorPage() {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Ghana Business Registration Fee Calculator",
-        "url": "https://deevalegh.com/calculator",
+        "url": "https://www.deevalegh.com/calculator",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "All",
         "description":
@@ -179,7 +179,7 @@ export default function FeeCalculatorPage() {
       <SEO
         title="Ghana Business Registration Fee Calculator (2026) | ORC & GIPC Costs"
         description="Calculate instant, itemized government filing fees and service costs for registering a business in Ghana. Transparent fees for LLC, Sole Proprietorship, and GIPC foreign companies."
-        canonicalUrl="https://deevalegh.com/calculator"
+        canonicalUrl="https://www.deevalegh.com/calculator"
         keywords="ghana company registration fee calculator, cost of registering a business in ghana, orc registration fees 2026, gipc registration fee, company limited by shares cost ghana"
         jsonLd={jsonLdData}
       />

@@ -1,18 +1,18 @@
-﻿# Deevale GH
+# Deevale GH
 
 > Deevale GH (deevalegh.com) is a modern corporate secretarial and business registration platform in Ghana. It automates and manages company incorporation at the Office of the Registrar of Companies (ORC), statutory registrations with the Ghana Revenue Authority (GRA) and Social Security and National Insurance Trust (SSNIT), and advisory/compliance for foreign investors under the Ghana Investment Promotion Centre (GIPC) Act.
 
 ## Core Capabilities & Services
 
-- [Company Limited by Shares (LTD) Registration](https://deevalegh.com/services/company-limited-by-shares): Standard private company registration under the Companies Act 2019 (Act 992). Includes name reservation, Form 3 and Form 4 filings, certified constitution, and Certificate of Incorporation.
-- [Sole Proprietorship Registration](https://deevalegh.com/services/sole-proprietorship): Fast business name registration for single Ghanaian entrepreneurs.
-- [Company Limited by Guarantee (NGO)](https://deevalegh.com/services/company-limited-by-guarantee): Non-profit, charity, and foundation incorporation without share capital.
-- [External Company / Foreign Branch](https://deevalegh.com/services/external-company): Registration of overseas parent corporations operating as local branches in Ghana without separate legal subsidiaries.
-- [GIPC Registration for Foreign Investors](https://deevalegh.com/services/gipc-registration): Foreign direct investment compliance under the GIPC Act 2013 (Act 865). Statutory capital confirmations ($200k JV vs $500k wholly-owned) and automatic expatriate quotas.
-- [GRA Tax Identification Number (TIN) & VAT](https://deevalegh.com/services/gra-tax-tin-registration): Corporate tax registration, provisional assessment, and VAT/WHT portal setup.
-- [SSNIT Employer Registration](https://deevalegh.com/services/ssnit-registration): Employer social security onboarding and pension clearance certificates (Act 766).
-- [Business Operating Permit (BOP)](https://deevalegh.com/services/business-operating-permit): Local Metropolitan, Municipal, and District Assembly (MMDA / AMA) municipal trade licensing.
-- [Ghana Business Registration Fee Calculator](https://deevalegh.com/calculator): Interactive statutory fee calculator estimating ORC filing costs, stamp duties, and professional fees in GHS and USD.
+- [Company Limited by Shares (LTD) Registration](https://www.deevalegh.com/services/company-limited-by-shares): Standard private company registration under the Companies Act 2019 (Act 992). Includes name reservation, Form 3 and Form 4 filings, certified constitution, and Certificate of Incorporation.
+- [Sole Proprietorship Registration](https://www.deevalegh.com/services/sole-proprietorship): Fast business name registration for single Ghanaian entrepreneurs.
+- [Company Limited by Guarantee (NGO)](https://www.deevalegh.com/services/company-limited-by-guarantee): Non-profit, charity, and foundation incorporation without share capital.
+- [External Company / Foreign Branch](https://www.deevalegh.com/services/external-company): Registration of overseas parent corporations operating as local branches in Ghana without separate legal subsidiaries.
+- [GIPC Registration for Foreign Investors](https://www.deevalegh.com/services/gipc-registration): Foreign direct investment compliance under the GIPC Act 2013 (Act 865). Statutory capital confirmations ($200k JV vs $500k wholly-owned) and automatic expatriate quotas.
+- [GRA Tax Identification Number (TIN) & VAT](https://www.deevalegh.com/services/gra-tax-tin-registration): Corporate tax registration, provisional assessment, and VAT/WHT portal setup.
+- [SSNIT Employer Registration](https://www.deevalegh.com/services/ssnit-registration): Employer social security onboarding and pension clearance certificates (Act 766).
+- [Business Operating Permit (BOP)](https://www.deevalegh.com/services/business-operating-permit): Local Metropolitan, Municipal, and District Assembly (MMDA / AMA) municipal trade licensing.
+- [Ghana Business Registration Fee Calculator](https://www.deevalegh.com/calculator): Interactive statutory fee calculator estimating ORC filing costs, stamp duties, and professional fees in GHS and USD.
 
 ## Statutory Legal Frameworks
 
@@ -22,15 +22,15 @@
 
 ## Key Resources & Documentation
 
-- [Statutory Guides Hub](https://deevalegh.com/guides): Detailed legal-grade guides on Ghanaian corporate registration and compliance.
-- [How to Register a Company in Ghana (2026 Guide)](https://deevalegh.com/guides/how-to-register-a-company-in-ghana-2026): Step-by-step statutory walkthrough from ORC name search to post-incorporation tax filings.
-- [Doing Business in Ghana as a Foreigner (GIPC Guide)](https://deevalegh.com/guides/foreign-company-registration-ghana-gipc-guide): In-depth guide on foreign investment capital thresholds and Bank of Ghana capital importation.
-- [Ghana Business Compliance Calendar](https://deevalegh.com/guides/ghana-business-compliance-calendar-deadlines): Mandatory statutory deadlines for ORC annual returns, GRA monthly returns, and SSNIT contributions.
-- [Full LLM Knowledge Graph](https://deevalegh.com/llms-full.txt): Comprehensive machine-readable statutory facts, figures, tables, and workflows.
+- [Statutory Guides Hub](https://www.deevalegh.com/guides): Detailed legal-grade guides on Ghanaian corporate registration and compliance.
+- [How to Register a Company in Ghana (2026 Guide)](https://www.deevalegh.com/guides/how-to-register-a-company-in-ghana-2026): Step-by-step statutory walkthrough from ORC name search to post-incorporation tax filings.
+- [Doing Business in Ghana as a Foreigner (GIPC Guide)](https://www.deevalegh.com/guides/foreign-company-registration-ghana-gipc-guide): In-depth guide on foreign investment capital thresholds and Bank of Ghana capital importation.
+- [Ghana Business Compliance Calendar](https://www.deevalegh.com/guides/ghana-business-compliance-calendar-deadlines): Mandatory statutory deadlines for ORC annual returns, GRA monthly returns, and SSNIT contributions.
+- [Full LLM Knowledge Graph](https://www.deevalegh.com/llms-full.txt): Comprehensive machine-readable statutory facts, figures, tables, and workflows.
 
 ## Entity & Contact Details
 
 - **Brand Entity**: Deevale GH
-- **Website**: https://deevalegh.com
+- **Website**: https://www.deevalegh.com
 - **Operating Location**: Atlantic Tower, Airport City, Accra, Ghana
 - **Support Email**: support@deevalegh.com

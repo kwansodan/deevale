@@ -42,6 +42,6 @@ Allow: /llms.txt
 Allow: /llms-full.txt
 
 # Host, Sitemap & LLMs declaration
-Sitemap: https://deevalegh.com/sitemap.xml
-# LLMs: https://deevalegh.com/llms.txt
+Sitemap: https://www.deevalegh.com/sitemap.xml
+# LLMs: https://www.deevalegh.com/llms.txt
 

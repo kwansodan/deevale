@@ -40,19 +40,19 @@ export default function GuideDetailPage() {
         "author": {
           "@type": "Organization",
           "name": "Deevale GH",
-          "url": "https://deevalegh.com",
+          "url": "https://www.deevalegh.com",
         },
         "publisher": {
           "@type": "Organization",
           "name": "Deevale GH",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://deevalegh.com/deevalegh-icon.svg",
+            "url": "https://www.deevalegh.com/deevalegh-icon.svg",
           },
         },
         "dateModified": "2026-03-01",
         "datePublished": "2026-01-15",
-        "mainEntityOfPage": `https://deevalegh.com/guides/${guide.slug}`,
+        "mainEntityOfPage": `https://www.deevalegh.com/guides/${guide.slug}`,
       },
       {
         "@context": "https://schema.org",
@@ -74,19 +74,19 @@ export default function GuideDetailPage() {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://deevalegh.com",
+            "item": "https://www.deevalegh.com",
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Statutory Guides",
-            "item": "https://deevalegh.com/guides",
+            "item": "https://www.deevalegh.com/guides",
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": guide.shortTitle,
-            "item": `https://deevalegh.com/guides/${guide.slug}`,
+            "item": `https://www.deevalegh.com/guides/${guide.slug}`,
           },
         ],
       },
@@ -103,7 +103,7 @@ export default function GuideDetailPage() {
           "position": idx + 1,
           "name": step.name,
           "text": step.text,
-          "url": `https://deevalegh.com/guides/${guide.slug}#${step.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+          "url": `https://www.deevalegh.com/guides/${guide.slug}#${step.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
         })),
       })
     }
@@ -116,7 +116,7 @@ export default function GuideDetailPage() {
       <SEO
         title={`${guide.shortTitle} — 2026 Statutory Guide`}
         description={guide.metaDescription}
-        canonicalUrl={`https://deevalegh.com/guides/${guide.slug}`}
+        canonicalUrl={`https://www.deevalegh.com/guides/${guide.slug}`}
         keywords={guide.keywords}
         ogType="article"
         jsonLd={jsonLdData}

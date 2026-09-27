@@ -37,7 +37,7 @@ export function SEO({
   canonicalUrl,
   keywords,
   ogType = "website",
-  ogImage = "https://deevalegh.com/deevalegh-icon.svg",
+  ogImage = "https://www.deevalegh.com/deevalegh-icon.svg",
   jsonLd,
 }: SEOProps) {
   const fullTitle = title.includes("Deevale GH") ? title : `${title} | Deevale GH`
