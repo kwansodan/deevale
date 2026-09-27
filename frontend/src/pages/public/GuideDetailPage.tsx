@@ -9,6 +9,7 @@ import {
   Info,
   Lightbulb,
   ShieldAlert,
+  ShieldCheck,
 } from "lucide-react"
 
 import { GUIDES } from "@/data/guidesData"
