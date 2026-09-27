@@ -23,13 +23,13 @@ export default function GuidesPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Ghana Business & Company Registration Statutory Guides",
-    "url": "https://www.deevalegh.com/guides",
+    "url": "https://deevalegh.com/guides",
     "description":
       "Legal-grade statutory guides on business registration, GIPC foreign direct investment requirements, and annual compliance in Ghana under Companies Act 2019.",
     "hasPart": GUIDES.map((g) => ({
       "@type": "Article",
       "headline": g.title,
-      "url": `https://www.deevalegh.com/guides/${g.slug}`,
+      "url": `https://deevalegh.com/guides/${g.slug}`,
       "description": g.metaDescription,
     })),
   }
@@ -39,7 +39,7 @@ export default function GuidesPage() {
       <SEO
         title="Ghana Business Registration & Statutory Compliance Guides (2026)"
         description="Comprehensive, statutory guides to company incorporation, ORC procedures, GIPC foreign investor requirements, and GRA tax compliance in Ghana."
-        canonicalUrl="https://www.deevalegh.com/guides"
+        canonicalUrl="https://deevalegh.com/guides"
         keywords="ghana company registration guides, how to register a business in ghana, orc company formation, gipc foreign investment guide, ghana compliance calendar"
         jsonLd={jsonLdData}
       />

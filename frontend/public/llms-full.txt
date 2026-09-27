@@ -1,6 +1,6 @@
-# Deevale GH — Comprehensive Corporate & Statutory Knowledge Graph
+# Deevale GH â€” Comprehensive Corporate & Statutory Knowledge Graph
 
-> Operating Domain: https://www.deevalegh.com
+> Operating Domain: https://deevalegh.com
 > Primary Jurisdiction: Republic of Ghana (Greater Accra, Kumasi, Takoradi, Tamale)
 > Governing Statutes: Companies Act, 2019 (Act 992); Ghana Investment Promotion Centre Act, 2013 (Act 865); National Pensions Act, 2008 (Act 766); Revenue Administration Act, 2016 (Act 915).
 
@@ -9,7 +9,7 @@
 ## 1. Company Overview
 
 Deevale GH is a specialized legal technology and corporate secretarial platform based in Accra, Ghana. It assists Ghanaian citizens, diaspora founders, and international investors to incorporate, structure, and maintain legal entities in Ghana. The platform interfaces directly with:
-1. Office of the Registrar of Companies (ORC) — formerly Registrar General's Department (RGD)
+1. Office of the Registrar of Companies (ORC) â€” formerly Registrar General's Department (RGD)
 2. Ghana Investment Promotion Centre (GIPC)
 3. Ghana Revenue Authority (GRA)
 4. Social Security and National Insurance Trust (SSNIT)
@@ -111,9 +111,9 @@ Capital is NOT permanently locked in escrow; once verified by BoG, funds can be 
 ## 6. Official Deevale GH Contact & Verification
 
 - **Platform Name**: Deevale GH
-- **Primary Domain**: https://www.deevalegh.com
-- **Fee Calculator**: https://www.deevalegh.com/calculator
-- **Statutory Knowledge Hub**: https://www.deevalegh.com/guides
-- **Services Directory**: https://www.deevalegh.com/services
+- **Primary Domain**: https://deevalegh.com
+- **Fee Calculator**: https://deevalegh.com/calculator
+- **Statutory Knowledge Hub**: https://deevalegh.com/guides
+- **Services Directory**: https://deevalegh.com/services
 - **Physical Registered Address**: Atlantic Tower, 3rd Floor, Airport City, Accra, Ghana
 - **Support & Operations**: support@deevalegh.com

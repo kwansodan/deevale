@@ -37,15 +37,15 @@ export default function ServiceDetailPage() {
       {
         "@context": "https://schema.org",
         "@type": "Service",
-        "@id": `https://www.deevalegh.com/services/${service.slug}#service`,
+        "@id": `https://deevalegh.com/services/${service.slug}#service`,
         "name": service.title,
         "serviceType": service.shortTitle,
         "description": service.metaDescription,
         "provider": {
           "@type": "LegalService",
           "name": "Deevale GH",
-          "url": "https://www.deevalegh.com",
-          "logo": "https://www.deevalegh.com/deevalegh-icon.svg",
+          "url": "https://deevalegh.com",
+          "logo": "https://deevalegh.com/deevalegh-icon.svg",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "3rd Floor, Atlantic Tower, Airport City",
@@ -95,19 +95,19 @@ export default function ServiceDetailPage() {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://www.deevalegh.com",
+            "item": "https://deevalegh.com",
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Services",
-            "item": "https://www.deevalegh.com/services",
+            "item": "https://deevalegh.com/services",
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": service.shortTitle,
-            "item": `https://www.deevalegh.com/services/${service.slug}`,
+            "item": `https://deevalegh.com/services/${service.slug}`,
           },
         ],
       },
@@ -123,7 +123,7 @@ export default function ServiceDetailPage() {
       <SEO
         title={service.metaTitle}
         description={service.metaDescription}
-        canonicalUrl={`https://www.deevalegh.com/services/${service.slug}`}
+        canonicalUrl={`https://deevalegh.com/services/${service.slug}`}
         keywords={service.keywords}
         jsonLd={jsonLdData}
       />

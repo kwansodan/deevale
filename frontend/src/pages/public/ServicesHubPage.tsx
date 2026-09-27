@@ -23,13 +23,13 @@ export default function ServicesHubPage() {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Ghana Business Registration & Statutory Secretarial Services",
-    "url": "https://www.deevalegh.com/services",
+    "url": "https://deevalegh.com/services",
     "description":
       "Official statutory business formation and corporate compliance services in Ghana. Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Setup, GRA Tax TIN, and SSNIT filing.",
     "hasPart": SERVICES.map((s) => ({
       "@type": "Service",
       "name": s.title,
-      "url": `https://www.deevalegh.com/services/${s.slug}`,
+      "url": `https://deevalegh.com/services/${s.slug}`,
       "description": s.metaDescription,
     })),
   }
@@ -39,7 +39,7 @@ export default function ServicesHubPage() {
       <SEO
         title="Business Registration & Statutory Services in Ghana | Deevale GH"
         description="Comprehensive statutory services in Ghana: Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Registration, GRA Tax, SSNIT, and Business Operating Permits."
-        canonicalUrl="https://www.deevalegh.com/services"
+        canonicalUrl="https://deevalegh.com/services"
         keywords="ghana business services, register company in ghana, orc company formation, gipc registration, gra corporate tin, ssnit employer registration, business permit accra"
         jsonLd={jsonLdData}
       />

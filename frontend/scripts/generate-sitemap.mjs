@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(__dirname, '..')
 
-const BASE_URL = 'https://www.deevalegh.com'
+const BASE_URL = 'https://deevalegh.com'
 const today = new Date().toISOString().slice(0, 10)
 
 // Extract guide slugs from src/data/guidesData.ts
