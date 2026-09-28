@@ -89,7 +89,7 @@ export function LeadCaptureSection() {
   const selectedServiceLabel =
     SERVICES_OPTIONS.find((s) => s.value === service)?.label || "Accounting & Tax Services"
 
-  const waNumber = company.whatsapp || "233596044738"
+  const waNumber = company.whatsapp || "233249733286"
   const waMessage = `Hi Deevale GH, I just submitted an inquiry on deevalegh.com:
 - Name: ${fullName}
 - Phone/WhatsApp: ${phone}

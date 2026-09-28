@@ -26,7 +26,7 @@ export function WhatsAppFab() {
   const rawNumber =
     company.whatsapp?.trim() ||
     (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined)?.trim() ||
-    "233596044738"
+    "233249733286"
 
   const cleanNumber = rawNumber.replace(/[^0-9]/g, "")
   if (!cleanNumber) return null
