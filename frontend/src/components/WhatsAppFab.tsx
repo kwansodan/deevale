@@ -2,8 +2,7 @@ import { useLocation } from "react-router-dom"
 
 import { useLandingConfig } from "@/config/landing"
 
-/** WhatsApp brand glyph (white, single path). lucide dropped brand icons, so the
- *  logo is inlined here. */
+/** WhatsApp brand glyph (white, single path). */
 function WhatsAppGlyph() {
   return (
     <svg viewBox="0 0 32 32" className="size-7" fill="currentColor" aria-hidden="true">
@@ -13,22 +12,27 @@ function WhatsAppGlyph() {
 }
 
 /**
- * Floating "chat on WhatsApp" button, shown on every customer-facing page
- * (landing, auth, and the /app client area) but never in the /ops staff console.
- *
- * The number is admin-managed (company.whatsapp in landing settings). If it is
- * unset the button renders nothing -- same honesty rule as the rest of the site,
- * no dead link.
+ * Floating "Chat on WhatsApp" button, positioned directly above the Chatwoot widget
+ * on all public pages (landing, services, guides, calculator, auth, etc.).
  */
 export function WhatsAppFab() {
   const { pathname } = useLocation()
   const { company } = useLandingConfig()
 
+  // Do not show in the internal ops staff console
   if (pathname.startsWith("/ops")) return null
-  if (!company.whatsapp) return null
 
-  const href = `https://wa.me/${company.whatsapp}?text=${encodeURIComponent(
-    "Hi Deevale GH, I'd like some help."
+  // Reliable WhatsApp number with safe fallback
+  const rawNumber =
+    company.whatsapp?.trim() ||
+    (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined)?.trim() ||
+    "233596044738"
+
+  const cleanNumber = rawNumber.replace(/[^0-9]/g, "")
+  if (!cleanNumber) return null
+
+  const href = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(
+    "Hi Deevale GH, I would like some assistance."
   )}`
 
   return (
@@ -38,9 +42,18 @@ export function WhatsAppFab() {
       rel="noreferrer noopener"
       aria-label="Chat with us on WhatsApp"
       title="Chat with us on WhatsApp"
-      className="fixed right-5 bottom-5 z-40 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-card-lg transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:outline-none motion-reduce:transition-none"
+      className="fixed right-5 bottom-[88px] z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-[#20ba5a] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:outline-none group motion-reduce:transition-none"
     >
       <WhatsAppGlyph />
+      {/* Presence indicator dot */}
+      <span className="absolute top-1 right-1 flex size-3">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+        <span className="relative inline-flex size-3 rounded-full bg-emerald-300"></span>
+      </span>
+      {/* Desktop hover tooltip */}
+      <span className="pointer-events-none absolute right-16 hidden rounded-md bg-gray-900 px-2.5 py-1 text-xs font-medium text-white opacity-0 shadow-md transition-opacity duration-150 group-hover:opacity-100 sm:inline-block whitespace-nowrap">
+        Chat on WhatsApp
+      </span>
     </a>
   )
 }
