@@ -24,7 +24,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Wordmark } from "@/components/Wordmark"
 import { StageTracker } from "@/components/landing/StageTracker"
-import { CertificateMark } from "@/components/landing/CertificateMark"
 import { StatCounter } from "@/components/landing/StatCounter"
 import { LogoStrip } from "@/components/landing/LogoStrip"
 import { Testimonials } from "@/components/landing/Testimonials"
@@ -35,6 +34,7 @@ import { useInView } from "@/hooks/useInView"
 import { cn } from "@/lib/utils"
 import { figures, useLandingConfig } from "@/config/landing"
 import { SEO } from "@/components/SEO"
+import { LeadCaptureSection } from "@/components/landing/LeadCaptureSection"
 
 // Deliberately not translated. tw.json is still a machine draft
 // (_meta.reviewed:false); unreviewed Twi on the page whose whole job is
@@ -247,6 +247,12 @@ export default function LandingPage() {
               Statutory Guides
             </Link>
             <Button render={<Link to="/login">Log in</Link>} nativeButton={false} variant="ghost" size="sm" />
+            <Button
+              render={<a href="#get-started-form">Free Quote</a>}
+              nativeButton={false}
+              size="sm"
+              className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold hidden sm:inline-flex"
+            />
             <Button render={<Link to="/signup">Get started</Link>} nativeButton={false} size="sm" />
           </nav>
         </div>
@@ -307,15 +313,16 @@ export default function LandingPage() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button
                 render={
-                  <Link to="/signup">
-                    Start Business Registration <ArrowRight />
-                  </Link>
+                  <a href="#get-started-form">
+                    Claim Free Assessment &amp; Quote <ArrowRight />
+                  </a>
                 }
                 nativeButton={false}
                 size="lg"
+                className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold shadow-sm"
               />
               <Button
                 render={
@@ -325,6 +332,16 @@ export default function LandingPage() {
                 }
                 nativeButton={false}
                 variant="outline"
+                size="lg"
+              />
+              <Button
+                render={
+                  <Link to="/signup">
+                    Start Business Registration
+                  </Link>
+                }
+                nativeButton={false}
+                variant="ghost"
                 size="lg"
               />
             </div>
@@ -697,46 +714,8 @@ export default function LandingPage() {
         <Faq />
       </Section>
 
-      {/* Closing CTA: a full-bleed slate-green band with the certificate motif
-          as a watermark -- the emotional high point, and previously the emptiest
-          screen on the page. */}
-      <section className="ink-gradient text-primary-foreground relative overflow-hidden px-4 py-20 md:py-28">
-        <CertificateMark
-          className="pointer-events-none absolute -right-10 -bottom-12 h-72 w-auto opacity-10 md:opacity-15"
-        />
-        <div className="relative mx-auto max-w-2xl text-center">
-          <p className="text-accent-400 mb-2 text-sm font-semibold tracking-wide uppercase">Get started</p>
-          <h2 className="text-3xl font-bold tracking-tight md:text-5xl">Ready to register?</h2>
-          <p className="text-primary-foreground/85 mx-auto mt-4 max-w-xl text-lg">
-            Most registrations start the same day we receive your documents.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button
-              render={
-                <Link to="/signup">
-                  Create your account <ArrowRight />
-                </Link>
-              }
-              nativeButton={false}
-              size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent-300"
-            />
-            {company.whatsapp && (
-              <Button
-                render={<a href={`https://wa.me/${company.whatsapp}`}>Chat on WhatsApp</a>}
-                nativeButton={false}
-                size="lg"
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 border bg-transparent"
-              />
-            )}
-          </div>
-          {rating.score && (
-            <div className="mt-6 flex justify-center">
-              <RatingInline rating={rating} tone="dark" />
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Lead Capture & Free Consultation Section */}
+      <LeadCaptureSection />
 
       <footer className="border-border text-muted-foreground border-t px-4 py-12 text-sm">
         <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-5">
