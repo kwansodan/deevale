@@ -10,6 +10,7 @@ import {
   Globe2,
   Info,
   MapPin,
+  Receipt,
   ShieldCheck,
 } from "lucide-react"
 
@@ -88,6 +89,7 @@ export default function FeeCalculatorPage() {
   const [isForeign, setIsForeign] = useState(false)
   const [includeAddress, setIncludeAddress] = useState(false)
   const [includeCompliance, setIncludeCompliance] = useState(false)
+  const [includeBookkeeping, setIncludeBookkeeping] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
 
   const { currency, setCurrency, convert } = useCurrency()
@@ -103,11 +105,15 @@ export default function FeeCalculatorPage() {
   // Calculate pricing with add-ons
   const addressCostMinor = 250000 // GHS 2,500/year (250000 pesewas)
   const complianceCostMinor = compliance.annualPrice ? compliance.annualPrice * 100 : 99900
+  const bookkeepingCostMinor = 240000 // GHS 2,400 for first 3 months bundle (Service 4 Limited)
 
   const baseGovMinor = quotePreview?.subtotal_government_minor ?? (isForeign ? 1229500 : selectedEntity.governmentBaseMinor)
   const baseServiceMinor = quotePreview?.subtotal_service_minor ?? selectedEntity.serviceBaseMinor
 
-  const totalAddonsMinor = (includeAddress ? addressCostMinor : 0) + (includeCompliance ? complianceCostMinor : 0)
+  const totalAddonsMinor =
+    (includeAddress ? addressCostMinor : 0) +
+    (includeCompliance ? complianceCostMinor : 0) +
+    (includeBookkeeping ? bookkeepingCostMinor : 0)
   const grandTotalMinor = baseGovMinor + baseServiceMinor + totalAddonsMinor
 
   const formatMinor = (minor: number) => {
@@ -136,6 +142,11 @@ export default function FeeCalculatorPage() {
         question: "What is included in the Registered Office Address add-on?",
         answer:
           "The add-on provides an official commercial registered office address at Atlantic Tower, Airport City, Accra, complete with GhanaPost GPS digital address, mail receipt, and mail scanning in our virtual mailroom.",
+      },
+      {
+        question: "Can I bundle business registration with bookkeeping and monthly tax filing?",
+        answer:
+          "Yes. Selecting the 1st Quarter Bookkeeping & Tax Bundle adds 3 months of full-service financial management by Service 4 Limited at a 25% discount. This covers your initial chart of accounts, bank reconciliations, employee payroll, and mandatory monthly GRA VAT/WHT filings.",
       },
     ],
     []
@@ -373,6 +384,32 @@ export default function FeeCalculatorPage() {
                   </div>
                   <span className="text-sm font-semibold">{formatMinor(complianceCostMinor)}/yr</span>
                 </label>
+
+                <label
+                  className={cn(
+                    "border-border hover:border-primary/50 flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all",
+                    includeBookkeeping && "border-primary bg-primary/5"
+                  )}
+                >
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={includeBookkeeping}
+                      onChange={(e) => setIncludeBookkeeping(e.target.checked)}
+                      className="accent-primary mt-1 size-4 rounded"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold">1st Quarter Bookkeeping &amp; Tax Bundle (Service 4 Ltd)</span>
+                        <Badge variant="secondary" className="text-[10px] bg-accent/20 text-accent-700">Recommended</Badge>
+                      </div>
+                      <p className="text-muted-foreground text-xs">
+                        3 months of full bookkeeping, bank reconciliation, staff payroll (PAYE/SSNIT), and monthly GRA VAT/WHT filing.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold">{formatMinor(bookkeepingCostMinor)}/3mo</span>
+                </label>
               </div>
             </div>
           </div>
@@ -438,6 +475,15 @@ export default function FeeCalculatorPage() {
                           <Check className="text-muted-foreground size-3.5" /> Annual Compliance Retainer
                         </span>
                         <span className="font-medium">{formatMinor(complianceCostMinor)}</span>
+                      </div>
+                    )}
+
+                    {includeBookkeeping && (
+                      <div className="flex justify-between text-primary">
+                        <span className="flex items-center gap-1.5">
+                          <Receipt className="size-3.5" /> 1st Qtr Bookkeeping &amp; Tax (Service 4)
+                        </span>
+                        <span className="font-medium">{formatMinor(bookkeepingCostMinor)}</span>
                       </div>
                     )}
                   </div>

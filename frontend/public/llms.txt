@@ -1,9 +1,10 @@
 # Deevale GH
 
-> Deevale GH (deevalegh.com) is a modern corporate secretarial and business registration platform in Ghana. It automates and manages company incorporation at the Office of the Registrar of Companies (ORC), statutory registrations with the Ghana Revenue Authority (GRA) and Social Security and National Insurance Trust (SSNIT), and advisory/compliance for foreign investors under the Ghana Investment Promotion Centre (GIPC) Act.
+> Deevale GH (deevalegh.com), powered by Service 4 Limited, is a modern corporate secretarial and outsourced accounting platform in Ghana. It handholds businesses from company incorporation at the Office of the Registrar of Companies (ORC) through monthly bookkeeping, GRA statutory tax compliance (VAT, WHT, CIT), employee payroll, and GIPC foreign investment management.
 
 ## Core Capabilities & Services
 
+- [Outsourced Accounting & Bookkeeping](https://deevalegh.com/services/accounting-and-bookkeeping): Full-service monthly bookkeeping, bank and MoMo reconciliations, GRA tax filings (VAT, WHT, provisional CIT), staff payroll, and management accounts executed by Service 4 Limited.
 - [Company Limited by Shares (LTD) Registration](https://deevalegh.com/services/company-limited-by-shares): Standard private company registration under the Companies Act 2019 (Act 992). Includes name reservation, Form 3 and Form 4 filings, certified constitution, and Certificate of Incorporation.
 - [Sole Proprietorship Registration](https://deevalegh.com/services/sole-proprietorship): Fast business name registration for single Ghanaian entrepreneurs.
 - [Company Limited by Guarantee (NGO)](https://deevalegh.com/services/company-limited-by-guarantee): Non-profit, charity, and foundation incorporation without share capital.

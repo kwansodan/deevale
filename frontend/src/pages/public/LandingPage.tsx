@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import {
   ArrowRight,
   Building2,
+  Calculator,
   Check,
   CheckCircle2,
   FileSignature,
@@ -10,8 +11,11 @@ import {
   Mail,
   MapPin,
   Phone,
+  Receipt,
   ShieldCheck,
   Star,
+  TrendingUp,
+  Wallet,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -219,6 +223,12 @@ export default function LandingPage() {
           <Wordmark size="md" />
           <nav className="flex items-center gap-2 sm:gap-3">
             <Link
+              to="/services/accounting-and-bookkeeping"
+              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
+            >
+              Accounting &amp; Tax
+            </Link>
+            <Link
               to="/services"
               className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
             >
@@ -251,13 +261,16 @@ export default function LandingPage() {
 
         <div className="relative mx-auto grid max-w-5xl items-center gap-12 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
           <div>
+            <Badge variant="outline" className="border-accent/40 bg-accent/10 text-accent-700 mb-4 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold">
+              <ShieldCheck className="size-3.5" /> Powered by Service 4 Limited • Corporate Secretarial &amp; Accounting
+            </Badge>
+
             <h1 className="text-4xl font-bold tracking-tight text-balance md:text-6xl">
-              Register your business in Ghana,{" "}
-              <span className="highlight-accent">without the guesswork.</span>
+              Form your company. Balance your books.{" "}
+              <span className="highlight-accent">Stay 100% compliant in Ghana.</span>
             </h1>
-            <p className="text-muted-foreground mt-5 max-w-2xl text-lg">
-              Incorporation, tax and SSNIT registration, and the filings that keep you compliant
-              afterwards.
+            <p className="text-muted-foreground mt-5 max-w-2xl text-lg leading-relaxed">
+              Deevale (powered by Service 4 Limited) is the all-in-one corporate and financial back office for founders. We incorporate your entity at the ORC, set up your GRA tax and SSNIT accounts, and continue as your outsourced monthly bookkeeping, tax, and payroll team.
             </p>
 
             <div className="mt-8">
@@ -278,12 +291,11 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Chips rather than a paragraph: this restated the subhead, and a
-                skimmer met three blocks of prose before reaching the CTA. */}
+            {/* Chips rather than a paragraph */}
             <ul className="mt-6 flex flex-wrap gap-2">
               {(isForeign
-                ? ["No travel required", "GIPC handled", "Ghanaian office address"]
-                : ["Fixed, itemised pricing", "Government fees at cost", "Every stage tracked"]
+                ? ["No travel required", "GIPC handled", "Chartered accounting", "Ghanaian office address"]
+                : ["ORC business registration", "Monthly bookkeeping", "GRA VAT/WHT filing", "Payroll & SSNIT"]
               ).map((chip) => (
                 <li
                   key={chip}
@@ -299,13 +311,22 @@ export default function LandingPage() {
               <Button
                 render={
                   <Link to="/signup">
-                    Start your registration <ArrowRight />
+                    Start Business Registration <ArrowRight />
                   </Link>
                 }
                 nativeButton={false}
                 size="lg"
               />
-              <Button render={<a href="#pricing">See pricing</a>} nativeButton={false} variant="outline" size="lg" />
+              <Button
+                render={
+                  <Link to="/services/accounting-and-bookkeeping">
+                    Outsourced Accounting &amp; Tax &rarr;
+                  </Link>
+                }
+                nativeButton={false}
+                variant="outline"
+                size="lg"
+              />
             </div>
 
             {rating.score && (
@@ -356,6 +377,115 @@ export default function LandingPage() {
           </div>
         </div>
       )}
+
+      {/* The Post-Incorporation Trap vs Complete Lifecycle */}
+      <Section
+        eyebrow="The Complete Lifecycle"
+        title="Registration is Day 0. What keeps you alive is what happens next."
+        surface="default"
+      >
+        <p className="text-muted-foreground -mt-4 mb-10 max-w-3xl text-base leading-relaxed">
+          Most founders assume obtaining an ORC certificate is the finish line. In reality, that is when statutory obligations begin.
+          The Ghana Revenue Authority and SSNIT expect monthly filings regardless of whether you have traded. Deevale, powered by
+          Service 4 Limited, bridges the gap between company registration and ongoing financial operations.
+        </p>
+
+        <div className="grid gap-6 md:grid-cols-4">
+          {[
+            {
+              step: "01",
+              title: "ORC Incorporation",
+              timeline: "Days 1 to 7",
+              body: "Name reservation, Form 3 and Form 4 filings, certified corporate constitution, and official Certificate of Incorporation.",
+            },
+            {
+              step: "02",
+              title: "Tax & Bank Setup",
+              timeline: "Days 8 to 14",
+              body: "GRA Corporate TIN activation, SSNIT employer onboarding, registered address setup, and bank account introduction.",
+            },
+            {
+              step: "03",
+              title: "Monthly Bookkeeping",
+              timeline: "Day 30 onwards",
+              body: "Reconciling bank accounts, MoMo merchant wallets, and expense receipts into clean, audit-ready cloud ledgers.",
+            },
+            {
+              step: "04",
+              title: "Taxes, Payroll & Reports",
+              timeline: "Every Month",
+              body: "Filing monthly GRA VAT/WHT, remitting SSNIT Tier 1 & 2 pensions, and delivering executive P&L and Balance Sheets.",
+            },
+          ].map((item) => (
+            <Card key={item.step} className="border-border shadow-card hover-lift rounded-2xl relative overflow-hidden">
+              <span className="bg-primary/20 absolute inset-x-0 top-0 h-1" aria-hidden />
+              <CardHeader className="pb-2">
+                <span className="text-primary font-mono text-xs font-bold uppercase tracking-wider">{item.step} • {item.timeline}</span>
+                <CardTitle className="text-base font-semibold">{item.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-xs leading-relaxed">{item.body}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      {/* Dedicated Accounting & Bookkeeping Section */}
+      <Section
+        id="accounting"
+        eyebrow="Chartered Accounting & Taxes"
+        title="Your dedicated outsourced finance team in Ghana"
+        surface="tinted"
+      >
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 -mt-4 mb-8">
+          <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
+            All accounting and compliance operations are executed directly by <strong>Service 4 Limited</strong>, a professional corporate
+            accounting practice in Accra. Gain the capabilities of a full finance department without hiring in-house staff.
+          </p>
+          <Link
+            to="/services/accounting-and-bookkeeping"
+            className="text-primary font-semibold text-sm hover:underline shrink-0 inline-flex items-center gap-1"
+          >
+            Full Accounting Details <ArrowRight className="size-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              icon: Receipt,
+              title: "Monthly Bookkeeping",
+              desc: "Complete reconciliation of local GHS accounts, foreign currency (USD/GBP/EUR) accounts, and Mobile Money merchant wallets.",
+            },
+            {
+              icon: Calculator,
+              title: "Statutory GRA Taxes",
+              desc: "Timely monthly filing of Withholding Tax (WHT), VAT/NHIL/GETFund returns, and quarterly provisional CIT assessments.",
+            },
+            {
+              icon: Wallet,
+              title: "Payroll & SSNIT (Act 766)",
+              desc: "Staff payroll calculation, electronic pay slips, PAYE tax deductions, and mandatory Tier 1 & Tier 2 pension remittances.",
+            },
+            {
+              icon: TrendingUp,
+              title: "Management Accounts",
+              desc: "Monthly Profit & Loss statements, balance sheets, cash flow tracking, and annual statutory return preparation.",
+            },
+          ].map(({ icon: Icon, title, desc }) => (
+            <Card key={title} className="border-border shadow-card hover-lift rounded-2xl bg-card">
+              <CardContent className="pt-6">
+                <div className="border-border bg-secondary text-primary flex size-10 items-center justify-center rounded-xl border mb-4">
+                  <Icon className="size-5" />
+                </div>
+                <h3 className="font-semibold text-base mb-1.5">{title}</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">{desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </Section>
 
       {/* Foreign path only. Remoteness is the overseas buyer's make-or-break
           question and barely registers for someone already in Accra, so it
@@ -625,6 +755,9 @@ export default function LandingPage() {
             <Link to="/services" className="hover:underline">
               All Services
             </Link>
+            <Link to="/services/accounting-and-bookkeeping" className="hover:underline font-medium text-foreground">
+              Accounting &amp; Tax
+            </Link>
             <Link to="/services/company-limited-by-shares" className="hover:underline">
               Company (LTD)
             </Link>
@@ -705,9 +838,8 @@ export default function LandingPage() {
           </nav>
         </div>
         <div className="mx-auto mt-8 max-w-5xl">
-          <p className="text-xs">
-            Deevale GH is a business registration and compliance service. We are not a law firm and
-            do not provide legal advice.
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Deevale GH is a corporate secretarial and accounting technology platform powered by Service 4 Limited. We provide business formation, chartered bookkeeping, GRA tax compliance, and payroll management in Accra, Ghana. We are not a law firm and do not provide legal advocacy.
           </p>
         </div>
       </footer>

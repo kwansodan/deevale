@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 
 export default function ServicesHubPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All")
-  const categories = ["All", "Entity Incorporation", "Regulatory & Compliance"]
+  const categories = ["All", "Entity Incorporation", "Regulatory & Compliance", "Accounting & Tax"]
 
   const filteredServices =
     selectedCategory === "All"
@@ -22,10 +22,10 @@ export default function ServicesHubPage() {
   const jsonLdData = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Ghana Business Registration & Statutory Secretarial Services",
+    "name": "Ghana Business Registration, Accounting & Statutory Services",
     "url": "https://deevalegh.com/services",
     "description":
-      "Official statutory business formation and corporate compliance services in Ghana. Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Setup, GRA Tax TIN, and SSNIT filing.",
+      "Official statutory business formation, outsourced accounting, and corporate compliance services in Ghana by Service 4 Limited. Company Limited by Shares, Bookkeeping, GRA Tax, and SSNIT filing.",
     "hasPart": SERVICES.map((s) => ({
       "@type": "Service",
       "name": s.title,
@@ -37,10 +37,10 @@ export default function ServicesHubPage() {
   return (
     <div className="bg-background min-h-svh text-foreground">
       <SEO
-        title="Business Registration & Statutory Services in Ghana | Deevale GH"
-        description="Comprehensive statutory services in Ghana: Company Limited by Shares, Sole Proprietorship, GIPC Foreign Investor Registration, GRA Tax, SSNIT, and Business Operating Permits."
+        title="Business Registration & Accounting Services in Ghana | Deevale GH"
+        description="Comprehensive business formation and outsourced accounting in Ghana: Company Limited by Shares, Bookkeeping, GRA Tax, VAT, SSNIT, and GIPC setup powered by Service 4 Limited."
         canonicalUrl="https://deevalegh.com/services"
-        keywords="ghana business services, register company in ghana, orc company formation, gipc registration, gra corporate tin, ssnit employer registration, business permit accra"
+        keywords="ghana business services, accounting services ghana, register company in ghana, orc company formation, bookkeeping accra, gra corporate tin, ssnit employer registration"
         jsonLd={jsonLdData}
       />
 

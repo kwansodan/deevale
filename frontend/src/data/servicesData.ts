@@ -17,7 +17,7 @@ export interface ServiceTable {
 
 export interface ServiceItem {
   slug: string
-  category: "Entity Incorporation" | "Regulatory & Compliance"
+  category: "Entity Incorporation" | "Regulatory & Compliance" | "Accounting & Tax"
   title: string
   shortTitle: string
   heroBadge: string
@@ -646,6 +646,101 @@ export const SERVICES: ServiceItem[] = [
         question: "When does a Business Operating Permit expire?",
         answer:
           "BOPs expire annually on December 31st, regardless of when issued during the year. Renewal bills are typically distributed and settled between January and March.",
+      },
+    ],
+  },
+  {
+    slug: "accounting-and-bookkeeping",
+    category: "Accounting & Tax",
+    title: "Outsourced Bookkeeping, Accounting & GRA Tax Services in Ghana",
+    shortTitle: "Accounting & Bookkeeping",
+    heroBadge: "Service 4 Limited • Chartered Accounting • Monthly Tax Filings",
+    metaTitle: "Accounting & Bookkeeping Services Ghana | GRA Tax, VAT & Payroll - Deevale GH",
+    metaDescription:
+      "Full-service outsourced bookkeeping, monthly GRA tax returns (VAT, WHT), payroll management (PAYE, SSNIT), and financial statements powered by Service 4 Limited.",
+    keywords:
+      "accounting services ghana, bookkeeping services accra, outsourced accountant ghana, gra tax filing service, monthly payroll ghana, small business accounting accra, service 4 limited",
+    snippet:
+      "Deevale, powered by Service 4 Limited, acts as your full outsourced back-office finance department in Ghana. We manage monthly bookkeeping, bank and MoMo reconciliations, GRA tax filings (VAT, WHT, CIT), employee payroll, and audit-ready management accounts.",
+    agency: "Ghana Revenue Authority (GRA) & ICAG",
+    statutoryAct: "Income Tax Act 2015 (Act 896) & Revenue Administration Act 2016 (Act 915)",
+    timeline: "Ongoing Monthly Retainer",
+    indicativeFeeMinor: 150000,
+    entityCode: "accounting_compliance",
+    deliverables: [
+      "Monthly bank, cash, and Mobile Money (MoMo) account reconciliation",
+      "Monthly GRA tax filings (VAT, NHIL, GETFund, COVID Levy, Withholding Tax)",
+      "Employee payroll processing, electronic pay slips, and PAYE tax submissions",
+      "SSNIT Tier 1 & Tier 2 employee pension calculations, schedules, and remittances",
+      "Monthly Profit & Loss (P&L), Balance Sheet, and Cash Flow statements",
+      "Annual Corporate Income Tax (CIT) return preparation and GRA provisional filing",
+      "Dedicated qualified accountant and direct WhatsApp finance hotline",
+    ],
+    whoNeedsThis: [
+      "Newly incorporated Ghanaian businesses needing proper financial setup from Day 1",
+      "Diaspora and foreign investors running companies remotely without in-house accountants",
+      "SMEs wanting to avoid GRA tax penalties, interest charges, and audit scrutiny",
+      "Fast-growing startups requiring investor-ready management reports and cash flow tracking",
+    ],
+    requirements: [
+      "Company Registration Certificate (ORC) and corporate TIN",
+      "Bank statements (GHS and foreign currency accounts) or read-only bank feeds",
+      "Sales invoices, receipts, and expense documentation (electronic or physical)",
+      "Staff payroll details (gross salaries, Ghana Card numbers, SSNIT numbers)",
+    ],
+    steps: [
+      {
+        name: "Financial Onboarding & Chart of Accounts",
+        description: "Set up a clean cloud ledger tailored to your industry and Ghanaian statutory reporting requirements.",
+        duration: "3-5 Days",
+      },
+      {
+        name: "Monthly Ingestion & Reconciliation",
+        description: "Import bank statements, Mobile Money records, sales invoices, and supplier receipts to balance every transaction.",
+        duration: "Monthly",
+      },
+      {
+        name: "Statutory Tax & Payroll Submissions",
+        description: "Calculate PAYE, submit SSNIT Tier 1 & 2 schedules, and file GRA VAT/WHT returns before monthly deadlines.",
+        duration: "By 14th/15th Monthly",
+      },
+      {
+        name: "Management Accounts & Advisory",
+        description: "Deliver monthly P&L, balance sheets, and cash flow reports with actionable tax and liquidity guidance.",
+        duration: "Monthly",
+      },
+    ],
+    table: {
+      caption: "Ghana Mandatory Monthly Statutory Filing Deadlines",
+      headers: ["Statutory Obligation", "Statutory Due Date", "Governing Agency", "Default Penalty"],
+      rows: [
+        ["GRA Withholding Tax (WHT)", "15th of following month", "Ghana Revenue Authority (GRA)", "Interest + statutory late penalties"],
+        ["SSNIT Tier 1 Contribution", "14th of following month", "SSNIT", "3% compound penalty per month"],
+        ["Tier 2 Private Pension", "14th of following month", "Licensed Pension Custodian", "Statutory interest surcharges"],
+        ["GRA VAT, NHIL, GETFund", "Last working day of month", "Ghana Revenue Authority (GRA)", "GHS 500 + 5% per month of tax due"],
+        ["Quarterly Provisional CIT", "End of each financial quarter", "Ghana Revenue Authority (GRA)", "30% penalty on unpaid assessment"],
+      ],
+    },
+    faqs: [
+      {
+        question: "Why should a newly registered company hire an outsourced accountant immediately?",
+        answer:
+          "In Ghana, statutory compliance begins the moment your ORC certificate is issued. The Ghana Revenue Authority expects provisional tax filings, and SSNIT requires employer onboarding even before your first commercial sale. Operating with a clean chart of accounts from Day 1 avoids retroactive bookkeeping fees and audit penalties.",
+      },
+      {
+        question: "Who performs the accounting work?",
+        answer:
+          "All accounting, bookkeeping, and tax preparation services are executed directly by Service 4 Limited, a licensed Ghanaian corporate finance and accounting firm adhering to the Institute of Chartered Accountants Ghana (ICAG) and International Financial Reporting Standards (IFRS).",
+      },
+      {
+        question: "Can I bundle company registration with accounting services?",
+        answer:
+          "Yes. Our Launch & Comply bundles combine ORC incorporation with 3 to 12 months of complete bookkeeping, payroll, and GRA tax filings at discounted retainer rates.",
+      },
+      {
+        question: "How do you handle Mobile Money (MoMo) and foreign currency accounts?",
+        answer:
+          "We specialize in multi-channel Ghanaian commerce. We reconcile MTN/Telecel/AT merchant wallets, local GHS checking accounts, and USD/EUR/GBP foreign exchange accounts with full exchange gain/loss tracking.",
       },
     ],
   },

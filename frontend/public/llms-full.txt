@@ -8,11 +8,11 @@
 
 ## 1. Company Overview
 
-Deevale GH is a specialized legal technology and corporate secretarial platform based in Accra, Ghana. It assists Ghanaian citizens, diaspora founders, and international investors to incorporate, structure, and maintain legal entities in Ghana. The platform interfaces directly with:
+Deevale GH, powered by Service 4 Limited, is a specialized corporate secretarial, legal technology, and outsourced accounting platform based in Accra, Ghana. It assists Ghanaian citizens, diaspora founders, and international investors to incorporate, structure, and financially maintain legal entities in Ghana from inception through monthly bookkeeping and annual tax filings. The platform interfaces directly with:
 1. Office of the Registrar of Companies (ORC) - formerly Registrar General's Department (RGD)
-2. Ghana Investment Promotion Centre (GIPC)
-3. Ghana Revenue Authority (GRA)
-4. Social Security and National Insurance Trust (SSNIT)
+2. Ghana Revenue Authority (GRA) - for monthly VAT, Withholding Tax (WHT), and Corporate Income Tax (CIT)
+3. Social Security and National Insurance Trust (SSNIT) - for Tier 1 & Tier 2 employee pensions
+4. Ghana Investment Promotion Centre (GIPC) - for foreign direct investment capital and expatriate quotas
 5. Metropolitan, Municipal, and District Assemblies (MMDAs, e.g., Accra Metropolitan Assembly - AMA)
 
 ---
