@@ -60,6 +60,11 @@ services:
       # bytes, not the console. Turning the redirect off makes files.deevalegh.com
       # return the object.
       MINIO_BROWSER_REDIRECT: "false"
+    networks:
+      default:
+      proxy:
+        aliases:
+          - deevalegh-minio
     volumes:
       - minio_data:/data
 
@@ -82,12 +87,17 @@ services:
     restart: unless-stopped
     env_file: .env
     # Published on loopback only, for host-side debugging (curl
-    # 127.0.0.1:8000/health). Public traffic arrives through the caddy service,
-    # which reaches this container as api:8000 over the compose network.
+    # 127.0.0.1:8000/health). Public traffic arrives through the central
+    # caddy-proxy service on the external `proxy` network as deevalegh-api:8000.
     ports:
       - "127.0.0.1:8000:8000"
     environment:
       <<: *app-env
+    networks:
+      default:
+      proxy:
+        aliases:
+          - deevalegh-api
     depends_on:
       postgres:
         condition: service_healthy
@@ -122,43 +132,15 @@ services:
       migrate:
         condition: service_completed_successfully
 
-  # TLS-terminating reverse proxy for the API. Provisions and renews a Let's
-  # Encrypt certificate for API_DOMAIN automatically and forwards to the api
-  # service; WebSocket upgrades (/socket.io/) pass through with no extra config.
-  #
-  # No depends_on: Caddy is independent infrastructure. It comes up, obtains its
-  # cert (which needs only port 80 + DNS, not the app), and returns 502 until
-  # api is reachable -- so a broken app never blocks the proxy or its cert.
-  #
-  # caddy_data MUST persist: it holds the certificates. Without it every deploy
-  # re-requests them and quickly trips Let's Encrypt rate limits.
-  caddy:
-    # Built from Dockerfile.caddy so the two-domain Caddyfile (api + files) is
-    # baked into the image -- a bind mount has no source in Komodo's managed run
-    # directory. Automatic HTTPS for both domains; certs persist in caddy_data.
-    build:
-      context: .
-      dockerfile: Dockerfile.caddy
-    restart: unless-stopped
-    environment:
-      API_DOMAIN: ${API_DOMAIN:?set in .env, e.g. api.deevalegh.com}
-      FILES_DOMAIN: ${FILES_DOMAIN:?set in .env, e.g. files.deevalegh.com}
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-
-  # NOTE: there is deliberately no `web` service here. The SPA is deployed to
-  # Vercel and talks to this stack cross-origin at api.deevalegh.com, so the
-  # nginx container that used to serve the bundle and proxy /api is redundant.
-  # frontend/Dockerfile + frontend/nginx.conf are kept for the all-in-one
-  # fallback (see DEPLOY.md) but are not built by this compose file.
+  # NOTE: Ingress TLS is managed by the host's central `caddy-proxy` stack on
+  # the external `proxy` network, routing to `deevalegh-api:8000` and
+  # `deevalegh-minio:9000`.
 
 volumes:
   pgdata:
   minio_data:
-  caddy_data:
-  caddy_config:
+
+networks:
+  default:
+  proxy:
+    external: true
