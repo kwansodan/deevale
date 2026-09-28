@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Simplified from deevalegh-icon.svg: the dot below the mark closes up and
-       muddies the shape at 16px, so the favicon carries the triangle alone. -->
-  <rect width="512" height="512" rx="72" fill="#45474B"/>
-  <path d="M256 128 L408 368 H104 Z" fill="#F4CE14"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#2D3E38"/>
+  <!-- D Monogram in Pure White -->
+  <path d="M18 15 H32 C41.941 15 50 23.059 50 32 C50 40.941 41.941 49 32 49 H18 V15 Z" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Upward Financial Growth Trajectory in Gold -->
+  <path d="M25 39 L40 24" fill="none" stroke="#F4CE14" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M31 24 H40 V33" fill="none" stroke="#F4CE14" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
