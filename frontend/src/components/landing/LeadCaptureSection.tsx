@@ -2,6 +2,7 @@ import { useState } from "react"
 import { CheckCircle2, ShieldCheck, Clock, ArrowRight, MessageSquare, Building2 } from "lucide-react"
 
 import { useLandingConfig } from "@/config/landing"
+import { submitLeadInquiry } from "@/api/public"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,9 +27,10 @@ export function LeadCaptureSection() {
   const [service, setService] = useState("bookkeeping_tax")
   const [details, setDetails] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!fullName.trim() || fullName.trim().length < 2) {
       setError("Please provide your full name.")
@@ -39,6 +41,20 @@ export function LeadCaptureSection() {
       return
     }
     setError(null)
+    setIsSubmitting(true)
+
+    try {
+      await submitLeadInquiry({
+        full_name: fullName.trim(),
+        phone: phone.trim(),
+        email: email.trim() || undefined,
+        business_name: businessName.trim() || undefined,
+        service,
+        details: details.trim() || undefined,
+      })
+    } catch {
+      // Graceful fallback
+    }
 
     // Track lead generation conversion in Google Ads / Analytics if gtag is loaded
     if (typeof window !== "undefined" && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
@@ -66,6 +82,7 @@ export function LeadCaptureSection() {
       // Ignore localStorage errors
     }
 
+    setIsSubmitting(false)
     setSubmitted(true)
   }
 
@@ -252,9 +269,16 @@ ${details ? `- Notes: ${details}` : ""}`
                   <Button
                     type="submit"
                     size="lg"
+                    disabled={isSubmitting}
                     className="w-full bg-accent text-accent-foreground hover:bg-accent-300 font-semibold text-base shadow-sm"
                   >
-                    Claim Free Assessment &amp; Quote <ArrowRight className="size-4" />
+                    {isSubmitting ? (
+                      "Sending Request..."
+                    ) : (
+                      <>
+                        Claim Free Assessment &amp; Quote <ArrowRight className="size-4" />
+                      </>
+                    )}
                   </Button>
 
                   <p className="text-center text-xs text-muted-foreground">

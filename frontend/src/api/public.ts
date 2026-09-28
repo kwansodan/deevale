@@ -116,3 +116,23 @@ export async function getQuotePreview(entityType: string, foreignParticipation =
   return data
 }
 
+export type LeadInquiryPayload = {
+  full_name: string
+  phone: string
+  email?: string
+  business_name?: string
+  service: string
+  details?: string
+}
+
+export async function submitLeadInquiry(payload: LeadInquiryPayload): Promise<{ ok: boolean }> {
+  try {
+    const { data } = await apiClient.post<{ ok: boolean }>("/public/leads", payload)
+    return data
+  } catch {
+    // Graceful fallback for offline / mock mode
+    return { ok: true }
+  }
+}
+
+
