@@ -104,6 +104,42 @@ Direct WhatsApp: https://wa.me/{data['phone'].replace('+', '').replace(' ', '')}
 <p><a href="https://wa.me/{data['phone'].replace('+', '').replace(' ', '')}" style="background:#25D366;color:white;padding:10px 18px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;">Chat on WhatsApp with Lead</a></p>
 """
         sender.send(admin_email, subject, html_body, plain_body)
+
+        # Dispatch confirmation email to client if an email was provided
+        client_email = data.get("email")
+        if client_email:
+            client_subject = f"We have received your inquiry - Deevale GH"
+            client_plain = f"""Hi {data['full_name']},
+
+Thank you for reaching out to Deevale GH (powered by Service 4 Limited).
+
+We have received your request regarding: {data['service']}.
+An advisor will review your business requirements and contact you shortly at {data['phone']}.
+
+Need immediate assistance? Chat with us directly on WhatsApp:
+https://wa.me/233249733286
+
+Best regards,
+The Deevale GH Team
+support@deevalegh.com
+https://deevalegh.com
+"""
+            client_html = f"""<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1e293b;line-height:1.6;">
+    <h2 style="color:#0f172a;">Thank You, {data['full_name']}!</h2>
+    <p>We have received your inquiry for <strong>{data['service']}</strong>.</p>
+    <p>A member of our corporate &amp; accounting team will review your business details and get back to you shortly at <strong>{data['phone']}</strong>.</p>
+    <div style="margin:24px 0;">
+        <a href="https://wa.me/233249733286" style="background:#25D366;color:white;padding:12px 20px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;">
+            Chat with Us on WhatsApp
+        </a>
+    </div>
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
+    <p style="font-size:12px;color:#64748b;">Deevale GH &bull; Powered by Service 4 Limited<br>Airport City, Accra, Ghana &bull; <a href="https://deevalegh.com">deevalegh.com</a></p>
+</div>"""
+            try:
+                sender.send(client_email, client_subject, client_html, client_plain)
+            except Exception as client_exc:
+                logger.warning("Failed to dispatch client receipt email to %s: %s", client_email, client_exc)
     except Exception as exc:
         logger.warning("Failed to dispatch lead email notification: %s", exc)
 
