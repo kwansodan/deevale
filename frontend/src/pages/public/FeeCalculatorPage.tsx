@@ -269,7 +269,7 @@ export default function FeeCalculatorPage() {
               <label className="mb-3 block text-sm font-semibold tracking-wide uppercase">
                 2. Ownership Structure
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setIsForeign(false)}
@@ -322,7 +322,7 @@ export default function FeeCalculatorPage() {
               <div className="space-y-2.5">
                 <label
                   className={cn(
-                    "border-border hover:border-primary/50 flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all",
+                    "border-border hover:border-primary/50 flex cursor-pointer flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border p-3.5 transition-all",
                     includeAddress && "border-primary bg-primary/5"
                   )}
                 >
@@ -331,7 +331,7 @@ export default function FeeCalculatorPage() {
                       type="checkbox"
                       checked={includeAddress}
                       onChange={(e) => setIncludeAddress(e.target.checked)}
-                      className="accent-primary mt-1 size-4 rounded"
+                      className="accent-primary mt-1 size-4 rounded shrink-0"
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -342,12 +342,12 @@ export default function FeeCalculatorPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold">{formatMinor(addressCostMinor)}/yr</span>
+                  <span className="text-sm font-semibold shrink-0 sm:text-right pl-7 sm:pl-0">{formatMinor(addressCostMinor)}/yr</span>
                 </label>
 
                 <label
                   className={cn(
-                    "border-border hover:border-primary/50 flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all",
+                    "border-border hover:border-primary/50 flex cursor-pointer flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border p-3.5 transition-all",
                     includeCompliance && "border-primary bg-primary/5"
                   )}
                 >
@@ -356,7 +356,7 @@ export default function FeeCalculatorPage() {
                       type="checkbox"
                       checked={includeCompliance}
                       onChange={(e) => setIncludeCompliance(e.target.checked)}
-                      className="accent-primary mt-1 size-4 rounded"
+                      className="accent-primary mt-1 size-4 rounded shrink-0"
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -367,12 +367,12 @@ export default function FeeCalculatorPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold">{formatMinor(complianceCostMinor)}/yr</span>
+                  <span className="text-sm font-semibold shrink-0 sm:text-right pl-7 sm:pl-0">{formatMinor(complianceCostMinor)}/yr</span>
                 </label>
 
                 <label
                   className={cn(
-                    "border-border hover:border-primary/50 flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all",
+                    "border-border hover:border-primary/50 flex cursor-pointer flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border p-3.5 transition-all",
                     includeBookkeeping && "border-primary bg-primary/5"
                   )}
                 >
@@ -381,7 +381,7 @@ export default function FeeCalculatorPage() {
                       type="checkbox"
                       checked={includeBookkeeping}
                       onChange={(e) => setIncludeBookkeeping(e.target.checked)}
-                      className="accent-primary mt-1 size-4 rounded"
+                      className="accent-primary mt-1 size-4 rounded shrink-0"
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -393,7 +393,7 @@ export default function FeeCalculatorPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold">{formatMinor(bookkeepingCostMinor)}/3mo</span>
+                  <span className="text-sm font-semibold shrink-0 sm:text-right pl-7 sm:pl-0">{formatMinor(bookkeepingCostMinor)}/3mo</span>
                 </label>
               </div>
             </div>
