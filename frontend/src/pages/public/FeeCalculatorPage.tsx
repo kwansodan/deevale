@@ -17,7 +17,7 @@ import {
 import { getQuotePreview } from "@/api/public"
 import { Wordmark } from "@/components/Wordmark"
 import { SEO } from "@/components/SEO"
-import { CurrencyToggle } from "@/components/landing/CurrencyToggle"
+import { PublicHeader } from "@/components/public/PublicHeader"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -195,22 +195,7 @@ export default function FeeCalculatorPage() {
         jsonLd={jsonLdData}
       />
 
-      {/* Top Header */}
-      <header className="border-border bg-background/90 sticky top-0 z-20 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Wordmark size="md" />
-          <nav className="flex items-center gap-3">
-            <Link to="/services" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
-              Services
-            </Link>
-            <Link to="/guides" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
-              Statutory Guides
-            </Link>
-            <CurrencyToggle currency={currency} onChange={setCurrency} />
-            <Button render={<Link to="/signup">Get Started</Link>} nativeButton={false} size="sm" />
-          </nav>
-        </div>
-      </header>
+      <PublicHeader currency={currency} onCurrencyChange={setCurrency} />
 
       {/* Hero Section */}
       <section className="border-border relative overflow-hidden border-b py-12 md:py-16">

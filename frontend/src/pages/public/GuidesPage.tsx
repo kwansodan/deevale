@@ -5,6 +5,7 @@ import { ArrowRight, BookOpen, Calculator, Clock } from "lucide-react"
 import { GUIDES } from "@/data/guidesData"
 import { Wordmark } from "@/components/Wordmark"
 import { SEO } from "@/components/SEO"
+import { PublicHeader } from "@/components/public/PublicHeader"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -44,21 +45,7 @@ export default function GuidesPage() {
         jsonLd={jsonLdData}
       />
 
-      {/* Header */}
-      <header className="border-border bg-background/90 sticky top-0 z-20 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Wordmark size="md" />
-          <nav className="flex items-center gap-3">
-            <Link to="/services" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
-              Services
-            </Link>
-            <Link to="/calculator" className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block">
-              Fee Calculator
-            </Link>
-            <Button render={<Link to="/signup">Get Started</Link>} nativeButton={false} size="sm" />
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero */}
       <section className="border-border relative overflow-hidden border-b py-14 md:py-20">

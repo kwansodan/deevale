@@ -147,7 +147,7 @@ export default function ReportsPage() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <StatTile label="Cases created" value={String(kpis.cases_created)} />
             <StatTile label="Cases completed" value={String(kpis.cases_completed)} />
             <StatTile
@@ -171,7 +171,7 @@ export default function ReportsPage() {
             <StatTile label="Subscription conversions" value={String(kpis.subscription_conversions)} />
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:max-w-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:max-w-md">
             <StatTile label="Service fee revenue" value={formatGhs(kpis.revenue_service_minor)} />
             <StatTile
               label="Government pass-through"

@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom"
-import { ArrowLeft, MessageSquare } from "lucide-react"
 
 import { Wordmark } from "@/components/Wordmark"
 import { SEO } from "@/components/SEO"
 import { LeadCaptureSection } from "@/components/landing/LeadCaptureSection"
-import { Button } from "@/components/ui/button"
+import { PublicHeader } from "@/components/public/PublicHeader"
 import { useLandingConfig } from "@/config/landing"
 
 export default function LeadCapturePage() {
   const { company } = useLandingConfig()
-  const waNumber = company.whatsapp || "233249733286"
 
   return (
     <div className="bg-background min-h-svh flex flex-col justify-between">
@@ -19,41 +17,7 @@ export default function LeadCapturePage() {
         canonicalUrl="https://deevalegh.com/quote"
       />
 
-      {/* Header */}
-      <header className="border-border bg-background/85 sticky top-0 z-20 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Wordmark size="md" />
-          <nav className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/services"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Services
-            </Link>
-            <Link
-              to="/calculator"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Fee Calculator
-            </Link>
-            <Button
-              render={
-                <a
-                  href={`https://wa.me/${waNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Hi Deevale GH, I'd like to inquire about your corporate and tax services.")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MessageSquare className="size-4" />
-                  WhatsApp
-                </a>
-              }
-              variant="outline"
-              size="sm"
-            />
-            <Button render={<Link to="/"><ArrowLeft className="size-4" /> Home</Link>} variant="ghost" size="sm" />
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Main Form Body */}
       <main className="flex-1">

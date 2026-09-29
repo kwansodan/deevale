@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from "react-router-dom"
 
-import { Wordmark } from "@/components/Wordmark"
+import { PublicHeader } from "@/components/public/PublicHeader"
 import { useLandingConfig } from "@/config/landing"
 
 // These are drafted, general-purpose policies for a Ghana business-registration
@@ -266,16 +266,7 @@ export default function LegalPage() {
 
   return (
     <div className="bg-background min-h-svh">
-      <header className="border-border bg-background/85 sticky top-0 z-10 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-          <Link to="/">
-            <Wordmark size="md" />
-          </Link>
-          <Link to="/" className="text-muted-foreground hover:text-foreground text-sm">
-            Back to home
-          </Link>
-        </div>
-      </header>
+      <PublicHeader />
 
       <main className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-3xl font-bold tracking-tight">{content.title}</h1>

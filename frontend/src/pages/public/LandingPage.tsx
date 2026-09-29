@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils"
 import { figures, useLandingConfig } from "@/config/landing"
 import { SEO } from "@/components/SEO"
 import { LeadCaptureSection } from "@/components/landing/LeadCaptureSection"
+import { PublicHeader } from "@/components/public/PublicHeader"
 
 // Deliberately not translated. tw.json is still a machine draft
 // (_meta.reviewed:false); unreviewed Twi on the page whose whole job is
@@ -233,53 +234,12 @@ export default function LandingPage() {
           "priceRange": "$$",
         }}
       />
-      {/* Needs its own translucent ground: bare backdrop-blur left the header
-          transparent, so the ink wordmark vanished over the ink section. */}
-      <header
-        className={cn(
-          "border-border bg-background/85 sticky top-0 z-20 border-b backdrop-blur transition-shadow",
-          scrolled && "shadow-card"
-        )}
-      >
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Wordmark size="md" />
-          <nav className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/services/accounting-and-bookkeeping"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Accounting &amp; Tax
-            </Link>
-            <Link
-              to="/services"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Services
-            </Link>
-            <Link
-              to="/calculator"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Fee Calculator
-            </Link>
-            <Link
-              to="/guides"
-              className="text-muted-foreground hover:text-foreground hidden text-sm font-medium sm:block"
-            >
-              Statutory Guides
-            </Link>
-            <Button render={<Link to="/login">Log in</Link>} nativeButton={false} variant="ghost" size="sm" />
-            <Button
-              onClick={scrollToForm}
-              size="sm"
-              className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold hidden sm:inline-flex"
-            >
-              Free Quote
-            </Button>
-            <Button render={<Link to="/signup">Get started</Link>} nativeButton={false} size="sm" />
-          </nav>
-        </div>
-      </header>
+      <PublicHeader
+        scrolled={scrolled}
+        currency={currency}
+        onCurrencyChange={setCurrency}
+        onQuoteClick={scrollToForm}
+      />
 
       {/* Hero + the audience fork. The product itself branches on
           WorkflowDefinition.variant standard|foreign, so the page does too. */}

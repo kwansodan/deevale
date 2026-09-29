@@ -43,7 +43,7 @@ export default function PaymentsPage() {
       <h1 className="text-xl font-semibold">Payments</h1>
 
       {metrics && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <MetricTile label="MRR" value={formatGhs(metrics.mrr_minor)} hint="annual plans amortized" />
           <MetricTile
             label="Active subscriptions"

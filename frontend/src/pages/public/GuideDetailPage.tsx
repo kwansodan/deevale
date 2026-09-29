@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react"
 import { Link, Navigate, useParams } from "react-router-dom"
 import {
-  ArrowLeft,
   ArrowRight,
   Calculator,
   ChevronDown,
@@ -15,6 +14,7 @@ import {
 import { GUIDES } from "@/data/guidesData"
 import { Wordmark } from "@/components/Wordmark"
 import { SEO } from "@/components/SEO"
+import { PublicHeader } from "@/components/public/PublicHeader"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -123,32 +123,7 @@ export default function GuideDetailPage() {
         jsonLd={jsonLdData}
       />
 
-      {/* Header */}
-      <header className="border-border bg-background/90 sticky top-0 z-20 border-b backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-4">
-            <Wordmark size="md" />
-            <Link
-              to="/guides"
-              className="text-muted-foreground hover:text-foreground hidden sm:flex items-center gap-1.5 text-xs font-medium border-l border-border pl-4"
-            >
-              <ArrowLeft className="size-3" /> All Guides
-            </Link>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              render={
-                <Link to="/calculator">
-                  <Calculator className="size-3.5 mr-1.5" /> Fee Calculator
-                </Link>
-              }
-              variant="outline"
-              size="sm"
-            />
-            <Button render={<Link to="/signup">Start Registration</Link>} nativeButton={false} size="sm" />
-          </div>
-        </div>
-      </header>
+      <PublicHeader />
 
       {/* Hero Header */}
       <section className="border-border bg-secondary/30 relative border-b py-10 md:py-16">
