@@ -190,7 +190,7 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="bg-background min-h-svh">
+    <div className="bg-background min-h-svh overflow-x-hidden">
       <SEO
         title="Business Registration in Ghana | ORC, GIPC & Tax Setup - Deevale GH"
         description="Register and run your business in Ghana without the guesswork. Company Limited by Shares, GIPC foreign investor registration, GRA TIN, SSNIT, and statutory corporate compliance in Accra."
@@ -250,11 +250,11 @@ export default function LandingPage() {
 
         <div className="relative mx-auto grid max-w-5xl items-center gap-12 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
           <div>
-            <Badge variant="outline" className="border-accent/40 bg-accent/10 text-accent-700 mb-4 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold">
-              <ShieldCheck className="size-3.5" /> Powered by Service 4 Limited • Corporate Secretarial &amp; Accounting
+            <Badge variant="outline" className="border-accent/40 bg-accent/10 text-accent-700 mb-4 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold max-w-full text-wrap leading-normal">
+              <ShieldCheck className="size-3.5 shrink-0" /> Powered by Service 4 Limited • Corporate Secretarial &amp; Accounting
             </Badge>
 
-            <h1 className="text-4xl font-bold tracking-tight text-balance md:text-6xl">
+            <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl md:text-6xl">
               Form your company. Balance your books.{" "}
               <span className="highlight-accent">Stay 100% compliant in Ghana.</span>
             </h1>
@@ -296,11 +296,11 @@ export default function LandingPage() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
               <Button
                 onClick={scrollToForm}
                 size="lg"
-                className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold shadow-sm"
+                className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold shadow-sm w-full sm:w-auto justify-center"
               >
                 Claim Free Assessment &amp; Quote <ArrowRight />
               </Button>
@@ -313,6 +313,7 @@ export default function LandingPage() {
                 nativeButton={false}
                 variant="outline"
                 size="lg"
+                className="w-full sm:w-auto justify-center"
               />
               <Button
                 render={
@@ -323,6 +324,7 @@ export default function LandingPage() {
                 nativeButton={false}
                 variant="ghost"
                 size="lg"
+                className="w-full sm:w-auto justify-center"
               />
             </div>
 
@@ -337,7 +339,7 @@ export default function LandingPage() {
               over a soft accent glow for depth. */}
           <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 relative motion-safe:duration-700">
             <div
-              className="bg-accent/20 absolute -inset-5 -z-10 rounded-[2rem] blur-2xl"
+              className="bg-accent/20 absolute inset-0 sm:-inset-5 -z-10 rounded-[2rem] blur-2xl"
               aria-hidden
             />
             <StageTracker audience={audience} />
@@ -345,7 +347,7 @@ export default function LandingPage() {
         </div>
 
         {/* Figures derived from the workflow library, not marketing claims. */}
-        <dl className="relative mx-auto grid max-w-5xl grid-cols-3 gap-6 border-t px-4 pt-8 pb-16">
+        <dl className="relative mx-auto grid max-w-5xl grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 border-t px-4 pt-8 pb-16">
           {figures.map((f) => (
             <StatCounter key={f.label} value={f.value} label={f.label} />
           ))}
@@ -642,17 +644,17 @@ export default function LandingPage() {
           </div>
           <Card className="border-border shadow-card-lg rounded-2xl">
             <CardContent className="space-y-4 pt-6">
-              <div className="flex items-baseline justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                 <span className="text-sm">Compliance plan, monthly</span>
-                <span className="font-semibold">{money(compliance.monthlyPrice, "Request a quote")}</span>
+                <span className="font-semibold shrink-0">{money(compliance.monthlyPrice, "Request a quote")}</span>
               </div>
-              <div className="flex items-baseline justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                 <span className="text-sm">Compliance plan, annual</span>
-                <span className="font-semibold">{money(compliance.annualPrice, "Request a quote")}</span>
+                <span className="font-semibold shrink-0">{money(compliance.annualPrice, "Request a quote")}</span>
               </div>
-              <div className="flex items-baseline justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                 <span className="text-sm">Registered office address</span>
-                <span className="font-semibold">{money(compliance.registeredAddressPrice, "Request a quote")}</span>
+                <span className="font-semibold shrink-0">{money(compliance.registeredAddressPrice, "Request a quote")}</span>
               </div>
               <Separator />
               <ul className="space-y-2">
@@ -698,8 +700,8 @@ export default function LandingPage() {
       <LeadCaptureSection />
 
       <footer className="border-border text-muted-foreground border-t px-4 py-12 text-sm">
-        <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-5">
-          <div className="space-y-2">
+        <div className="mx-auto grid max-w-5xl gap-8 grid-cols-2 sm:grid-cols-5">
+          <div className="col-span-2 sm:col-span-1 space-y-2">
             <Wordmark size="md" />
             <p className="text-foreground font-semibold">{company.legalName ?? "Deevale GH"}</p>
             {company.address && (

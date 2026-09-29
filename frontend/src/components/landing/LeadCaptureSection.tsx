@@ -245,7 +245,7 @@ ${details ? `- Notes: ${details}` : ""}`
                       id="lead-service"
                       value={service}
                       onChange={(e) => setService(e.target.value)}
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-base md:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {SERVICES_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>

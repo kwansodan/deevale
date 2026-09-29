@@ -16,7 +16,7 @@ export function StatCounter({ value, label }: { value: string; label: string }) 
 
   return (
     <div ref={ref}>
-      <dt className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">
+      <dt className="font-heading text-2xl sm:text-3xl md:text-5xl font-semibold tracking-tight">
         {match ? (
           <>
             <span className="tabular-nums">{n}</span>
