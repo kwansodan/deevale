@@ -42,9 +42,11 @@ export function WhatsAppFab() {
       rel="noreferrer noopener"
       aria-label="Chat with us on WhatsApp"
       title="Chat with us on WhatsApp"
-      className="fixed right-5 bottom-[88px] z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-[#20ba5a] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:outline-none group motion-reduce:transition-none"
+      className="fixed right-4 sm:right-5 bottom-[76px] sm:bottom-[88px] z-50 flex size-12 sm:size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-200 hover:scale-110 hover:bg-[#20ba5a] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:outline-none group motion-reduce:transition-none"
     >
-      <WhatsAppGlyph />
+      <div className="scale-85 sm:scale-100 flex items-center justify-center">
+        <WhatsAppGlyph />
+      </div>
       {/* Presence indicator dot */}
       <span className="absolute top-1 right-1 flex size-3">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>

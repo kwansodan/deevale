@@ -137,11 +137,15 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
     @apply font-sans;
+    overflow-x: hidden;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
   }
   /* Headings take the serif globally, so pages do not each have to opt in.
      Card/Dialog/Sheet titles already reference font-heading directly. */

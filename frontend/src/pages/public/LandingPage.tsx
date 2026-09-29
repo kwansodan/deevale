@@ -249,33 +249,38 @@ export default function LandingPage() {
         <div className="dot-grid pointer-events-none absolute inset-0" aria-hidden />
 
         <div className="relative mx-auto grid max-w-5xl items-center gap-12 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
-          <div>
-            <Badge variant="outline" className="border-accent/40 bg-accent/10 text-accent-700 mb-4 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold max-w-full text-wrap leading-normal">
-              <ShieldCheck className="size-3.5 shrink-0" /> Powered by Service 4 Limited • Corporate Secretarial &amp; Accounting
-            </Badge>
+          <div className="w-full min-w-0">
+            <div className="border-accent/40 bg-accent/10 text-accent-700 mb-4 inline-flex flex-wrap items-center gap-1.5 rounded-2xl sm:rounded-full border px-3 py-1.5 text-xs font-semibold leading-normal max-w-full">
+              <ShieldCheck className="size-3.5 shrink-0" />
+              <span>Powered by Service 4 Limited</span>
+              <span className="hidden sm:inline" aria-hidden>•</span>
+              <span className="text-accent-800">Corporate Secretarial &amp; Accounting</span>
+            </div>
 
-            <h1 className="text-3xl font-bold tracking-tight text-balance sm:text-4xl md:text-6xl">
+            <h1 className="text-2xl font-bold tracking-tight sm:text-4xl md:text-6xl text-balance break-words">
               Form your company. Balance your books.{" "}
-              <span className="highlight-accent">Stay 100% compliant in Ghana.</span>
+              <span className="highlight-accent inline">Stay 100% compliant in Ghana.</span>
             </h1>
-            <p className="text-muted-foreground mt-5 max-w-2xl text-lg leading-relaxed">
+            <p className="text-muted-foreground mt-4 sm:mt-5 max-w-2xl text-base sm:text-lg leading-relaxed break-words">
               Deevale (powered by Service 4 Limited) is the all-in-one corporate and financial back office for founders. We incorporate your entity at the ORC, set up your GRA tax and SSNIT accounts, and continue as your outsourced monthly bookkeeping, tax, and payroll team.
             </p>
 
             <div className="mt-8">
               <p className="text-muted-foreground mb-3 text-sm font-medium">Where are you starting from?</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2">
                 <Button
                   variant={audience === "local" ? "default" : "outline"}
                   onClick={() => setAudience("local")}
+                  className="w-full sm:w-auto justify-center"
                 >
-                  <Building2 /> I&apos;m in Ghana
+                  <Building2 className="size-4 shrink-0" /> I&apos;m in Ghana
                 </Button>
                 <Button
                   variant={isForeign ? "default" : "outline"}
                   onClick={() => setAudience("foreign")}
+                  className="w-full sm:w-auto justify-center"
                 >
-                  <Globe2 /> I&apos;m investing from abroad
+                  <Globe2 className="size-4 shrink-0" /> I&apos;m investing from abroad
                 </Button>
               </div>
             </div>
@@ -288,10 +293,10 @@ export default function LandingPage() {
               ).map((chip) => (
                 <li
                   key={chip}
-                  className="border-border bg-background/60 text-foreground flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm"
+                  className="border-border bg-background/60 text-foreground inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs sm:text-sm max-w-full"
                 >
-                  <Check className="text-accent-600 size-3.5" />
-                  {chip}
+                  <Check className="text-accent-600 size-3.5 shrink-0" />
+                  <span>{chip}</span>
                 </li>
               ))}
             </ul>
@@ -337,7 +342,7 @@ export default function LandingPage() {
 
           {/* The page's main image: the product's own case timeline, floated
               over a soft accent glow for depth. */}
-          <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 relative motion-safe:duration-700">
+          <div className="w-full min-w-0 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 relative motion-safe:duration-700">
             <div
               className="bg-accent/20 absolute inset-0 sm:-inset-5 -z-10 rounded-[2rem] blur-2xl"
               aria-hidden
