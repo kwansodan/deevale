@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { CertificateMark } from "@/components/landing/CertificateMark"
+import { trackLeadConversion } from "@/lib/analytics"
 
 const SERVICES_OPTIONS = [
   { value: "bookkeeping_tax", label: "Outsourced Bookkeeping & Monthly Accounts" },
@@ -56,14 +57,8 @@ export function LeadCaptureSection() {
       // Graceful fallback
     }
 
-    // Track lead generation conversion in Google Ads / Analytics if gtag is loaded
-    if (typeof window !== "undefined" && (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
-      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", "generate_lead", {
-        event_category: "lead_form",
-        event_label: service,
-        value: 1,
-      })
-    }
+    // Track lead generation conversion in Google Ads / Analytics
+    trackLeadConversion(service)
 
     // Save lead record in local storage for fail-safe persistence
     try {
