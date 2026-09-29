@@ -166,6 +166,28 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  const scrollToForm = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault()
+    const el = document.getElementById("get-started-form")
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" })
+      window.history.pushState(null, "", "#get-started-form")
+    }
+  }
+
+  // Auto-scroll to #get-started-form when arriving via anchor link / hash URL
+  useEffect(() => {
+    if (window.location.hash === "#get-started-form" || window.location.hash === "#quote") {
+      const timer = setTimeout(() => {
+        const el = document.getElementById("get-started-form")
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      }, 150)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <div className="bg-background min-h-svh">
       <SEO
@@ -248,11 +270,12 @@ export default function LandingPage() {
             </Link>
             <Button render={<Link to="/login">Log in</Link>} nativeButton={false} variant="ghost" size="sm" />
             <Button
-              render={<a href="#get-started-form">Free Quote</a>}
-              nativeButton={false}
+              onClick={scrollToForm}
               size="sm"
               className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold hidden sm:inline-flex"
-            />
+            >
+              Free Quote
+            </Button>
             <Button render={<Link to="/signup">Get started</Link>} nativeButton={false} size="sm" />
           </nav>
         </div>
@@ -315,15 +338,12 @@ export default function LandingPage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button
-                render={
-                  <a href="#get-started-form">
-                    Claim Free Assessment &amp; Quote <ArrowRight />
-                  </a>
-                }
-                nativeButton={false}
+                onClick={scrollToForm}
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent-300 font-semibold shadow-sm"
-              />
+              >
+                Claim Free Assessment &amp; Quote <ArrowRight />
+              </Button>
               <Button
                 render={
                   <Link to="/services/accounting-and-bookkeeping">

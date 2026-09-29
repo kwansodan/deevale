@@ -30,6 +30,7 @@ const GuidesPage = lazy(() => import("@/pages/public/GuidesPage"))
 const GuideDetailPage = lazy(() => import("@/pages/public/GuideDetailPage"))
 const ServicesHubPage = lazy(() => import("@/pages/public/ServicesHubPage"))
 const ServiceDetailPage = lazy(() => import("@/pages/public/ServiceDetailPage"))
+const LeadCapturePage = lazy(() => import("@/pages/public/LeadCapturePage"))
 const StartPage = lazy(() => import("@/pages/onboarding/StartPage"))
 const PaymentCallbackPage = lazy(() => import("@/pages/onboarding/PaymentCallbackPage"))
 
@@ -89,6 +90,9 @@ export default function App() {
         <Route path="/guides" element={<GuidesPage />} />
         <Route path="/guides/:slug" element={<GuideDetailPage />} />
         <Route path="/legal/:doc" element={<LegalPage />} />
+        <Route path="/quote" element={<LeadCapturePage />} />
+        <Route path="/free-quote" element={<LeadCapturePage />} />
+        <Route path="/contact" element={<LeadCapturePage />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/app" element={<ClientLayout />}>
