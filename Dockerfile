@@ -14,9 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
 COPY migrations ./migrations
 COPY seeds ./seeds
-COPY wsgi.py ./
+COPY wsgi.py entrypoint.sh ./
+RUN chmod +x entrypoint.sh && sed -i 's/\r$//' entrypoint.sh
 
 ENV FLASK_ENV=production
 EXPOSE 8000
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--threads", "2", "wsgi:app"]

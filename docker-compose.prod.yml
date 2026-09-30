@@ -70,20 +70,6 @@ services:
     volumes:
       - minio_data:/data
 
-  # Runs once per deploy and exits; everything that touches the database waits
-  # for it to succeed. If a migration fails, the app never starts on a schema it
-  # cannot use -- which is the failure mode you want.
-  migrate:
-    build: .
-    restart: "no"
-    env_file: .env
-    environment:
-      <<: *app-env
-    command: flask --app wsgi db upgrade
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   api:
     build: .
     restart: unless-stopped
@@ -105,8 +91,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
 
   inngest:
     image: inngest/inngest:latest

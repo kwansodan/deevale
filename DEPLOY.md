@@ -66,19 +66,18 @@ docker compose -f docker-compose.prod.yml up -d --build
 ```
 
 Five persistent services come up: `postgres`, `redis`, `minio`, `api`, `inngest`
-(plus `caddy` for TLS) - plus a one-shot `migrate` that runs `flask db upgrade`
-and exits. `api` waits on `migrate` via `service_completed_successfully`, so a
-failed migration means nothing starts on a schema it cannot use. Migrations
-therefore need no manual step on any deploy or redeploy.
+(plus `caddy` for TLS). Database migrations run automatically via `entrypoint.sh`
+inside the `api` container before the web server begins taking requests, ensuring
+zero downtime and no orphaned or exited helper containers.
 
 The self-hosted `inngest` service runs the official `inngest/inngest:latest` image
 consuming only ~30-50MB RAM. It automatically syncs with the Flask API at
 `http://api:8000/api/inngest`, orchestrating all background jobs and 10 scheduled
 crons entirely on your VPS with zero external cloud accounts.
 
-> ⚠️ `migrate` fails immediately if `migrations/versions/` is empty of a real
+> ⚠️ Database migration fails immediately if `migrations/versions/` is empty of a real
 > initial revision, or if `ProdConfig.validate()` rejects a default secret. Both
-> are intentional: better a stack that refuses to start than an API returning
+> are intentional: better a container that refuses to start than an API returning
 > 500s because no tables exist.
 
 First boot only - seed the reference data:
@@ -92,13 +91,12 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow
 ### Running it from Komodo
 
 `docker-compose.prod.yml` is the single, self-contained stack - postgres,
-redis, minio, migrate, api, inngest, caddy. Point Komodo's File Paths at it.
+redis, minio, api, inngest, caddy. Point Komodo's File Paths at it.
 (The name keeps the `.prod` suffix only because Komodo already references it;
 there is no dev compose file to contrast with anymore.)
 
 Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` - the
-image `COPY`s `app/`, `migrations/`, `seeds/` and `wsgi.py`, all of which live
-at the root. One build serves `migrate` and `api`; they differ only by `command`.
+image `COPY`s `app/`, `migrations/`, `seeds/`, `wsgi.py`, and `entrypoint.sh`.
 
 Then replace the seeded fee amounts with the real current government fees via
 the admin UI (`/ops/settings`) - the seeded figures are placeholders.
