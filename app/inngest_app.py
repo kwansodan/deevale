@@ -7,9 +7,17 @@ import inngest.flask
 
 logger = logging.getLogger("deevalegh.inngest")
 
+inngest_base_url = (
+    os.environ.get("INNGEST_BASE_URL")
+    or os.environ.get("INNGEST_EVENT_API_BASE_URL")
+)
+
 inngest_client = inngest.Inngest(
     app_id="deevalegh",
-    is_production=os.environ.get("FLASK_ENV") == "production",
+    base_url=inngest_base_url or None,
+    event_key=os.environ.get("INNGEST_EVENT_KEY") or None,
+    signing_key=os.environ.get("INNGEST_SIGNING_KEY") or None,
+    is_production=bool(os.environ.get("FLASK_ENV") == "production" and not inngest_base_url),
     logger=logger,
 )
 
@@ -42,6 +50,7 @@ class InngestTask:
             os.environ.get("INNGEST_EVENT_KEY")
             or os.environ.get("INNGEST_SIGNING_KEY")
             or os.environ.get("INNGEST_DEV")
+            or os.environ.get("INNGEST_BASE_URL")
         )
 
         if is_testing or not has_inngest_credentials:

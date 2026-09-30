@@ -5,7 +5,7 @@ The frontend and backend are deployed separately:
 | Piece | Where | Hostname |
 |---|---|---|
 | React SPA | Vercel (static) | `app.deevalegh.com` |
-| Flask API (Inngest), Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
+| Flask API, Inngest, Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
 
 They are **different origins**, so the browser talks to the API cross-origin.
 That works because auth is Bearer-token based, not cookie based - but it means
@@ -50,7 +50,7 @@ code:
 - `S3_ACCESS_KEY`, `S3_SECRET_KEY` - MinIO root credentials
 - `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` - **live** keys
 - `RESEND_API_KEY`, `EMAIL_SENDER=resend`, `EMAIL_FROM_ADDRESS`
-- `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` - from your Inngest Cloud or self-hosted dashboard
+- `INNGEST_BASE_URL`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` - self-hosted defaults work out of the box in docker-compose.prod.yml, or set custom keys in .env
 - `CORS_ORIGINS=https://app.deevalegh.com`
 
 > ⚠️ **`CORS_ORIGINS` order is load-bearing.** The first entry doubles as the
@@ -65,15 +65,16 @@ code:
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Four persistent services come up: `postgres`, `redis`, `minio`, `api` (plus
-`caddy` for TLS) - plus a one-shot `migrate` that runs `flask db upgrade` and
-exits. `api` waits on `migrate` via `service_completed_successfully`, so a
+Five persistent services come up: `postgres`, `redis`, `minio`, `api`, `inngest`
+(plus `caddy` for TLS) - plus a one-shot `migrate` that runs `flask db upgrade`
+and exits. `api` waits on `migrate` via `service_completed_successfully`, so a
 failed migration means nothing starts on a schema it cannot use. Migrations
 therefore need no manual step on any deploy or redeploy.
 
-Background asynchronous jobs and scheduled crons execute through Inngest via
-the `/api/inngest` endpoint on the `api` service, eliminating separate Celery
-worker and beat containers.
+The self-hosted `inngest` service runs the official `inngest/inngest:latest` image
+consuming only ~30-50MB RAM. It automatically syncs with the Flask API at
+`http://api:8000/api/inngest`, orchestrating all background jobs and 10 scheduled
+crons entirely on your VPS with zero external cloud accounts.
 
 > ⚠️ `migrate` fails immediately if `migrations/versions/` is empty of a real
 > initial revision, or if `ProdConfig.validate()` rejects a default secret. Both
@@ -91,7 +92,7 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow
 ### Running it from Komodo
 
 `docker-compose.prod.yml` is the single, self-contained stack - postgres,
-redis, minio, migrate, api, caddy. Point Komodo's File Paths at it.
+redis, minio, migrate, api, inngest, caddy. Point Komodo's File Paths at it.
 (The name keeps the `.prod` suffix only because Komodo already references it;
 there is no dev compose file to contrast with anymore.)
 

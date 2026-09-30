@@ -17,6 +17,7 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     JWT_TOKEN_LOCATION = ["headers"]
 
+    INNGEST_BASE_URL = os.environ.get("INNGEST_BASE_URL", "")
     INNGEST_EVENT_KEY = os.environ.get("INNGEST_EVENT_KEY", "")
     INNGEST_SIGNING_KEY = os.environ.get("INNGEST_SIGNING_KEY", "")
 
