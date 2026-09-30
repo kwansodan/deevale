@@ -1,7 +1,3 @@
-from app.celery_app import celery_app
-
-
-@celery_app.task(name="app.mailroom.tasks.shred_expired_mail")
 def shred_expired_mail() -> int:
     """Retention policy: mail scans past their shred_after date have the scan
     object deleted from storage and are marked shredded. An open forwarding

@@ -1,7 +1,3 @@
-from app.celery_app import celery_app
-
-
-@celery_app.task(name="app.reports.tasks.materialize_report_snapshot")
 def materialize_report_snapshot(day_iso: str | None = None) -> str:
     """Nightly: aggregates yesterday's counters into report_snapshots."""
     from datetime import date, timedelta

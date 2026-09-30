@@ -1,11 +1,8 @@
 from datetime import timedelta
 
-from app.celery_app import celery_app
-
 ESCALATION_AFTER_HOURS = 24
 
 
-@celery_app.task(name="app.deadlines.sla_scanner.scan_sla_breaches")
 def scan_sla_breaches() -> dict:
     """Hourly: flags tasks past their SLA due time, alerts the case's officer,
     and escalates to the officer's supervisor after 24h unresolved."""

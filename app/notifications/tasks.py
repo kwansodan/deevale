@@ -1,16 +1,10 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 MAX_ATTEMPTS = 5
 
 
-@celery_app.task(
-    name="app.notifications.tasks.send_notification_delivery",
-    bind=True,
-    autoretry_for=(Exception,),
-    retry_backoff=True,
-    max_retries=MAX_ATTEMPTS,
-)
-def send_notification_delivery(self, delivery_id: str) -> None:
+@task_wrapper("notification/delivery.send", "delivery_id")
+def send_notification_delivery(delivery_id: str) -> None:
     """Sends one delivery over its channel (email / SMS / WhatsApp), with
     retry bookkeeping shared across channels."""
     from flask import render_template
@@ -61,7 +55,6 @@ def send_notification_delivery(self, delivery_id: str) -> None:
     db.session.commit()
 
 
-@celery_app.task(name="app.notifications.tasks.flush_queued_sms")
 def flush_queued_sms() -> int:
     """Releases SMS deliveries held during Ghana quiet hours once the window
     has passed. Runs every 15 minutes via beat."""
@@ -85,7 +78,6 @@ def flush_queued_sms() -> int:
     return len(due)
 
 
-@celery_app.task(name="app.notifications.tasks.send_weekly_digests")
 def send_weekly_digests() -> int:
     """Sunday-evening digest email: case progress + upcoming deadlines.
     Opt-in via the 'weekly_digest' preference category."""

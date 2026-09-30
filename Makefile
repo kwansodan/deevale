@@ -27,11 +27,8 @@ demo:
 run:
 	flask --app wsgi run --debug
 
-worker:
-	celery -A app.celery_app worker --loglevel=info --pool=solo
-
-beat:
-	celery -A celery_beat_schedule beat --loglevel=info
+inngest:
+	npx inngest-cli@latest dev -u http://127.0.0.1:8000/api/inngest
 
 test:
 	pytest -v

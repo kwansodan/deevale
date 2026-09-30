@@ -1,6 +1,6 @@
 """Self-hosted uptime monitor.
 
-A Celery Beat task probes the public URLs every few minutes and emails a
+A scheduled Inngest cron task probes the public URLs every few minutes and emails a
 configured address on a state change: DOWN after N consecutive failures (so a
 single blip or a quick deploy restart doesn't cry wolf) and RECOVERED once it is
 reachable again. Reuses the Resend email sender and the Redis the app already
@@ -19,7 +19,6 @@ import requests
 from flask import current_app
 
 from app.auth.blocklist import get_redis
-from app.celery_app import celery_app
 from app.notifications.channels.email import get_email_sender
 
 _STATE_PREFIX = "uptime:"
@@ -62,7 +61,6 @@ def _send_alert(to_email: str, url: str, is_down: bool, detail: str) -> None:
     get_email_sender().send(to_email, subject, html, text)
 
 
-@celery_app.task(name="app.monitoring.tasks.check_uptime")
 def check_uptime() -> dict:
     alert_email = current_app.config.get("UPTIME_ALERT_EMAIL", "")
     urls = current_app.config.get("UPTIME_CHECK_URLS", [])

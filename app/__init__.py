@@ -41,6 +41,10 @@ def create_app(env_name: str | None = None) -> Flask:
 
     _register_blueprints(api)
 
+    from app.inngest_app import register_inngest
+
+    register_inngest(app)
+
     with app.app_context():
         bus.reset()
         register_all(bus)

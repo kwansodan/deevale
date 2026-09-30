@@ -12,8 +12,8 @@ class DomainEventBus:
 
     Handlers run in registration order, in the same thread/transaction as the
     caller. Handlers needing slow I/O (email, PDF generation, SMS) must do
-    their own hand-off to a Celery task as their last synchronous step -- the
-    bus itself has no knowledge of Celery, so it stays trivially testable.
+    their own hand-off to an async / Inngest task as their last synchronous step -- the
+    bus itself has no knowledge of background task runners, so it stays trivially testable.
     """
 
     def __init__(self):

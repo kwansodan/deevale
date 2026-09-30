@@ -40,7 +40,7 @@ def test_action_required_defaults_to_in_app_email_sms(app):
         channels, deliveries = _channels_for(client_user.id, "action_required")
         assert channels == {"in_app", "email", "sms"}
         sms = next(d for d in deliveries if d.channel == "sms")
-        assert sms.status == "sent"  # eager celery in tests; console sender
+        assert sms.status == "sent"  # eager execution in tests; console sender
         assert sms.cost_minor == app.config["SMS_DEFAULT_COST_MINOR"]  # per-message cost logged
 
 

@@ -14,7 +14,7 @@ python-socketio==5.11.3
 simple-websocket==1.0.0
 Flask-Cors==4.0.1
 flask-talisman==1.1.0
-celery==5.4.0
+inngest>=0.5.0
 redis==5.0.8
 boto3==1.35.11
 weasyprint==62.3

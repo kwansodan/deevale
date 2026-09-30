@@ -1,7 +1,7 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 
-@celery_app.task(name="app.documents.tasks.scan_document_version")
+@task_wrapper("document/version.scan", "document_version_id")
 def scan_document_version(document_version_id: str) -> None:
     """Stub virus-scan task: no-op, marks every upload clean.
 

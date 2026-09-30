@@ -1,7 +1,7 @@
 # The build context is sent to the daemon in full, so anything not COPYed by
 # the Dockerfile is pure cost -- and .env would be a secret leak into the image
 # layers. The Dockerfile only needs requirements.txt, app/, migrations/, seeds/
-# and the three wsgi/celery entrypoints.
+# and wsgi.py.
 
 # Secrets -- never in an image
 .env

@@ -5,7 +5,7 @@ The frontend and backend are deployed separately:
 | Piece | Where | Hostname |
 |---|---|---|
 | React SPA | Vercel (static) | `app.deevalegh.com` |
-| Flask API, Celery, Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
+| Flask API (Inngest), Postgres, Redis, MinIO | One Ubuntu VPS, Docker Compose | `api.deevalegh.com` |
 
 They are **different origins**, so the browser talks to the API cross-origin.
 That works because auth is Bearer-token based, not cookie based - but it means
@@ -50,6 +50,7 @@ code:
 - `S3_ACCESS_KEY`, `S3_SECRET_KEY` - MinIO root credentials
 - `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY` - **live** keys
 - `RESEND_API_KEY`, `EMAIL_SENDER=resend`, `EMAIL_FROM_ADDRESS`
+- `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` - from your Inngest Cloud or self-hosted dashboard
 - `CORS_ORIGINS=https://app.deevalegh.com`
 
 > ⚠️ **`CORS_ORIGINS` order is load-bearing.** The first entry doubles as the
@@ -64,11 +65,15 @@ code:
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Six services come up: `postgres`, `redis`, `minio`, `api`, `worker`, `beat` -
-plus a one-shot `migrate` that runs `flask db upgrade` and exits. `api`,
-`worker` and `beat` all wait on it via `service_completed_successfully`, so a
+Four persistent services come up: `postgres`, `redis`, `minio`, `api` (plus
+`caddy` for TLS) - plus a one-shot `migrate` that runs `flask db upgrade` and
+exits. `api` waits on `migrate` via `service_completed_successfully`, so a
 failed migration means nothing starts on a schema it cannot use. Migrations
 therefore need no manual step on any deploy or redeploy.
+
+Background asynchronous jobs and scheduled crons execute through Inngest via
+the `/api/inngest` endpoint on the `api` service, eliminating separate Celery
+worker and beat containers.
 
 > ⚠️ `migrate` fails immediately if `migrations/versions/` is empty of a real
 > initial revision, or if `ProdConfig.validate()` rejects a default secret. Both
@@ -86,14 +91,13 @@ docker compose -f docker-compose.prod.yml exec api python -m seeds.seed_workflow
 ### Running it from Komodo
 
 `docker-compose.prod.yml` is the single, self-contained stack - postgres,
-redis, minio, migrate, api, worker, beat. Point Komodo's File Paths at it.
+redis, minio, migrate, api, caddy. Point Komodo's File Paths at it.
 (The name keeps the `.prod` suffix only because Komodo already references it;
 there is no dev compose file to contrast with anymore.)
 
 Build Path is the repo root (`.`) and Dockerfile Path is `Dockerfile` - the
-image `COPY`s `app/`, `migrations/`, `seeds/` and the wsgi/celery entrypoints,
-all of which live at the root. One build serves `migrate`, `api`, `worker` and
-`beat`; they differ only by `command`.
+image `COPY`s `app/`, `migrations/`, `seeds/` and `wsgi.py`, all of which live
+at the root. One build serves `migrate` and `api`; they differ only by `command`.
 
 Then replace the seeded fee amounts with the real current government fees via
 the admin UI (`/ops/settings`) - the seeded figures are placeholders.
@@ -168,7 +172,7 @@ pinned to a stale shell by the CDN.
 
 ## Operations
 
-- **Logs**: `docker compose -f docker-compose.prod.yml logs -f api worker`
+- **Logs**: `docker compose -f docker-compose.prod.yml logs -f api`
 - **Update**: `git pull && docker compose -f docker-compose.prod.yml up -d --build`
 - **DB backup**: `docker compose -f docker-compose.prod.yml exec postgres pg_dump -U $POSTGRES_USER deevalegh > backup.sql`
 - **MinIO bucket policy**: the documents bucket is private; all client access

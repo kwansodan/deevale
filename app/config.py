@@ -17,11 +17,8 @@ class Config:
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     JWT_TOKEN_LOCATION = ["headers"]
 
-    CELERY = {
-        "broker_url": os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/1"),
-        "result_backend": os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/1"),
-        "task_always_eager": False,
-    }
+    INNGEST_EVENT_KEY = os.environ.get("INNGEST_EVENT_KEY", "")
+    INNGEST_SIGNING_KEY = os.environ.get("INNGEST_SIGNING_KEY", "")
 
     S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL", "http://localhost:9000")
     S3_ACCESS_KEY = os.environ.get("S3_ACCESS_KEY", "deevalegh")
@@ -131,7 +128,6 @@ class TestConfig(Config):
     )
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(seconds=2)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(seconds=10)
-    CELERY = {**Config.CELERY, "task_always_eager": True}
     RATELIMIT_ENABLED = False
 
 

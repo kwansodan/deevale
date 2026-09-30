@@ -1,4 +1,3 @@
-from app.celery_app import celery_app
 from app.core.events.bus import bus
 from app.core.events.events import DeadlineApproaching
 from app.core.model_mixins import utcnow
@@ -9,13 +8,12 @@ DEADLINE_WINDOWS_DAYS = (14, 7, 2)
 WINDOW_TOLERANCE_HOURS = 12
 
 
-@celery_app.task(name="app.deadlines.scanner.scan_upcoming_deadlines")
 def scan_upcoming_deadlines() -> int:
     """Finds CaseStages (e.g. a Name Reservation nearing its expiry) whose
     deadline_at falls within a T-14/T-7/T-2 day window and emits
     deadline.approaching once per window per stage.
 
-    Runs every 6 hours (see celery_beat_schedule.py); the tolerance window
+    Runs every 6 hours (via Inngest cron); the tolerance window
     keeps it idempotent-ish in practice -- a stage's deadline_at only crosses
     each threshold once, so re-running mid-window won't re-notify because the
     stage's status typically changes (or the deadline passes) well before the

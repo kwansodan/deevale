@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
 COPY migrations ./migrations
 COPY seeds ./seeds
-COPY wsgi.py celery_worker.py celery_beat_schedule.py ./
+COPY wsgi.py ./
 
 ENV FLASK_ENV=production
 EXPOSE 8000

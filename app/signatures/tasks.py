@@ -1,9 +1,9 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 REMINDER_AFTER_HOURS = 48
 
 
-@celery_app.task(name="app.signatures.tasks.assemble_signed_pdf")
+@task_wrapper("signature/pdf.assemble", "request_id")
 def assemble_signed_pdf(request_id: str) -> None:
     """Renders the completed document plus a signature block (each signer's
     name, drawn/typed mark, timestamp and IP, flagged 'simple electronic
@@ -29,7 +29,6 @@ def assemble_signed_pdf(request_id: str) -> None:
     attach_signed_document(request, s3_key)
 
 
-@celery_app.task(name="app.signatures.tasks.remind_unsigned_parties")
 def remind_unsigned_parties() -> int:
     """Reminds the current signer of any sent request whose turn has been open
     for more than 48h without a signature."""

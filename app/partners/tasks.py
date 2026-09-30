@@ -1,17 +1,10 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 MAX_ATTEMPTS = 6
 
 
-@celery_app.task(
-    name="app.partners.tasks.deliver_webhook",
-    bind=True,
-    autoretry_for=(Exception,),
-    retry_backoff=True,
-    retry_backoff_max=3600,
-    max_retries=MAX_ATTEMPTS,
-)
-def deliver_webhook(self, delivery_id: str) -> None:
+@task_wrapper("partner/webhook.deliver", "delivery_id")
+def deliver_webhook(delivery_id: str) -> None:
     """POSTs a signed webhook payload to the partner's URL. Retries with
     exponential backoff on failure; marks abandoned after MAX_ATTEMPTS."""
     import requests

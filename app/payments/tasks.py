@@ -1,7 +1,7 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 
-@celery_app.task(name="app.payments.tasks.generate_receipt_pdf")
+@task_wrapper("payment/receipt.generate", "invoice_id")
 def generate_receipt_pdf(invoice_id: str) -> None:
     """Renders a receipt PDF for a paid invoice and stores it to S3, linking
     it back onto the Invoice. WeasyPrint (and its native Pango/Cairo

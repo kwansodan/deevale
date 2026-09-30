@@ -1,7 +1,7 @@
-from app.celery_app import celery_app
+from app.inngest_app import task_wrapper
 
 
-@celery_app.task(name="app.bookkeeping.tasks.generate_invoice_pdf")
+@task_wrapper("bookkeeping/invoice.generate", "invoice_id")
 def generate_invoice_pdf(invoice_id: str) -> None:
     """Renders a branded PDF for a client-issued invoice, stores it to S3, and
     (if the customer email is set) emails a pay link. WeasyPrint is imported
@@ -47,7 +47,6 @@ def generate_invoice_pdf(invoice_id: str) -> None:
         )
 
 
-@celery_app.task(name="app.bookkeeping.tasks.mark_overdue_invoices")
 def mark_overdue_invoices() -> int:
     """Daily: flips sent invoices past their due date to overdue."""
     from datetime import date
