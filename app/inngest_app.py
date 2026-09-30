@@ -12,11 +12,12 @@ inngest_base_url = (
     or os.environ.get("INNGEST_EVENT_API_BASE_URL")
 )
 
+if inngest_base_url:
+    os.environ.setdefault("INNGEST_BASE_URL", inngest_base_url)
+    os.environ.setdefault("INNGEST_EVENT_API_BASE_URL", inngest_base_url)
+
 inngest_client = inngest.Inngest(
     app_id="deevalegh",
-    base_url=inngest_base_url or None,
-    event_key=os.environ.get("INNGEST_EVENT_KEY") or None,
-    signing_key=os.environ.get("INNGEST_SIGNING_KEY") or None,
     is_production=bool(os.environ.get("FLASK_ENV") == "production" and not inngest_base_url),
     logger=logger,
 )
@@ -275,4 +276,7 @@ inngest_functions = [
 
 def register_inngest(app):
     """Mounts Inngest serve handler on the Flask app at /api/inngest."""
-    inngest.flask.serve(app, inngest_client, inngest_functions)
+    try:
+        inngest.flask.serve(app, inngest_client, inngest_functions)
+    except Exception as exc:
+        logger.warning("Inngest serve handler registration skipped or failed: %s", exc)
