@@ -101,8 +101,6 @@ services:
       INNGEST_EVENT_KEY: ${INNGEST_EVENT_KEY:-deevalegh_event_key}
     volumes:
       - inngest_data:/var/lib/inngest
-    ports:
-      - "127.0.0.1:8288:8288"
     depends_on:
       - api
 
